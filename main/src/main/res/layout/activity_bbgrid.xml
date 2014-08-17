@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="horizontal"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content" android:id="@+id/linearLayout"
+                  android:focusable="true"
+                  android:focusableInTouchMode="true"
+                  android:minHeight="20dp">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/BBMainCity"
+                android:id="@+id/btnBBMainCities"
+                android:layout_weight="1"
+                android:onClick="onBBMainClick" />
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/BBMainCategories"
+                android:id="@+id/btnBBMainCategories"
+                android:layout_weight="1"
+                android:onClick="onBBMainClick"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/BBMainNewBulletin"
+                android:id="@+id/btnBBMainCreateBulletin"
+                android:layout_weight="1"
+                android:onClick="onBBMainClick"/>
+
+    </LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="fill_parent" android:layout_below="@+id/linearLayout">
+
+        <GridView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/gridView"
+                android:clickable="false"
+                >
+
+        </GridView>
+
+    </LinearLayout>
+</RelativeLayout>

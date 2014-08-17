@@ -1,0 +1,22 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:colorBackground">#F7F7F7</item>
+        <item name="android:textColor">#ff000000</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:buttonStyle">@style/AppThemeButton</item>
+    </style>
+
+    <style name="AppThemeButton" parent="@android:style/Widget.Button">
+
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/border</item>
+        <item name="android:textColor">#ff000000</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:minWidth">60dp</item>
+        <item name="android:gravity">center</item>
+
+    </style>
+
+</resources>
