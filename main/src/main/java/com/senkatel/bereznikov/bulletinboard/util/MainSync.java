@@ -2,6 +2,7 @@ package com.senkatel.bereznikov.bulletinboard.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import com.senkatel.bereznikov.bulletinboard.bulletinboard.BBArrayAdapter;
@@ -17,9 +18,9 @@ import java.util.concurrent.TimeUnit;
 /*Class that implements periodical syncing data*/
 public class MainSync {
 	private static Activity context;
-	private static ScheduledExecutorService updateBB  = Executors.newSingleThreadScheduledExecutor();
-	private static ScheduledExecutorService updateCategories  = Executors.newSingleThreadScheduledExecutor();
-	private static ScheduledExecutorService updateCities  = Executors.newSingleThreadScheduledExecutor();
+	//private static ScheduledExecutorService updateBB;
+	//private static ScheduledExecutorService updateCategories  = Executors.newSingleThreadScheduledExecutor();
+	//private static ScheduledExecutorService updateCities  = Executors.newSingleThreadScheduledExecutor();
 
 	private static ScheduledFuture updateBBTask;
 	private static ScheduledFuture updateCategoriesTask;
@@ -38,14 +39,16 @@ public class MainSync {
 		adapterBB = adapter;
 	}
 	public static void startSyncingBulletinBoard() {
-		Log.v(Constants.LOG_TAG, "UpdateBB Task Started");
+
+		ScheduledExecutorService updateBB  = Executors.newSingleThreadScheduledExecutor();
+
 			updateBBTask = updateBB.scheduleWithFixedDelay(new Runnable() {
 				@Override
 				public void run() {
 					try {
 						Bulletins.update(Constants.URL);
 
-						Log.v(Constants.LOG_TAG, "BulletinUpdate");
+
 						if (adapterBB != null) {
 							context.runOnUiThread(new Runnable() {
 								@Override
@@ -59,14 +62,16 @@ public class MainSync {
 					} catch (Exception e) {
 						Log.e(Constants.LOG_TAG, "startSyncingBulletinBoard Error bulletins update from server: " + e.toString());
 					}
+
 				}
-			}, 0, 10, TimeUnit.SECONDS);
+			}, 0, 60, TimeUnit.SECONDS);
 
 
 	}
 
 	public static void stopSyncingBulletinBoard() {
 		updateBBTask.cancel(true);
+
 		Log.v(Constants.LOG_TAG, "UpdateBB Task Stoped");
 	}
 
@@ -75,10 +80,11 @@ public class MainSync {
 	}
 
 	public static void startSyncingCategories() {
-		Log.v(Constants.LOG_TAG, "UpdateCategories Task Started");
+		ScheduledExecutorService updateCategories  = Executors.newSingleThreadScheduledExecutor();
 		updateCategoriesTask = updateCategories.scheduleWithFixedDelay(new Runnable() {
 				@Override
 				public void run() {
+
 					try {
 						Categories.update(Constants.URL);
 						if (adapterCategories != null) {
@@ -94,8 +100,9 @@ public class MainSync {
 					} catch (Exception e) {
 						Log.e(Constants.LOG_TAG, "startSyncingCategories Error categories update from server: " + e.toString());
 					}
+
 				}
-			}, 0, 10, TimeUnit.SECONDS);
+			}, 0, 60, TimeUnit.SECONDS);
 
 
 	}
@@ -110,7 +117,7 @@ public class MainSync {
 	}
 
 	public static void startSyncingCities() {
-		Log.v(Constants.LOG_TAG, "UpdateCities Task Started");
+		ScheduledExecutorService updateCities  = Executors.newSingleThreadScheduledExecutor();
 		updateCitiesTask = updateCities.scheduleWithFixedDelay(new Runnable() {
 			@Override
 			public void run() {
@@ -130,7 +137,7 @@ public class MainSync {
 					Log.e(Constants.LOG_TAG, "startSyncingCities Error categories update from server: " + e.toString());
 				}
 			}
-		}, 0, 10, TimeUnit.SECONDS);
+		}, 0, 60, TimeUnit.SECONDS);
 
 
 	}
@@ -138,5 +145,21 @@ public class MainSync {
 	public static void stopSyncingCities() {
 		updateCitiesTask.cancel(true);
 		Log.v(Constants.LOG_TAG, "UpdateCities Task Stoped");
+	}
+
+
+	public static void syncAll(){
+		InitialSync initialSync = new InitialSync();
+		initialSync.execute();
+	}
+	private static class InitialSync extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			Bulletins.update(Constants.URL);
+			Categories.update(Constants.URL);
+			Cities.update(Constants.URL);
+			return null;
+		}
 	}
 }

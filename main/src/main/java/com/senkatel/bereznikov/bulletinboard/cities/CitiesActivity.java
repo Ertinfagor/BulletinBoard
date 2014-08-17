@@ -20,7 +20,7 @@ import com.senkatel.bereznikov.bulletinboard.util.MainSync;
  */
 public class CitiesActivity extends Activity {
 	private ListView lvCities;
-	ArrayAdapter<String> citiesAdapter;
+	private  ArrayAdapter<String> citiesAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class CitiesActivity extends Activity {
 		lvCities.setAdapter(citiesAdapter);
 
 		MainSync.initSyncingCities(citiesAdapter);
-		MainSync.startSyncingCities();
+
 
 
 
@@ -50,6 +50,7 @@ public class CitiesActivity extends Activity {
 				Intent intent = new Intent(getApplicationContext(),BBGridActivity.class);
 				if(pos != -1) {
 					intent.putExtra("city", Cities.getId(citiesAdapter.getItem(position)));
+
 				}
 
 				startActivity(intent);

@@ -31,21 +31,23 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:inputType="text"/>
-    <EditText
+    <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/edBBDetailedCity"
             android:layout_below="@+id/edBBDetailedText"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:inputType="numberDecimal"/>
+            android:inputType="text"
+            android:id="@+id/spnBBDetailedCity"
+
+            android:layout_centerHorizontal="true"/>
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/edBBDetailedContact"
-            android:layout_below="@+id/edBBDetailedCity"
+            android:layout_below="@+id/spnBBDetailedCity"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentRight="true"
@@ -63,6 +65,7 @@
             android:layout_alignParentEnd="true"
             android:inputType="number"
             />
+
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,4 +87,5 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:onClick="onBBDetailedDelete"/>
+
 </RelativeLayout>

@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import com.senkatel.bereznikov.bulletinboard.categories.Categories;
 import com.senkatel.bereznikov.bulletinboard.categories.CategoriesActivity;
 import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.cities.CitiesActivity;
@@ -34,10 +33,10 @@ public class BBGridActivity extends Activity {
 		adapter = new BBArrayAdapter(this,R.layout.grid_layout);
 
 
+		MainSync.syncAll();
 
 		gvBB.setAdapter(adapter);
 		MainSync.initSyncingBulletinBoard(adapter);
-		MainSync.startSyncingBulletinBoard();
 		if(!Contact.init(this)){
 			Intent intent = new Intent(this, ContactActivity.class);
 			startActivity(intent);
@@ -62,7 +61,7 @@ public class BBGridActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		adapter.notifyDataSetChanged();
-		MainSync.startSyncingBulletinBoard();
+
 		if (getIntent().hasExtra("city")) {
 			int id = getIntent().getIntExtra("city", -1);
 			Bulletins.setFilterCity(id);
@@ -73,12 +72,13 @@ public class BBGridActivity extends Activity {
 			Bulletins.setFilterCategories(getIntent().getIntExtra("category", -1));
 			Log.v(Constants.LOG_TAG, "Filter category " + Bulletins.getFilter());
 		}
+		MainSync.startSyncingBulletinBoard();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		MainSync.stopSyncingBulletinBoard();
+
 
 	}
 	@Override
@@ -106,4 +106,6 @@ public class BBGridActivity extends Activity {
 		}
 
 	}
+
+
 }

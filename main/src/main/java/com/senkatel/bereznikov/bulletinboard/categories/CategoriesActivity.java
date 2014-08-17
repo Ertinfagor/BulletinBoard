@@ -37,7 +37,7 @@ public class CategoriesActivity extends Activity{
 		lvCategories.setAdapter(categoriesAdapter);
 
 		MainSync.initSyncingCategories(categoriesAdapter);
-		MainSync.startSyncingCategories();
+
 
 
 
