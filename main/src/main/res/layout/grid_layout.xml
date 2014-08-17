@@ -16,7 +16,7 @@
             android:minWidth="100dp"
             android:minHeight="100dp"
             android:longClickable="false"
-            android:src="@drawable/ic_launcher"
+            android:src="@drawable/nonimage"
             />
 
     <TextView
