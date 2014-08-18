@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.senkatel.bereznikov.bulletinboard.bulletinboard.BBGridActivity;
 import com.senkatel.bereznikov.bulletinboard.bulletinboard.Bulletins;
-import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.MainSync;
 
@@ -63,8 +62,8 @@ public class CategoriesActivity extends Activity{
 	protected void onResume() {
 		super.onResume();
 		MainSync.startSyncingCategories();
-		if (Bulletins.getCategoriesFilterId()!=-1){
-			lvCategories.setItemChecked(categoriesAdapter.getPosition(Categories.getName(Bulletins.getCategoriesFilterId())),true);
+		if (Bulletins.getCategoryFilterId()!=-1){
+			lvCategories.setItemChecked(categoriesAdapter.getPosition(Categories.getName(Bulletins.getCategoryFilterId())),true);
 		}
 	}
 

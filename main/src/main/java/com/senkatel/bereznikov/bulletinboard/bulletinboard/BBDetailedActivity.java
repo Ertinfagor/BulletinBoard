@@ -3,13 +3,11 @@ package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
-import com.senkatel.bereznikov.bulletinboard.categories.Categories;
 import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.contacts.Contact;
 import com.senkatel.bereznikov.bulletinboard.main.R;
@@ -161,7 +159,7 @@ public class BBDetailedActivity extends Activity {
 		@Override
 		protected Void doInBackground(Void... params) {
 			try {
-			Bulletins.update(Constants.URL);
+			Bulletins.getBulletins(Constants.URL);
 			String url = Constants.URL+Constants.BULLETIN +"/" + bulletin.getId() + "/image";
 			bitmap = ParseJson.getImage(url);}
 			catch (Exception e){

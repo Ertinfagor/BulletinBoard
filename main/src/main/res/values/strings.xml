@@ -3,4 +3,5 @@
     <string name="BBMainCity">Город</string>
     <string name="BBMainCategories">Категории</string>
     <string name="BBMainNewBulletin">Новое объявление</string>
+    <string name="BBMainUpdate">Обновить</string>
 </resources>

@@ -30,7 +30,7 @@ public class Bulletins {
 		this.context = context;
 	}
 
-	public static void update(String url) {
+	public static void getBulletins(String url) {
 
 		url += Constants.BULLETIN;
 		if (!filter.equals("?")){
@@ -60,7 +60,7 @@ public class Bulletins {
 				tempBulletins.add(bulletin);
 			}
 		} catch (Exception e) {
-			Log.e(Constants.LOG_TAG, "Bulletins update error: " + e.toString());
+			Log.e(Constants.LOG_TAG, "getBulletins error: " + e.toString());
 		}
 		synchronized (bulletins){
 			bulletins.clear();
@@ -70,7 +70,7 @@ public class Bulletins {
 	}
 
 	public static Bulletin get(int id){
-		if (id >= 0) {
+		if (id >= 0) {//TODO Подумать как решить не через exception
 			try {
 				return bulletins.get(id);
 			} catch (Exception e) {
@@ -137,19 +137,27 @@ public class Bulletins {
 				try {
 
 					String url = Constants.URL + Constants.BULLETIN;
-					JSONObject jsonobj = new JSONObject();
-					jsonobj.put("title", bulletin.getTitle());
-					jsonobj.put("text", bulletin.getText());
-					jsonobj.put("city_id", bulletin.getCity_id());
-					jsonobj.put("contact_uid", bulletin.getContact_uid());
-					jsonobj.put("price", bulletin.getPrice());
-					jsonobj.put("categories", bulletin.getCategories().toArray());
-					ParseJson.postJson(url, jsonobj);
+					JSONObject postJsonObj = new JSONObject();
+					postJsonObj.put("title", bulletin.getTitle());
+					postJsonObj.put("text", bulletin.getText());
+					postJsonObj.put("city_id", bulletin.getCity_id());
+					postJsonObj.put("contact_uid", bulletin.getContact_uid());
+					postJsonObj.put("price", bulletin.getPrice());
+
+					JSONArray categories = new JSONArray();
+					List<Integer> categoriesIds = bulletin.getCategories();
+					for (int i = 0; i < categoriesIds.size(); i++){
+						categories.put(i, categoriesIds.get(i));
+					}
+
+					postJsonObj.put("categories", categories);
+
+					ParseJson.postJson(url, postJsonObj);
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t POST Category: " + e.toString());
 				}
 				MainSync.stopSyncingBulletinBoard();
-				Bulletins.update(Constants.URL);
+				Bulletins.getBulletins(Constants.URL);
 				MainSync.startSyncingBulletinBoard();
 			}
 		});
@@ -162,27 +170,27 @@ public class Bulletins {
 				try {
 
 					String url = Constants.URL + Constants.BULLETIN + "/" + String.valueOf(bulletin.getId());
-					JSONObject jsonobj = new JSONObject();
-					jsonobj.put("title", bulletin.getTitle());
-					jsonobj.put("text", bulletin.getText());
-					jsonobj.put("city_id", bulletin.getCity_id());
-					jsonobj.put("contact_uid", bulletin.getContact_uid());
-					jsonobj.put("price", bulletin.getPrice());
+					JSONObject putJsonObj = new JSONObject();
+					putJsonObj.put("title", bulletin.getTitle());
+					putJsonObj.put("text", bulletin.getText());
+					putJsonObj.put("city_id", bulletin.getCity_id());
+					putJsonObj.put("contact_uid", bulletin.getContact_uid());
+					putJsonObj.put("price", bulletin.getPrice());
 
 
-					JSONArray test1 = new JSONArray();
-					List<Integer> inted = bulletin.getCategories();
-					for (int i = 0; i < inted.size(); i++){
-						test1.put(i,inted.get(i));
+					JSONArray categories = new JSONArray();
+					List<Integer> categoriesIds = bulletin.getCategories();
+					for (int i = 0; i < categoriesIds.size(); i++){
+						categories.put(i, categoriesIds.get(i));
 					}
 
-					jsonobj.put("categories",test1);
-					ParseJson.putJson(url, jsonobj);
+					putJsonObj.put("categories", categories);
+					ParseJson.putJson(url, putJsonObj);
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t PUT Category: " + e.toString());
 				}
 				MainSync.stopSyncingBulletinBoard();
-				Bulletins.update(Constants.URL);
+				Bulletins.getBulletins(Constants.URL);
 				MainSync.startSyncingBulletinBoard();
 			}
 		});
@@ -201,7 +209,7 @@ public class Bulletins {
 					Log.e(Constants.LOG_TAG, "Can`t PUT Category: " + e.toString());
 				}
 				MainSync.stopSyncingBulletinBoard();
-				Bulletins.update(Constants.URL);
+				Bulletins.getBulletins(Constants.URL);
 				MainSync.startSyncingBulletinBoard();
 			}
 		});
@@ -209,11 +217,11 @@ public class Bulletins {
 	}
 
 
-	public static int getCategoriesFilterId() {
+	public static int getCategoryFilterId() {
 		return categoriesFilterId;
 	}
 
-	public static int getCitiesFilterId() {
+	public static int getCityFilterId() {
 		return citiesFilterId;
 	}
 }

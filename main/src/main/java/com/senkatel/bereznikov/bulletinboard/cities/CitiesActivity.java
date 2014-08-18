@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.senkatel.bereznikov.bulletinboard.bulletinboard.BBGridActivity;
 import com.senkatel.bereznikov.bulletinboard.bulletinboard.Bulletins;
-import com.senkatel.bereznikov.bulletinboard.categories.Categories;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.MainSync;
@@ -67,8 +66,8 @@ public class CitiesActivity extends Activity {
 		super.onResume();
 		citiesAdapter.notifyDataSetChanged();
 		MainSync.startSyncingCities();
-		if (Bulletins.getCitiesFilterId()!=-1){
-			int id = Bulletins.getCitiesFilterId();
+		if (Bulletins.getCityFilterId()!=-1){
+			int id = Bulletins.getCityFilterId();
 			Log.v(Constants.LOG_TAG,"ID: " + id);
 			String name =Cities.getName(id);
 			Log.v(Constants.LOG_TAG,"Name: " + name);

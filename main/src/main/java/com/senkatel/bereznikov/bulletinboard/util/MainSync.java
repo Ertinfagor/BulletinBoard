@@ -46,7 +46,7 @@ public class MainSync {
 				@Override
 				public void run() {
 					try {
-						Bulletins.update(Constants.URL);
+						Bulletins.getBulletins(Constants.URL);
 
 
 						if (adapterBB != null) {
@@ -156,7 +156,7 @@ public class MainSync {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			Bulletins.update(Constants.URL);
+			Bulletins.getBulletins(Constants.URL);
 			Categories.update(Constants.URL);
 			Cities.update(Constants.URL);
 			return null;
