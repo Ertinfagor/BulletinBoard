@@ -4,4 +4,6 @@
     <string name="BBMainCategories">Категории</string>
     <string name="BBMainNewBulletin">Новое объявление</string>
     <string name="BBMainUpdate">Обновить</string>
+    <string name="ErrorConnectToServer">Отсутсвует соединение с сервером</string>
+    <string name="BBMainNewResetFilters">Сбросить филтры</string>
 </resources>

@@ -94,9 +94,8 @@ public class Categories {
 				}catch (Exception e){
 					Log.e(Constants.LOG_TAG,"Can`t POST Category: " + e.toString());
 				}
-				MainSync.stopSyncingCategories();
 				Categories.update(Constants.URL);
-				MainSync.startSyncingCategories();
+
 			}
 		});
 		thread.start();

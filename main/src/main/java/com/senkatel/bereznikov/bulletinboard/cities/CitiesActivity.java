@@ -2,14 +2,19 @@ package com.senkatel.bereznikov.bulletinboard.cities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 import com.senkatel.bereznikov.bulletinboard.bulletinboard.BBGridActivity;
 import com.senkatel.bereznikov.bulletinboard.bulletinboard.Bulletins;
+import com.senkatel.bereznikov.bulletinboard.categories.Categories;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.MainSync;
@@ -20,6 +25,7 @@ import com.senkatel.bereznikov.bulletinboard.util.MainSync;
 public class CitiesActivity extends Activity {
 	private ListView lvCities;
 	private  ArrayAdapter<String> citiesAdapter;
+	private MenuItem menuItemRefreshCity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,7 @@ public class CitiesActivity extends Activity {
 
 		lvCities.setAdapter(citiesAdapter);
 
-		MainSync.initSyncingCities(citiesAdapter);
+
 
 
 
@@ -65,53 +71,77 @@ public class CitiesActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		citiesAdapter.notifyDataSetChanged();
-		MainSync.startSyncingCities();
 		if (Bulletins.getCityFilterId()!=-1){
-			int id = Bulletins.getCityFilterId();
-			Log.v(Constants.LOG_TAG,"ID: " + id);
-			String name =Cities.getName(id);
-			Log.v(Constants.LOG_TAG,"Name: " + name);
-			int pos = citiesAdapter.getPosition(name);
-			Log.v(Constants.LOG_TAG,"Pos: " + pos);
-			lvCities.setItemChecked(pos,true);
+			lvCities.setItemChecked(citiesAdapter.getPosition(Cities.getName(Bulletins.getCityFilterId())),true);
+		}
+		try {
+			UpdateCities updateNow = new UpdateCities();
+			updateNow.execute();
+		}catch (Exception e){
+			Log.e(Constants.LOG_TAG, "Cannot start Cities update task: " + e.toString());
+		}
+	}
+
+
+
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_filter, menu);
+		menuItemRefreshCity = menu.findItem(R.id.menuFilterUpdate);
+		return true;
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		boolean ret;
+
+		switch (item.getItemId()) {
+			case R.id.menuFilterUpdate:
+				try {
+					UpdateCities updateNow = new UpdateCities();
+					updateNow.execute();
+				}catch (Exception e){
+					Log.e(Constants.LOG_TAG, "Cannot start Cities update task: " + e.toString());
+				}
+				ret = true;
+				break;
+
+			default:
+				ret = super.onOptionsItemSelected(item);
+
+		}
+		return ret;
+	}
+
+
+	private class UpdateCities extends AsyncTask<Void, Void, Void> {
+		@Override
+		protected void onProgressUpdate(Void... values) {
+			super.onProgressUpdate(values);
+			menuItemRefreshCity.setActionView(R.layout.progressbar_layout);
+		}
+		@Override
+		protected Void doInBackground(Void... params) {
+			try {
+				Cities.update(Constants.URL);
+				Log.v(Constants.LOG_TAG, "Refresh ");
+			} catch (Exception e) {
+				Log.e(Constants.LOG_TAG, "Can`t get Cities: " + e.toString());
+				Toast.makeText(getApplicationContext(), getString(R.string.ErrorConnectToServer), Toast.LENGTH_LONG).show();
+			}
+			return null;
+		}
+		@Override
+		protected void onPostExecute(Void aVoid) {
+			super.onPostExecute(aVoid);
+			citiesAdapter.notifyDataSetChanged();
+			menuItemRefreshCity.setActionView(null);
 
 		}
 	}
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MainSync.stopSyncingCities();
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		MainSync.stopSyncingCities();
-	}
-
-	public void onCitiesClickOk(View view){
-		int pos = lvCities.getCheckedItemPosition();
-		Intent intent = new Intent(this,BBGridActivity.class);
-		if(pos != -1) {
-			intent.putExtra("city",Cities.getId(citiesAdapter.getItem(pos)));
-		}
-
-
-		startActivity(intent);
-
-
-
-
-	}
-	public void onCitiesClickReset(View view){
-		Bulletins.resetFilter();
-		Intent intent = new Intent(getApplicationContext(),BBGridActivity.class);
-		startActivity(intent);
-	}
-
-	public void onCitiesClickUpdate(View view){
-		citiesAdapter.notifyDataSetChanged();
-	}
 }
 

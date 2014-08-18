@@ -2,22 +2,30 @@ package com.senkatel.bereznikov.bulletinboard.categories;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+import com.senkatel.bereznikov.bulletinboard.bulletinboard.BBDetailedActivity;
 import com.senkatel.bereznikov.bulletinboard.bulletinboard.BBGridActivity;
 import com.senkatel.bereznikov.bulletinboard.bulletinboard.Bulletins;
+import com.senkatel.bereznikov.bulletinboard.cities.Cities;
+import com.senkatel.bereznikov.bulletinboard.cities.CitiesActivity;
 import com.senkatel.bereznikov.bulletinboard.main.R;
+import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.MainSync;
 
-/**
- * Created by Bereznik on 16.08.2014.
- */
+
 public class CategoriesActivity extends Activity{
 	private ListView lvCategories;
 	ArrayAdapter<String> categoriesAdapter;
+	private MenuItem menuItemRefreshCategory;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +43,7 @@ public class CategoriesActivity extends Activity{
 
 		lvCategories.setAdapter(categoriesAdapter);
 
-		MainSync.initSyncingCategories(categoriesAdapter);
+
 
 
 
@@ -61,43 +69,72 @@ public class CategoriesActivity extends Activity{
 	@Override
 	protected void onResume() {
 		super.onResume();
-		MainSync.startSyncingCategories();
 		if (Bulletins.getCategoryFilterId()!=-1){
 			lvCategories.setItemChecked(categoriesAdapter.getPosition(Categories.getName(Bulletins.getCategoryFilterId())),true);
 		}
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MainSync.stopSyncingCategories();
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		MainSync.stopSyncingCategories();
-	}
-
-	public void onCategoriesClickOk(View view){
-		int pos = lvCategories.getCheckedItemPosition();
-		Intent intent = new Intent(this,BBGridActivity.class);
-		if(pos != -1) {
-			intent.putExtra("category", Categories.getId(categoriesAdapter.getItem(pos)));
+		try {
+			UpdateCategories updateNow = new UpdateCategories();
+			updateNow.execute();
+		}catch (Exception e){
+			Log.e(Constants.LOG_TAG, "Cannot start Categories update task: " + e.toString());
 		}
-
-		startActivity(intent);
-
-
-
-
-	}
-	public void onCategoriesClickReset(View view){Bulletins.resetFilter();
-	Intent intent = new Intent(getApplicationContext(),BBGridActivity.class);
-	startActivity(intent);
 	}
 
-	public void onCategoriesClickUpdate(View view){
-		categoriesAdapter.notifyDataSetChanged();
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_filter, menu);
+		menuItemRefreshCategory = menu.findItem(R.id.menuFilterUpdate);
+		return true;
 	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		boolean ret;
+
+		switch (item.getItemId()) {
+			case R.id.menuFilterUpdate:
+				try {
+					UpdateCategories updateNow = new UpdateCategories();
+					updateNow.execute();
+				}catch (Exception e){
+					Log.e(Constants.LOG_TAG, "Cannot start Categories update task: " + e.toString());
+				}
+				ret = true;
+				break;
+
+			default:
+				ret = super.onOptionsItemSelected(item);
+
+		}
+		return ret;
+	}
+
+	private class UpdateCategories extends AsyncTask<Void, Void, Void> {
+		@Override
+		protected void onProgressUpdate(Void... values) {
+			super.onProgressUpdate(values);
+			menuItemRefreshCategory.setActionView(R.layout.progressbar_layout);
+		}
+		@Override
+		protected Void doInBackground(Void... params) {
+			try {
+				Categories.update(Constants.URL);
+				Log.v(Constants.LOG_TAG, "Refresh ");
+			} catch (Exception e) {
+				Log.e(Constants.LOG_TAG, "Can`t get categories: " + e.toString());
+				Toast.makeText(getApplicationContext(), getString(R.string.ErrorConnectToServer), Toast.LENGTH_LONG).show();
+			}
+			return null;
+		}
+		@Override
+		protected void onPostExecute(Void aVoid) {
+			super.onPostExecute(aVoid);
+			categoriesAdapter.notifyDataSetChanged();
+			menuItemRefreshCategory.setActionView(null);
+		}
+	}
+
 }

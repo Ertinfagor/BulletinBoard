@@ -156,10 +156,8 @@ public class Bulletins {
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t POST Category: " + e.toString());
 				}
-				MainSync.stopSyncingBulletinBoard();
 				Bulletins.getBulletins(Constants.URL);
-				MainSync.startSyncingBulletinBoard();
-			}
+				}
 		});
 		thread.start();
 	}
@@ -189,10 +187,8 @@ public class Bulletins {
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t PUT Category: " + e.toString());
 				}
-				MainSync.stopSyncingBulletinBoard();
 				Bulletins.getBulletins(Constants.URL);
-				MainSync.startSyncingBulletinBoard();
-			}
+				}
 		});
 		thread.start();
 	}
@@ -208,10 +204,8 @@ public class Bulletins {
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t PUT Category: " + e.toString());
 				}
-				MainSync.stopSyncingBulletinBoard();
 				Bulletins.getBulletins(Constants.URL);
-				MainSync.startSyncingBulletinBoard();
-			}
+				}
 		});
 		thread.start();
 	}

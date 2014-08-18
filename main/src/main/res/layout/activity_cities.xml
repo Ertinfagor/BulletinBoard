@@ -10,17 +10,5 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/lvCities" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" android:layout_above="@+id/btnCitiesOk"/>
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ok"
-            android:id="@+id/btnCitiesOk" android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" android:onClick="onCitiesClickOk"/>
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reset"
-            android:id="@+id/btnCitiesReset" android:layout_alignTop="@+id/btnCitiesOk" android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" android:onClick="onCitiesClickReset"/>
+            android:layout_alignParentStart="true"/>
 </RelativeLayout>

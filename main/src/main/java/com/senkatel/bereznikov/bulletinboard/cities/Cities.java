@@ -90,9 +90,8 @@ public class Cities {
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t POST Category: " + e.toString());
 				}
-				MainSync.stopSyncingCities();
 				Cities.update(Constants.URL);
-				MainSync.startSyncingCities();
+
 			}
 		});
 		thread.start();

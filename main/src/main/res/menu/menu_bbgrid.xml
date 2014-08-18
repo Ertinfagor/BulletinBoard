@@ -19,10 +19,18 @@
             android:title="@string/BBMainCity">
     </item>
     <item
+            android:id="@+id/menubbgridactivityResetFilters"
+            android:icon="@android:drawable/ic_menu_info_details"
+            android:showAsAction="ifRoom|withText"
+            android:visible="false"
+            android:title="@string/BBMainNewResetFilters">
+    </item>
+    <item
             android:id="@+id/menubbgridactivityNewBulletin"
             android:icon="@android:drawable/ic_menu_info_details"
             android:showAsAction="ifRoom|withText"
             android:title="@string/BBMainNewBulletin">
     </item>
+
 
 </menu>
