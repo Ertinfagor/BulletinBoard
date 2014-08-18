@@ -160,9 +160,13 @@ public class BBDetailedActivity extends Activity {
 
 		@Override
 		protected Void doInBackground(Void... params) {
+			try {
 			Bulletins.update(Constants.URL);
 			String url = Constants.URL+Constants.BULLETIN +"/" + bulletin.getId() + "/image";
-			bitmap = ParseJson.getImage(url);
+			bitmap = ParseJson.getImage(url);}
+			catch (Exception e){
+				Log.v(Constants.LOG_TAG,"test");
+			}
 			return null;
 		}
 

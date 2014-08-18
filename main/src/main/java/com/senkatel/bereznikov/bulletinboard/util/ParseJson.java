@@ -157,7 +157,6 @@ public class ParseJson {
 	public static Bitmap getImage(String url){
 
 			InputStream rawContent = null;
-			String jsonRawString = null;
 			Bitmap resultBitmap = null;
 
 			try {

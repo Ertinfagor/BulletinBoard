@@ -8,6 +8,7 @@ import com.senkatel.bereznikov.bulletinboard.util.ParseJson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -142,6 +143,7 @@ public class Bulletins {
 					jsonobj.put("city_id", bulletin.getCity_id());
 					jsonobj.put("contact_uid", bulletin.getContact_uid());
 					jsonobj.put("price", bulletin.getPrice());
+					jsonobj.put("categories", bulletin.getCategories().toArray());
 					ParseJson.postJson(url, jsonobj);
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t POST Category: " + e.toString());
@@ -166,6 +168,15 @@ public class Bulletins {
 					jsonobj.put("city_id", bulletin.getCity_id());
 					jsonobj.put("contact_uid", bulletin.getContact_uid());
 					jsonobj.put("price", bulletin.getPrice());
+
+
+					JSONArray test1 = new JSONArray();
+					List<Integer> inted = bulletin.getCategories();
+					for (int i = 0; i < inted.size(); i++){
+						test1.put(i,inted.get(i));
+					}
+
+					jsonobj.put("categories",test1);
 					ParseJson.putJson(url, jsonobj);
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t PUT Category: " + e.toString());

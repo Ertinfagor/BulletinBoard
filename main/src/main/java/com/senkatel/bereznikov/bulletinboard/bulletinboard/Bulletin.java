@@ -4,6 +4,7 @@ package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,9 +25,9 @@ public class Bulletin implements Parcelable{
 	private int city_id = -1;
 	private String contact_uid = null;
 	private float price = 0;
+	private List<Integer> categories = new ArrayList<Integer>();
 	//state
 	//private Date date = null;
-	//private int[] categories = null;
 
 	public Bulletin(int id, String title, String text, int city_id, String contact_uid, float price) {
 		this.id = id;
@@ -45,7 +46,7 @@ public class Bulletin implements Parcelable{
 		parcel.readIntArray(ints);
 		parcel.readStringArray(strings);
 
-		this.price = parcel.readLong();
+		this.price = parcel.readFloat();
 
 		this.id = ints[0];
 		this.city_id = ints[1];
@@ -53,6 +54,7 @@ public class Bulletin implements Parcelable{
 		this.title = strings[0];
 		this.text = strings[1];
 		this.contact_uid = strings[2];
+		parcel.readList(this.categories,Integer.class.getClassLoader());
 	}
 
 	public Bulletin() {
@@ -118,6 +120,18 @@ public class Bulletin implements Parcelable{
 		this.price = price;
 	}
 
+	public List<Integer> getCategories() {
+		categories.add(1);
+		categories.add(2);
+		categories.add(3);
+
+		return categories;
+	}
+
+	public void setCategories(List<Integer> categories) {
+		this.categories = categories;
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;
@@ -131,5 +145,6 @@ public class Bulletin implements Parcelable{
 		parcel.writeIntArray(ints);
 		parcel.writeStringArray(strings);
 		parcel.writeFloat(this.price);
+		parcel.writeList(categories);
 	}
 }
