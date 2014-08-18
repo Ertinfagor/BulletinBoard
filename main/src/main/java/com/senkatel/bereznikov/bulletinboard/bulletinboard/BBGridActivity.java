@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 import com.senkatel.bereznikov.bulletinboard.categories.Categories;
 import com.senkatel.bereznikov.bulletinboard.categories.CategoriesActivity;
 import com.senkatel.bereznikov.bulletinboard.cities.Cities;
@@ -20,12 +21,39 @@ import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.MainSync;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class BBGridActivity extends Activity {
 	private GridView gvBB;
 	private BBArrayAdapter adapterBB;
 	private MenuItem menuItemRefreshBB;
 	private MenuItem menuItemCategoryBB;
 	private MenuItem menuItemCityBB;
+
+	ScheduledExecutorService updateBB  = Executors.newSingleThreadScheduledExecutor();
+	private Runnable updateNotifierTask = new Runnable() {
+		public void run() {
+			adapterBB.notifyDataSetChanged();
+		}
+	};
+
+	private Runnable periodicSyncTask = new Runnable() {
+		@Override
+		public void run() {
+			try {
+				Bulletins.getBulletins(Constants.URL);
+
+				if (adapterBB != null) {
+					runOnUiThread(updateNotifierTask);
+				}
+			} catch (Exception e) {
+				Log.e(Constants.LOG_TAG, "startSyncingBulletinBoard Error bulletins update from server: " + e.toString());
+				Toast.makeText(getApplicationContext(),getString(R.string.ErrorConnectToServer), Toast.LENGTH_LONG).show();
+			}
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +76,9 @@ public class BBGridActivity extends Activity {
 			Intent intent = new Intent(this, ContactActivity.class);
 			startActivity(intent);
 		}
+
+
+		updateBB.scheduleWithFixedDelay(periodicSyncTask, 0, 60, TimeUnit.SECONDS);
 
 		gvBB.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -96,11 +127,10 @@ public class BBGridActivity extends Activity {
 	}
 
 	@Override
-	protected void onStop() {
-		super.onStop();
-		/*TODO Reset all periodic tasks*/
+	protected void onDestroy() {
+		super.onDestroy();
+		updateBB.shutdown();
 	}
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -168,6 +198,7 @@ public class BBGridActivity extends Activity {
 				Bulletins.getBulletins(Constants.URL);
 			} catch (Exception e) {
 				Log.e(Constants.LOG_TAG, "Can`t get bulletins: " + e.getMessage());
+				Toast.makeText(getApplicationContext(),getString(R.string.ErrorConnectToServer), Toast.LENGTH_LONG).show();
 			}
 			return null;
 		}
