@@ -64,7 +64,6 @@ public class BBGridActivity extends Activity {
 		setContentView(R.layout.activity_bbgrid);
 		getActionBar().setHomeButtonEnabled(true);
 
-		MainSync mainSync = new MainSync(this);/*TODO Убрать*/
 
 		gvBB = (GridView) findViewById(R.id.gridView);
 		adapterBB = new BBArrayAdapter(this, R.layout.grid_layout);
@@ -116,7 +115,7 @@ public class BBGridActivity extends Activity {
 			UpdateBulletins updateNow = new UpdateBulletins();
 			updateNow.execute();
 		}catch (Exception e){
-			Log.e(Constants.LOG_TAG, "Cannot start update task: " + e.toString());
+			Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 		}
 	}
 
@@ -185,7 +184,7 @@ public class BBGridActivity extends Activity {
 					UpdateBulletins updateNow = new UpdateBulletins();
 					updateNow.execute();
 				}catch (Exception e){
-					Log.e(Constants.LOG_TAG, "Cannot start update task: " + e.toString());
+					Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 				}
 				ret = true;
 				break;
@@ -195,7 +194,7 @@ public class BBGridActivity extends Activity {
 					UpdateBulletins updateNow = new UpdateBulletins();
 					updateNow.execute();
 				}catch (Exception e){
-					Log.e(Constants.LOG_TAG, "Cannot start update task: " + e.toString());
+					Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 				}
 				menuItemResetFiltersBB.setVisible(false);
 				menuItemCategoryBB.setTitle(getString(R.string.BBMainCategories));
