@@ -31,6 +31,9 @@ public class BBGridActivity extends Activity {
 	private MenuItem menuItemRefreshBB;
 	private MenuItem menuItemCategoryBB;
 	private MenuItem menuItemCityBB;
+	private MenuItem menuItemResetFiltersBB;
+
+	UpdateBulletins updateNow = new UpdateBulletins();
 
 	ScheduledExecutorService updateBB  = Executors.newSingleThreadScheduledExecutor();
 	private Runnable updateNotifierTask = new Runnable() {
@@ -110,12 +113,10 @@ public class BBGridActivity extends Activity {
 			Log.e(Constants.LOG_TAG, "GetIntent error: " + e.toString());
 		}
 		try {
-
-
-			UpdateBulletins updateBulletins = new UpdateBulletins();
-			updateBulletins.execute();
-		} catch (Exception e) {
-			Log.e(Constants.LOG_TAG, "Update task start error: " + e.toString());
+			UpdateBulletins updateNow = new UpdateBulletins();
+			updateNow.execute();
+		}catch (Exception e){
+			Log.e(Constants.LOG_TAG, "Cannot start update task: " + e.toString());
 		}
 	}
 
@@ -138,6 +139,8 @@ public class BBGridActivity extends Activity {
 		menuItemRefreshBB = menu.findItem(R.id.menubbgridactivityUpdate);
 		menuItemCategoryBB = menu.findItem(R.id.menubbgridactivityCategory);
 		menuItemCityBB = menu.findItem(R.id.menubbgridactivityCity);
+		menuItemResetFiltersBB = menu.findItem(R.id.menubbgridactivityResetFilters);
+
 		return true;
 	}
 
@@ -149,6 +152,10 @@ public class BBGridActivity extends Activity {
 		}
 		if (Bulletins.getCategoryFilterId() != -1) {
 			menuItemCategoryBB.setTitle(Categories.getName(Bulletins.getCategoryFilterId()));
+		}
+
+		if (Bulletins.getFilter()!="?"){
+			menuItemResetFiltersBB.setVisible(true);
 		}
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -174,9 +181,27 @@ public class BBGridActivity extends Activity {
 				ret = true;
 				break;
 			case R.id.menubbgridactivityUpdate:
-				UpdateBulletins upd = new UpdateBulletins();
-				upd.execute();
-
+				try {
+					UpdateBulletins updateNow = new UpdateBulletins();
+					updateNow.execute();
+				}catch (Exception e){
+					Log.e(Constants.LOG_TAG, "Cannot start update task: " + e.toString());
+				}
+				ret = true;
+				break;
+			case R.id.menubbgridactivityResetFilters:
+				Bulletins.resetFilter();
+				try {
+					UpdateBulletins updateNow = new UpdateBulletins();
+					updateNow.execute();
+				}catch (Exception e){
+					Log.e(Constants.LOG_TAG, "Cannot start update task: " + e.toString());
+				}
+				menuItemResetFiltersBB.setVisible(false);
+				menuItemCategoryBB.setTitle(getString(R.string.BBMainCategories));
+				menuItemCityBB.setTitle(getString(R.string.BBMainCity));
+				ret = true;
+				break;
 			default:
 				ret = super.onOptionsItemSelected(item);
 
@@ -197,7 +222,7 @@ public class BBGridActivity extends Activity {
 			try {
 				Bulletins.getBulletins(Constants.URL);
 			} catch (Exception e) {
-				Log.e(Constants.LOG_TAG, "Can`t get bulletins: " + e.getMessage());
+				Log.e(Constants.LOG_TAG, "Can`t get bulletins: " + e.toString());
 				Toast.makeText(getApplicationContext(),getString(R.string.ErrorConnectToServer), Toast.LENGTH_LONG).show();
 			}
 			return null;
