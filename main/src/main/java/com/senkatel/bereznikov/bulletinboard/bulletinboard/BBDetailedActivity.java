@@ -2,23 +2,25 @@ package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.*;
 import com.senkatel.bereznikov.bulletinboard.categories.Categories;
 import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.contacts.Contact;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
+import com.senkatel.bereznikov.bulletinboard.util.ParseJson;
 
 /**
  * Created by Bereznik on 17.08.2014.
  */
 public class BBDetailedActivity extends Activity {
+	private ImageView image;
 	private EditText title;
 	private EditText text;
 	private EditText contact_uid;
@@ -26,12 +28,14 @@ public class BBDetailedActivity extends Activity {
 	private Spinner spnCity;
 	private Button buttonOK;
 	private Button buttonDelete;
+	private Bitmap bitmap= null;
 
 	private ArrayAdapter<String>citiesAdapter;
 
 	private boolean isEditable = false;
 
 	private Bulletin bulletin;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,8 +57,9 @@ public class BBDetailedActivity extends Activity {
 		spnCity = (Spinner)findViewById(R.id.spnBBDetailedCity);
 		buttonOK.setVisibility(View.INVISIBLE);
 		buttonDelete.setVisibility(View.INVISIBLE);
-
-
+		image =(ImageView)findViewById(R.id.imageView);
+		sync tesa = new sync();
+		tesa.execute();
 
 		spnCity.setAdapter(citiesAdapter);
 		spnCity.setPrompt("Title");
@@ -149,5 +154,24 @@ public class BBDetailedActivity extends Activity {
 		Bulletins.deleteBulletin(bulletin);
 		Intent intent = new Intent(this, BBGridActivity.class);
 		startActivity(intent);
+	}
+
+	private class sync extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			Bulletins.update(Constants.URL);
+			String url = Constants.URL+Constants.BULLETIN +"/" + bulletin.getId() + "/image";
+			bitmap = ParseJson.getImage(url);
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void aVoid) {
+			super.onPostExecute(aVoid);
+			if (bitmap!=null) {
+				image.setImageBitmap(bitmap);
+			}
+		}
 	}
 }

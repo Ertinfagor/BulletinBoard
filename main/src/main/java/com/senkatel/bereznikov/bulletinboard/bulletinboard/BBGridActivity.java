@@ -2,6 +2,8 @@ package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +18,7 @@ import com.senkatel.bereznikov.bulletinboard.contacts.ContactActivity;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.MainSync;
+import com.senkatel.bereznikov.bulletinboard.util.ParseJson;
 
 public class BBGridActivity extends Activity {
 	private GridView gvBB;
@@ -34,7 +37,19 @@ public class BBGridActivity extends Activity {
 
 
 		MainSync.syncAll();
+/*		Thread my = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				String url = Constants.URL+Constants.BULLETIN +"/2/image";
+				Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.bb);
+				ParseJson.postImage(url,bm);
 
+				Bitmap test = ParseJson.getImage(url);
+			}
+		});
+		my.start();
+
+*/
 		gvBB.setAdapter(adapter);
 		MainSync.initSyncingBulletinBoard(adapter);
 		if(!Contact.init(this)){

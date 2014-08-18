@@ -1,5 +1,8 @@
 package com.senkatel.bereznikov.bulletinboard.util;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -9,6 +12,11 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
+
+
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
@@ -16,11 +24,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.io.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 /**
  * Created by Bereznik on 16.08.2014.
@@ -127,5 +132,47 @@ public class ParseJson {
 
 	}
 
+	public static void postImage(String url, Bitmap image){
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			image.compress(Bitmap.CompressFormat.JPEG, 75, bos);
+			byte[] data = bos.toByteArray();
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpPost postRequest = new HttpPost(url);
+			ByteArrayBody bab = new ByteArrayBody(data, "test.jpg");
+			MultipartEntity reqEntity = new MultipartEntity(
+					HttpMultipartMode.BROWSER_COMPATIBLE);
+			reqEntity.addPart("file", bab);
+			postRequest.setEntity(reqEntity);
+			httpClient.execute(postRequest);
+
+		} catch (Exception e) {
+			// handle exception here
+			Log.e(e.getClass().getName(), e.getMessage());
+		}
+
+
+	}
+
+	public static Bitmap getImage(String url){
+
+			InputStream rawContent = null;
+			String jsonRawString = null;
+			Bitmap resultBitmap = null;
+
+			try {
+				HttpClient httpclient = new DefaultHttpClient();
+				HttpGet httpget = new HttpGet(url);
+				HttpResponse response = httpclient.execute(httpget);
+				HttpEntity entity = response.getEntity();
+				rawContent = entity.getContent();
+				resultBitmap = BitmapFactory.decodeStream(rawContent);
+			}catch (Exception e) {
+				Log.e(Constants.LOG_TAG, "getBitmap Network error" + e.toString());
+
+			}
+	return resultBitmap;
+
+	}
 
 }
