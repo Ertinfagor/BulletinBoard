@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,76 +13,75 @@ import android.widget.TextView;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.Images;
-import com.senkatel.bereznikov.bulletinboard.util.MainSync;
 
 import java.lang.ref.WeakReference;
 
 
 public class BBArrayAdapter extends ArrayAdapter<Bulletin> {
-	private final Activity context;
+	private final Activity actMainContext;
 
-	public BBArrayAdapter(Context context, int textViewResourceId) {
-		super(context, textViewResourceId, Bulletins.getAll());
-		this.context = (Activity)context;
+	public BBArrayAdapter(Context cntMainContext, int textViewResourceId) {
+		super(cntMainContext, textViewResourceId, Bulletins.getAll());
+		this.actMainContext = (Activity) cntMainContext;
 
 
 
 	}
 
 	static class ViewHolder {
-		public TextView txtGridLayoutTitle;
-		public TextView txtGridLayoutDescription;
-		public ImageView imageView;
+		public TextView tvGridLayoutTitle;
+		public TextView tvGridLayoutDescription;
+		public ImageView ivImage;
 
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder holder;
+	public View getView(int position, View vConvert, ViewGroup parent) {
+		ViewHolder vhHolder;
 		notifyDataSetChanged();
-		View rowView = convertView;
+		View vRow = vConvert;
 
-		if (rowView == null) {
-			LayoutInflater inflater = context.getLayoutInflater();
-			rowView = inflater.inflate(R.layout.grid_layout, null, true);
-			holder = new ViewHolder();
-			holder.txtGridLayoutTitle = (TextView) rowView.findViewById(R.id.txtGridLayoutTitle);
-			holder.txtGridLayoutDescription = (TextView) rowView.findViewById(R.id.txtGridLayoutDescription);
-			holder.imageView = (ImageView)rowView.findViewById(R.id.ivBBGridActivity);
+		if (vRow == null) {
+			LayoutInflater inflater = actMainContext.getLayoutInflater();
+			vRow = inflater.inflate(R.layout.grid_layout, null, true);
+			vhHolder = new ViewHolder();
+			vhHolder.tvGridLayoutTitle = (TextView) vRow.findViewById(R.id.txtGridLayoutTitle);
+			vhHolder.tvGridLayoutDescription = (TextView) vRow.findViewById(R.id.txtGridLayoutDescription);
+			vhHolder.ivImage = (ImageView) vRow.findViewById(R.id.ivBBGridActivity);
 
-			rowView.setTag(holder);
+			vRow.setTag(vhHolder);
 		} else {
-			holder = (ViewHolder) rowView.getTag();
+			vhHolder = (ViewHolder) vRow.getTag();
 		}
-		holder.txtGridLayoutTitle.setText(Bulletins.get(position).getTitle());
-		holder.txtGridLayoutDescription.setText(Bulletins.get(position).getText());
-		new BitmapWorkerTask(holder.imageView).execute(Bulletins.get(position).getId());
+		vhHolder.tvGridLayoutTitle.setText(Bulletins.get(position).getTitle());
+		vhHolder.tvGridLayoutDescription.setText(Bulletins.get(position).getText());
+		new BitmapWorkerTask(vhHolder.ivImage).execute(Bulletins.get(position).getId());
 
-		return rowView;
+		return vRow;
 	}
 
 
 	class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
-		private final WeakReference<ImageView> imageViewReference;
-		private int id = 0;
+		private final WeakReference<ImageView> ivrImageReference;
+		private int bulletinId = 0;
 
 		public BitmapWorkerTask(ImageView imageView) {
 			// Use a WeakReference to ensure the ImageView can be garbage collected
-			imageViewReference = new WeakReference<ImageView>(imageView);
+			ivrImageReference = new WeakReference<ImageView>(imageView);
 		}
 
 		// Decode image in background.
 		@Override
 		protected Bitmap doInBackground(Integer... params) {
-			id = params[0];
-			return Images.loadImage(id,100,100);
+			bulletinId = params[0];
+			return Images.loadImage(bulletinId, Constants.IMAGE_WIDTH,Constants.IMAGE_HEIHT);
 		}
 
 		// Once complete, see if ImageView is still around and set bitmap.
 		@Override
 		protected void onPostExecute(Bitmap bitmap) {
-			if (imageViewReference != null && bitmap != null) {
-				final ImageView imageView = imageViewReference.get();
+			if (ivrImageReference != null && bitmap != null) {
+				final ImageView imageView = ivrImageReference.get();
 				if (imageView != null) {
 					imageView.setImageBitmap(bitmap);
 				}
