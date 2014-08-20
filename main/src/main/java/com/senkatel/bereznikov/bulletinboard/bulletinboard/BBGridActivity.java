@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 import com.senkatel.bereznikov.bulletinboard.categories.Categories;
 import com.senkatel.bereznikov.bulletinboard.categories.CategoriesActivity;
 import com.senkatel.bereznikov.bulletinboard.cities.Cities;
@@ -21,7 +20,6 @@ import com.senkatel.bereznikov.bulletinboard.main.PreferencesActivity;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.Images;
-import com.senkatel.bereznikov.bulletinboard.util.MainSync;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -34,8 +32,6 @@ public class BBGridActivity extends Activity {
 	private MenuItem miCategoryFilterBB;
 	private MenuItem miCityFilterBB;
 	private MenuItem miResetFiltersBB;
-
-	ForseUpdate forseUpdateNow = new ForseUpdate();
 
 	ScheduledExecutorService sesPeriodicUpdate = Executors.newSingleThreadScheduledExecutor();
 	private Runnable runUpdateNotifierTask = new Runnable() {
@@ -87,8 +83,6 @@ public class BBGridActivity extends Activity {
 		}
 
 
-
-
 		gvBB.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -120,7 +114,7 @@ public class BBGridActivity extends Activity {
 		}
 		try {
 			new ForseUpdate().execute();
-		}catch (Exception e){
+		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 		}
 	}
@@ -159,7 +153,7 @@ public class BBGridActivity extends Activity {
 			miCategoryFilterBB.setTitle(Categories.getName(Bulletins.getCategoryFilterId()));
 		}
 
-		if (Bulletins.getFilter()!="?"){
+		if (Bulletins.getFilter() != "?") {
 			miResetFiltersBB.setVisible(true);
 		}
 		return super.onPrepareOptionsMenu(menu);
@@ -188,7 +182,7 @@ public class BBGridActivity extends Activity {
 			case R.id.menubbgridactivityUpdate:
 				try {
 					new ForseUpdate().execute();
-				}catch (Exception e){
+				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 				}
 				boolReturn = true;
@@ -197,7 +191,7 @@ public class BBGridActivity extends Activity {
 				Bulletins.resetFilter();
 				try {
 					new ForseUpdate().execute();
-				}catch (Exception e){
+				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 				}
 				miResetFiltersBB.setVisible(false);
