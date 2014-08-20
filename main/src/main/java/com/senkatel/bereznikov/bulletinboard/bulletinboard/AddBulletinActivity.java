@@ -22,9 +22,6 @@ import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Bereznik on 19.08.2014.
- */
 public class AddBulletinActivity extends Activity {
 
 	private ImageView ivImage;
@@ -96,8 +93,8 @@ public class AddBulletinActivity extends Activity {
 				if (!categoriesIds.contains(Categories.getId(adapterCategories.getItem(position)))) {
 					categoriesIds.add(Categories.getId(adapterCategories.getItem(position)));
 					for (Integer categorieId : categoriesIds) {
-						categoriesString += ", ";
 						categoriesString += Categories.getName(categorieId);
+						categoriesString += " ";
 					}
 					tvCategories.setText(categoriesString);
 				}
@@ -108,6 +105,10 @@ public class AddBulletinActivity extends Activity {
 
 			}
 		});
+	}
+	public void onAddBulletinClear(View view){
+		tvCategories.setText("");
+
 	}
 
 	private void post() {

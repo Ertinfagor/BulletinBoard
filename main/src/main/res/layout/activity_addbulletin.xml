@@ -65,15 +65,23 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/tvaddBulletinSelectedCategories"
-            android:layout_below="@+id/spnaddBulletinCategories" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/btnAddBulletinClearCategories" android:layout_below="@+id/spnaddBulletinCategories"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Загрузить изображение"
             android:id="@+id/btnAddBulletinAddImage" android:layout_alignParentTop="true" android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" android:onClick="addBulletinOpenFile"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Очистить"
+            android:id="@+id/btnAddBulletinClearCategories"
+            android:layout_alignRight="@+id/btnAddBulletinAddImage"
+            android:layout_alignEnd="@+id/btnAddBulletinAddImage" android:layout_below="@+id/spnaddBulletinCategories"
+            android:layout_above="@+id/edaddBulletinPrice" android:onClick="onAddBulletinClear"/>
 
 </RelativeLayout>
     </ScrollView>

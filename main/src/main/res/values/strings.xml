@@ -14,4 +14,6 @@
     <string name="preferences">Настройки</string>
     <string name="Maximum">Максимум</string>
     <string name="Minimum">Минимум</string>
+    <string name="edit">Редактировать</string>
+    <string name="delete">Удалить</string>
 </resources>
