@@ -23,17 +23,17 @@ public class Bulletin implements Parcelable{
 		}
 	};
 
-	private Bitmap image; //Uses only to send bulletin by url and temporary, main images container is Image Class
-	private int id = -1;
-	private String title = null;
-	private String text = null;
-	private int city_id = -1;
-	private String contact_uid = null;
-	private float price = 0;
-	private List<Integer> categories = new ArrayList<Integer>();
-	private boolean state = true;
-	private Date date;
-	private BulletinContact contact;
+	private Bitmap bmpImage; //Uses only to send bulletin by url and temporary, main images container is Image Class
+	private int intBulletinId = -1;
+	private String sTitle = null;
+	private String sText = null;
+	private int intCity_id = -1;
+	private String intContact_uid = null;
+	private float fPrice = 0;
+	private List<Integer> listCategories = new ArrayList<Integer>();
+	private boolean bState = true;
+	private Date dBulletinDate;
+	private BulletinContact bcBulletinContact;
 
 
 
@@ -43,124 +43,124 @@ public class Bulletin implements Parcelable{
 	@Override
 	public String toString() {
 		return "Bulletin{" +
-				"id=" + id +
-				", title='" + title + '\'' +
-				", text='" + text + '\'' +
-				", city_id=" + city_id +
-				", contact_uid='" + contact_uid + '\'' +
-				", price=" + price +
+				"intBulletinId=" + intBulletinId +
+				", sTitle='" + sTitle + '\'' +
+				", sText='" + sText + '\'' +
+				", intCity_id=" + intCity_id +
+				", intContact_uid='" + intContact_uid + '\'' +
+				", fPrice=" + fPrice +
 				'}';
 	}
 
 	/*Getters and setters*/
-	public int getId() {
-		return id;
+	public int getIntBulletinId() {
+		return intBulletinId;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getsTitle() {
+		return sTitle;
 	}
 
-	public String getText() {
-		return text;
+	public String getsText() {
+		return sText;
 	}
 
-	public int getCity_id() {
-		return city_id;
+	public int getIntCity_id() {
+		return intCity_id;
 	}
 
-	public String getContact_uid() {
-		return contact_uid;
+	public String getIntContact_uid() {
+		return intContact_uid;
 	}
 
-	public float getPrice() {
-		return price;
+	public float getfPrice() {
+		return fPrice;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setIntBulletinId(int intBulletinId) {
+		this.intBulletinId = intBulletinId;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setsTitle(String sTitle) {
+		this.sTitle = sTitle;
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	public void setsText(String sText) {
+		this.sText = sText;
 	}
 
-	public void setCity_id(int city_id) {
-		this.city_id = city_id;
+	public void setIntCity_id(int intCity_id) {
+		this.intCity_id = intCity_id;
 	}
 
-	public void setContact_uid(String contact_uid) {
-		this.contact_uid = contact_uid;
+	public void setIntContact_uid(String intContact_uid) {
+		this.intContact_uid = intContact_uid;
 	}
 
-	public void setPrice(float price) {
-		this.price = price;
+	public void setfPrice(float fPrice) {
+		this.fPrice = fPrice;
 	}
 
-	public boolean isState() {
-		return state;
+	public boolean isbState() {
+		return bState;
 	}
 
-	public void setState(boolean state) {
-		this.state = state;
+	public void setbState(boolean bState) {
+		this.bState = bState;
 	}
 
-	public Bitmap getImage() {
-		return image;
+	public Bitmap getBmpImage() {
+		return bmpImage;
 	}
 
-	public void setImage(Bitmap image) {
-		this.image = image;
+	public void setBmpImage(Bitmap bmpImage) {
+		this.bmpImage = bmpImage;
 	}
 
-	public List<Integer> getCategories() {
-		return categories;
+	public List<Integer> getListCategories() {
+		return listCategories;
 	}
 
-	public Date getDate() {
-		return date;
+	public Date getdBulletinDate() {
+		return dBulletinDate;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setdBulletinDate(Date dBulletinDate) {
+		this.dBulletinDate = dBulletinDate;
 	}
 
-	public void setCategories(List<Integer> categories) {
-		this.categories = categories;
+	public void setListCategories(List<Integer> listCategories) {
+		this.listCategories = listCategories;
 	}
 
-	public BulletinContact getContact() {
-		return contact;
+	public BulletinContact getBcBulletinContact() {
+		return bcBulletinContact;
 	}
 
-	public void setContact(BulletinContact contact) {
-		this.contact = contact;
+	public void setBcBulletinContact(BulletinContact bcBulletinContact) {
+		this.bcBulletinContact = bcBulletinContact;
 	}
 
 	/*Parcable Implementation*/
 	private Bulletin(Parcel parcel) {
 
-		int[] ints = new int[2];
-		String[] strings = new String[3];
+		int[] intArrayParcel = new int[2];
+		String[] strArrayParcel = new String[3];
 
-		parcel.readIntArray(ints);
-		parcel.readStringArray(strings);
+		parcel.readIntArray(intArrayParcel);
+		parcel.readStringArray(strArrayParcel);
 
-		this.price = parcel.readFloat();
+		this.fPrice = parcel.readFloat();
 
-		this.id = ints[0];
-		this.city_id = ints[1];
+		this.intBulletinId = intArrayParcel[0];
+		this.intCity_id = intArrayParcel[1];
 
-		this.title = strings[0];
-		this.text = strings[1];
-		this.contact_uid = strings[2];
-		parcel.readList(this.categories,Integer.class.getClassLoader());
-		this.contact = parcel.readParcelable(Contact.class.getClassLoader());
-		this.date = new Date(parcel.readLong());
+		this.sTitle = strArrayParcel[0];
+		this.sText = strArrayParcel[1];
+		this.intContact_uid = strArrayParcel[2];
+		parcel.readList(this.listCategories,Integer.class.getClassLoader());
+		this.bcBulletinContact = parcel.readParcelable(Contact.class.getClassLoader());
+		this.dBulletinDate = new Date(parcel.readLong());
 
 
 	}
@@ -172,14 +172,14 @@ public class Bulletin implements Parcelable{
 
 	@Override
 	public void writeToParcel(Parcel parcel, int i) {
-		int[] ints = {this.id,this.city_id};
-		String[] strings = {this.title,this.text,this.contact_uid};
+		int[] intArrayParcel = {this.intBulletinId,this.intCity_id};
+		String[] strArrayParcel = {this.sTitle,this.sText,this.intContact_uid};
 
-		parcel.writeIntArray(ints);
-		parcel.writeStringArray(strings);
-		parcel.writeFloat(this.price);
-		parcel.writeList(this.categories);
-		parcel.writeParcelable(this.contact,0);
-		parcel.writeLong(this.date.getTime());
+		parcel.writeIntArray(intArrayParcel);
+		parcel.writeStringArray(strArrayParcel);
+		parcel.writeFloat(this.fPrice);
+		parcel.writeList(this.listCategories);
+		parcel.writeParcelable(this.bcBulletinContact,0);
+		parcel.writeLong(this.dBulletinDate.getTime());
 	}
 }

@@ -53,9 +53,9 @@ public class BBArrayAdapter extends ArrayAdapter<Bulletin> {
 		} else {
 			vhHolder = (ViewHolder) vRow.getTag();
 		}
-		vhHolder.tvGridLayoutTitle.setText(Bulletins.get(position).getTitle());
-		vhHolder.tvGridLayoutDescription.setText(Bulletins.get(position).getText());
-		new BitmapWorkerTask(vhHolder.ivImage).execute(Bulletins.get(position).getId());
+		vhHolder.tvGridLayoutTitle.setText(Bulletins.get(position).getsTitle());
+		vhHolder.tvGridLayoutDescription.setText(Bulletins.get(position).getsText());
+		new BitmapWorkerTask(vhHolder.ivImage).execute(Bulletins.get(position).getIntBulletinId());
 
 		return vRow;
 	}

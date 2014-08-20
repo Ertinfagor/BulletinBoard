@@ -71,13 +71,13 @@ public class AddBulletinActivity extends Activity {
 
 			bulletin = extras.getParcelable("bulletin");
 
-			edTitle.setText(bulletin.getTitle());
-			edText.setText(bulletin.getText());
-			edPrice.setText(Float.toString(bulletin.getPrice()));
-			cbState.setEnabled(bulletin.isState());
-			spnCity.setSelection(adapterCity.getPosition(Cities.getName((bulletin.getCity_id()))));
+			edTitle.setText(bulletin.getsTitle());
+			edText.setText(bulletin.getsText());
+			edPrice.setText(Float.toString(bulletin.getfPrice()));
+			cbState.setEnabled(bulletin.isbState());
+			spnCity.setSelection(adapterCity.getPosition(Cities.getName((bulletin.getIntCity_id()))));
 			String categories = "";
-			for (int id : bulletin.getCategories()) {
+			for (int id : bulletin.getListCategories()) {
 				categories += Categories.getName(id);
 			}
 			tvCategories.setText(categories);
@@ -122,17 +122,17 @@ public class AddBulletinActivity extends Activity {
 		} else {
 			Bulletin newBulletin = new Bulletin();
 
-			newBulletin.setTitle(edTitle.getText().toString());
-			newBulletin.setText(edText.getText().toString());
-			newBulletin.setCity_id(Cities.getId((String) spnCity.getSelectedItem()));
-			newBulletin.setCategories(categoriesIds);
-			newBulletin.setContact_uid(Contact.getUid());
-			newBulletin.setPrice(Float.valueOf(edPrice.getText().toString()));
-			newBulletin.setState(cbState.isChecked());
-			newBulletin.setImage(bmpImage);
+			newBulletin.setsTitle(edTitle.getText().toString());
+			newBulletin.setsText(edText.getText().toString());
+			newBulletin.setIntCity_id(Cities.getId((String) spnCity.getSelectedItem()));
+			newBulletin.setListCategories(categoriesIds);
+			newBulletin.setIntContact_uid(Contact.getUid());
+			newBulletin.setfPrice(Float.valueOf(edPrice.getText().toString()));
+			newBulletin.setbState(cbState.isChecked());
+			newBulletin.setBmpImage(bmpImage);
 
-			if (bulletin.getId() != -1) {
-				newBulletin.setId(bulletin.getId());
+			if (bulletin.getIntBulletinId() != -1) {
+				newBulletin.setIntBulletinId(bulletin.getIntBulletinId());
 				Bulletins.putBulletin(newBulletin);
 
 			} else {

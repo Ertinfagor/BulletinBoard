@@ -221,7 +221,7 @@ public class BBGridActivity extends Activity {
 		@Override
 		protected void onProgressUpdate(Void... values) {
 			super.onProgressUpdate(values);
-			miRefreshBB.setVisible(false);
+
 		}
 
 		@Override
@@ -240,7 +240,7 @@ public class BBGridActivity extends Activity {
 		protected void onPostExecute(Void aVoid) {
 			super.onPostExecute(aVoid);
 			bbArrayAdapter.notifyDataSetChanged();
-			miRefreshBB.setVisible(true);
+
 		}
 	}
 }

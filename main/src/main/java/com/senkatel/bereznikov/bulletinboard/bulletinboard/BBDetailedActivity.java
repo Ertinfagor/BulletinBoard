@@ -62,24 +62,24 @@ public class BBDetailedActivity extends Activity {
 			bulletin = extras.getParcelable("bulletin");
 
 			BitmapWorkerTaskDetailed loadImage = new BitmapWorkerTaskDetailed(ivImage);
-			loadImage.execute(bulletin.getId());
+			loadImage.execute(bulletin.getIntBulletinId());
 
-			tvTitle.setText(bulletin.getTitle());
-			tvText.setText(bulletin.getText());
-			tvCity.setText(Cities.getName(bulletin.getCity_id()));
+			tvTitle.setText(bulletin.getsTitle());
+			tvText.setText(bulletin.getsText());
+			tvCity.setText(Cities.getName(bulletin.getIntCity_id()));
 			String categories = "";
-			for (int i : bulletin.getCategories()) {
+			for (int i : bulletin.getListCategories()) {
 				categories += Categories.getName(i) + " ";
 			}
 			tvCategories.setText(categories);
 
-			tvContactName.setText(bulletin.getContact().getName() + " " + bulletin.getContact().getLastName());
-			tvContactPhone.setText(bulletin.getContact().getPhone());
-			tvContactEmail.setText(bulletin.getContact().getEmail());
+			tvContactName.setText(bulletin.getBcBulletinContact().getName() + " " + bulletin.getBcBulletinContact().getLastName());
+			tvContactPhone.setText(bulletin.getBcBulletinContact().getPhone());
+			tvContactEmail.setText(bulletin.getBcBulletinContact().getEmail());
 
-			tvDate.setText(bulletin.getDate().toString());
-			tvPrice.setText(String.valueOf(bulletin.getPrice()));
-			if (bulletin.isState()) {
+			tvDate.setText(bulletin.getdBulletinDate().toString());
+			tvPrice.setText(String.valueOf(bulletin.getfPrice()));
+			if (bulletin.isbState()) {
 				tvState.setText(getString(R.string.itemNew));
 			} else {
 				tvState.setText(getString(R.string.itemUsed));
@@ -107,7 +107,7 @@ public class BBDetailedActivity extends Activity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		/*Buttons allow only if user is create item*/
-		if (bulletin.getContact_uid().equals(Contact.getUid())) {
+		if (bulletin.getIntContact_uid().equals(Contact.getUid())) {
 			miEdit.setVisible(true);
 			miDelete.setVisible(true);
 		} else {
