@@ -3,43 +3,44 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
             android:id="@+id/menubbgridactivityUpdate"
-            android:icon="@android:drawable/ic_menu_rotate"
+            android:icon="@drawable/refresh"
             android:showAsAction="always"
             android:title="@string/BBMainUpdate">
     </item>
     <item
             android:id="@+id/menubbgridactivityCategory"
+            android:icon="@drawable/category_filter"
             android:showAsAction="always|withText"
             android:title="@string/BBMainCategories">
     </item>
     <item
             android:id="@+id/menubbgridactivityCity"
-            android:icon="@android:drawable/ic_menu_call"
+            android:icon="@drawable/city_filter"
             android:showAsAction="ifRoom|withText"
             android:title="@string/BBMainCity">
     </item>
     <item
             android:id="@+id/menubbgridactivityResetFilters"
-            android:icon="@android:drawable/ic_menu_info_details"
+
             android:showAsAction="ifRoom|withText"
             android:visible="false"
             android:title="@string/BBMainNewResetFilters">
     </item>
     <item
             android:id="@+id/menubbgridactivityNewBulletin"
-            android:icon="@android:drawable/ic_menu_info_details"
+            android:icon="@drawable/add"
             android:showAsAction="ifRoom|withText"
             android:title="@string/BBMainNewBulletin">
     </item>
     <item
             android:id="@+id/menubbgridactivityCostFilter"
-            android:icon="@android:drawable/ic_menu_info_details"
+            android:icon="@drawable/cost_filter"
             android:showAsAction="ifRoom|withText"
             android:title="@string/cost">
     </item>
     <item
             android:id="@+id/menubbgridactivitPreferences"
-            android:icon="@android:drawable/ic_menu_info_details"
+            android:icon="@drawable/settings"
             android:showAsAction="ifRoom|withText"
             android:title="@string/preferences">
     </item>
