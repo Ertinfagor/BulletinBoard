@@ -29,33 +29,35 @@ import java.util.concurrent.TimeUnit;
 
 public class BBGridActivity extends Activity {
 	private GridView gvBB;
-	private BBArrayAdapter adapterBB;
-	private MenuItem menuItemRefreshBB;
-	private MenuItem menuItemCategoryBB;
-	private MenuItem menuItemCityBB;
-	private MenuItem menuItemResetFiltersBB;
+	private BBArrayAdapter bbArrayAdapter;
+	private MenuItem miRefreshBB;
+	private MenuItem miCategoryFilterBB;
+	private MenuItem miCityFilterBB;
+	private MenuItem miResetFiltersBB;
 
-	Update updateNow = new Update();
+	ForseUpdate forseUpdateNow = new ForseUpdate();
 
-	ScheduledExecutorService updateBB  = Executors.newSingleThreadScheduledExecutor();
-	private Runnable updateNotifierTask = new Runnable() {
+	ScheduledExecutorService sesPeriodicUpdate = Executors.newSingleThreadScheduledExecutor();
+	private Runnable runUpdateNotifierTask = new Runnable() {
 		public void run() {
-			adapterBB.notifyDataSetChanged();
+			bbArrayAdapter.notifyDataSetChanged();
 		}
 	};
 
-	private Runnable periodicSyncTask = new Runnable() {
+	private Runnable runPeriodicUpdateTask = new Runnable() {
 		@Override
 		public void run() {
 			try {
 				Bulletins.getBulletins(Constants.URL);
+				Categories.update(Constants.URL);
+				Cities.update(Constants.URL);
 
-				if (adapterBB != null) {
-					runOnUiThread(updateNotifierTask);
+				if (bbArrayAdapter != null) {
+					runOnUiThread(runUpdateNotifierTask);
 				}
 			} catch (Exception e) {
 				Log.e(Constants.LOG_TAG, "startSyncingBulletinBoard Error bulletins update from server: " + e.toString());
-				Toast.makeText(getApplicationContext(),getString(R.string.ErrorConnectToServer), Toast.LENGTH_LONG).show();
+
 			}
 		}
 	};
@@ -64,19 +66,19 @@ public class BBGridActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_bbgrid);
-		getActionBar().setHomeButtonEnabled(true);
+		sesPeriodicUpdate.scheduleWithFixedDelay(runPeriodicUpdateTask, 0, Constants.UPDATE_INTERVAL, TimeUnit.SECONDS);
 		getActionBar().setTitle("");
 
 		Images.init();
 
 
 		gvBB = (GridView) findViewById(R.id.gridView);
-		adapterBB = new BBArrayAdapter(this, R.layout.grid_layout);
+		bbArrayAdapter = new BBArrayAdapter(this, R.layout.grid_layout);
 
 
-		MainSync.syncAll();
+		//MainSync.syncAll();
 
-		gvBB.setAdapter(adapterBB);
+		gvBB.setAdapter(bbArrayAdapter);
 
 
 		if (!Contact.init(this)) {
@@ -85,7 +87,7 @@ public class BBGridActivity extends Activity {
 		}
 
 
-		updateBB.scheduleWithFixedDelay(periodicSyncTask, 0, 60, TimeUnit.SECONDS);
+
 
 		gvBB.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -101,7 +103,7 @@ public class BBGridActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		adapterBB.notifyDataSetChanged();
+		bbArrayAdapter.notifyDataSetChanged();
 
 		try {
 
@@ -117,8 +119,7 @@ public class BBGridActivity extends Activity {
 			Log.e(Constants.LOG_TAG, "GetIntent error: " + e.toString());
 		}
 		try {
-			Update updateNow = new Update();
-			updateNow.execute();
+			new ForseUpdate().execute();
 		}catch (Exception e){
 			Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 		}
@@ -134,16 +135,16 @@ public class BBGridActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		updateBB.shutdown();
+		sesPeriodicUpdate.shutdown();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_bbgrid, menu);
-		menuItemRefreshBB = menu.findItem(R.id.menubbgridactivityUpdate);
-		menuItemCategoryBB = menu.findItem(R.id.menubbgridactivityCategory);
-		menuItemCityBB = menu.findItem(R.id.menubbgridactivityCity);
-		menuItemResetFiltersBB = menu.findItem(R.id.menubbgridactivityResetFilters);
+		miRefreshBB = menu.findItem(R.id.menubbgridactivityUpdate);
+		miCategoryFilterBB = menu.findItem(R.id.menubbgridactivityCategory);
+		miCityFilterBB = menu.findItem(R.id.menubbgridactivityCity);
+		miResetFiltersBB = menu.findItem(R.id.menubbgridactivityResetFilters);
 
 		return true;
 	}
@@ -152,82 +153,81 @@ public class BBGridActivity extends Activity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 
 		if (Bulletins.getCityFilterId() != -1) {
-			menuItemCityBB.setTitle(Cities.getName(Bulletins.getCityFilterId()));
+			miCityFilterBB.setTitle(Cities.getName(Bulletins.getCityFilterId()));
 		}
 		if (Bulletins.getCategoryFilterId() != -1) {
-			menuItemCategoryBB.setTitle(Categories.getName(Bulletins.getCategoryFilterId()));
+			miCategoryFilterBB.setTitle(Categories.getName(Bulletins.getCategoryFilterId()));
 		}
 
 		if (Bulletins.getFilter()!="?"){
-			menuItemResetFiltersBB.setVisible(true);
+			miResetFiltersBB.setVisible(true);
 		}
 		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		boolean ret;
+		boolean boolReturn;
 		Intent intent;
 		switch (item.getItemId()) {
 			case R.id.menubbgridactivityCategory:
 				intent = new Intent(this, CategoriesActivity.class);
 				startActivity(intent);
-				ret = true;
+				boolReturn = true;
 				break;
 			case R.id.menubbgridactivityCity:
 				intent = new Intent(this, CitiesActivity.class);
 				startActivity(intent);
-				ret = true;
+				boolReturn = true;
 				break;
 			case R.id.menubbgridactivityNewBulletin:
 				intent = new Intent(getApplicationContext(), AddBulletinActivity.class);
 				startActivity(intent);
-				ret = true;
+				boolReturn = true;
 				break;
 			case R.id.menubbgridactivityUpdate:
 				try {
-					MainSync.syncAll();
+					new ForseUpdate().execute();
 				}catch (Exception e){
 					Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 				}
-				ret = true;
+				boolReturn = true;
 				break;
 			case R.id.menubbgridactivityResetFilters:
 				Bulletins.resetFilter();
 				try {
-					Update updateNow = new Update();
-					updateNow.execute();
+					new ForseUpdate().execute();
 				}catch (Exception e){
 					Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 				}
-				menuItemResetFiltersBB.setVisible(false);
-				menuItemCategoryBB.setTitle(getString(R.string.BBMainCategories));
-				menuItemCityBB.setTitle(getString(R.string.BBMainCity));
-				ret = true;
+				miResetFiltersBB.setVisible(false);
+				miCategoryFilterBB.setTitle(getString(R.string.BBMainCategories));
+				miCityFilterBB.setTitle(getString(R.string.BBMainCity));
+				boolReturn = true;
 				break;
 			case R.id.menubbgridactivityCostFilter:
 				intent = new Intent(getApplicationContext(), CostFilterActivity.class);
 				startActivity(intent);
-				ret = true;
+				boolReturn = true;
 				break;
 			case R.id.menubbgridactivitPreferences:
 				intent = new Intent(getApplicationContext(), PreferencesActivity.class);
 				startActivity(intent);
-				ret = true;
+				boolReturn = true;
 				break;
 			default:
-				ret = super.onOptionsItemSelected(item);
+				boolReturn = super.onOptionsItemSelected(item);
 
 		}
-		return ret;
+		return boolReturn;
 	}
 
 
-	private class Update extends AsyncTask<Void, Void, Void> {
+	private class ForseUpdate extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected void onProgressUpdate(Void... values) {
 			super.onProgressUpdate(values);
-			menuItemRefreshBB.setActionView(R.layout.progressbar_layout);
+			miRefreshBB.setVisible(false);
 		}
 
 		@Override
@@ -238,7 +238,6 @@ public class BBGridActivity extends Activity {
 				Cities.update(Constants.URL);
 			} catch (Exception e) {
 				Log.e(Constants.LOG_TAG, "Can`t get bulletins: " + e.toString());
-				Toast.makeText(getApplicationContext(),getString(R.string.ErrorConnectToServer), Toast.LENGTH_LONG).show();
 			}
 			return null;
 		}
@@ -246,8 +245,8 @@ public class BBGridActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void aVoid) {
 			super.onPostExecute(aVoid);
-			adapterBB.notifyDataSetChanged();
-			menuItemRefreshBB.setActionView(null);
+			bbArrayAdapter.notifyDataSetChanged();
+			miRefreshBB.setVisible(true);
 		}
 	}
 }
