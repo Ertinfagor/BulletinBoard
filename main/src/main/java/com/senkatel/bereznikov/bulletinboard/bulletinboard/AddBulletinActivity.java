@@ -67,6 +67,7 @@ public class AddBulletinActivity extends Activity {
 		spnCategories.setAdapter(adapterCategories);
 
 
+
 		if (getIntent().hasExtra("bulletin")) {
 			Bundle extras = getIntent().getExtras();
 
@@ -77,10 +78,16 @@ public class AddBulletinActivity extends Activity {
 			edPrice.setText(Float.toString(bulletin.getPrice()));
 			cbState.setEnabled(bulletin.isState());
 			spnCity.setSelection(adapterCity.getPosition(Cities.getName((bulletin.getCity_id()))));
-			//spnCategories.setSelection(adapterCategories.getPosition(Categories.getName((bulletin.getCategories()))));
+			String categories = "";
+			for (int id: bulletin.getCategories()){
+				categories += Categories.getName(id);
+			}
+			tvCategories.setText(categories);
 		}
 
 		spnCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				String categoriesString = "";
@@ -146,16 +153,23 @@ public class AddBulletinActivity extends Activity {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		if (resultCode == RESULT_OK) {
-			try {
-				Uri selectedimg = data.getData();
-				bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedimg);
-				ivImage.setImageBitmap(bitmap);
-				ivImage.setScaleType(ImageView.ScaleType.FIT_XY);
-			} catch (Exception e) {
-				Log.e(Constants.LOG_TAG, "Can`t get image from file: " + e.toString());
-			}
+			Thread bitmapwork = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Uri selectedimg = data.getData();
+						bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), selectedimg);
+						Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap,Constants.IMAGE_WIDTH,Constants.IMAGE_HEIHT,false);
+						ivImage.setImageBitmap(scaledBitmap);
+
+					} catch (Exception e) {
+						Log.e(Constants.LOG_TAG, "Can`t get image from file: " + e.toString());
+					}
+				}
+			});
+			bitmapwork.start();
 		}
 	}
 
