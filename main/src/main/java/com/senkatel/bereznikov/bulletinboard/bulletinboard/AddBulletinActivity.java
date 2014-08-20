@@ -38,7 +38,7 @@ public class AddBulletinActivity extends Activity {
 	private ArrayAdapter<String> adapterCity;
 	private ArrayAdapter<String> adapterCategories;
 
-	private Bitmap bitmap = null;
+	private Bitmap bmpImage = null;
 
 	private Bulletin bulletin = new Bulletin();
 
@@ -66,7 +66,6 @@ public class AddBulletinActivity extends Activity {
 		spnCategories.setAdapter(adapterCategories);
 
 
-
 		if (getIntent().hasExtra("bulletin")) {
 			Bundle extras = getIntent().getExtras();
 
@@ -78,7 +77,7 @@ public class AddBulletinActivity extends Activity {
 			cbState.setEnabled(bulletin.isState());
 			spnCity.setSelection(adapterCity.getPosition(Cities.getName((bulletin.getCity_id()))));
 			String categories = "";
-			for (int id: bulletin.getCategories()){
+			for (int id : bulletin.getCategories()) {
 				categories += Categories.getName(id);
 			}
 			tvCategories.setText(categories);
@@ -106,7 +105,8 @@ public class AddBulletinActivity extends Activity {
 			}
 		});
 	}
-	public void onAddBulletinClear(View view){
+
+	public void onAddBulletinClear(View view) {
 		tvCategories.setText("");
 
 	}
@@ -124,12 +124,12 @@ public class AddBulletinActivity extends Activity {
 
 			newBulletin.setTitle(edTitle.getText().toString());
 			newBulletin.setText(edText.getText().toString());
-			newBulletin.setCity_id(Integer.valueOf(Cities.getId((String) spnCity.getSelectedItem())));
+			newBulletin.setCity_id(Cities.getId((String) spnCity.getSelectedItem()));
 			newBulletin.setCategories(categoriesIds);
 			newBulletin.setContact_uid(Contact.getUid());
 			newBulletin.setPrice(Float.valueOf(edPrice.getText().toString()));
 			newBulletin.setState(cbState.isChecked());
-			newBulletin.setImage(bitmap);
+			newBulletin.setImage(bmpImage);
 
 			if (bulletin.getId() != -1) {
 				newBulletin.setId(bulletin.getId());
@@ -158,13 +158,13 @@ public class AddBulletinActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		if (resultCode == RESULT_OK) {
-			Thread bitmapwork = new Thread(new Runnable() {
+			Thread threadBitmapWork = new Thread(new Runnable() {
 				@Override
 				public void run() {
 					try {
-						Uri selectedimg = data.getData();
-						bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), selectedimg);
-						Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap,Constants.IMAGE_WIDTH,Constants.IMAGE_HEIHT,false);
+						Uri uriImagePath = data.getData();
+						bmpImage = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), uriImagePath);
+						Bitmap scaledBitmap = Bitmap.createScaledBitmap(bmpImage, Constants.IMAGE_WIDTH, Constants.IMAGE_HEIHT, false);
 						ivImage.setImageBitmap(scaledBitmap);
 
 					} catch (Exception e) {
@@ -172,7 +172,7 @@ public class AddBulletinActivity extends Activity {
 					}
 				}
 			});
-			bitmapwork.start();
+			threadBitmapWork.start();
 		}
 	}
 
@@ -201,12 +201,12 @@ public class AddBulletinActivity extends Activity {
 				break;
 			case R.id.menuaddbulletinAddCategory:
 				intent = new Intent(getApplicationContext(), CategoryAddActivity.class);
-				startActivityForResult(intent,0);
+				startActivityForResult(intent, 0);
 				ret = true;
 				break;
 			case R.id.menuaddbulletinAddCity:
 				intent = new Intent(getApplicationContext(), CityAddActivity.class);
-				startActivityForResult(intent,0);
+				startActivityForResult(intent, 0);
 				ret = true;
 				break;
 			default:
