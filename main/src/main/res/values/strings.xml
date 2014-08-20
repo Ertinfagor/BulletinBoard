@@ -19,4 +19,6 @@
     <string name="needSetCost">Укажите цену</string>
     <string name="needSetDetail">Укажите детальную информацию</string>
     <string name="needSetTitle">Укажите заголовок</string>
+    <string name="itemNew">Новый</string>
+    <string name="itemUsed">Подержанный</string>
 </resources>

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -33,8 +32,8 @@ public class BBDetailedActivity extends Activity {
 	private TextView tvPrice;
 	private TextView tvState;
 
-	MenuItem meEdit;
-	MenuItem meDelete;
+	MenuItem miEdit;
+	MenuItem miDelete;
 
 	private Bulletin bulletin;
 
@@ -45,7 +44,6 @@ public class BBDetailedActivity extends Activity {
 
 
 		ivImage = (ImageView) findViewById(R.id.ivBBGridActivityDetailed);
-
 		tvTitle = (TextView) findViewById(R.id.edBBDetailedTitle);
 		tvText = (TextView) findViewById(R.id.edBBDetailedText);
 		tvCity = (TextView) findViewById(R.id.edBBDetailedCity);
@@ -82,9 +80,9 @@ public class BBDetailedActivity extends Activity {
 			tvDate.setText(bulletin.getDate().toString());
 			tvPrice.setText(String.valueOf(bulletin.getPrice()));
 			if (bulletin.isState()) {
-				tvState.setText("Новый");
+				tvState.setText(getString(R.string.itemNew));
 			} else {
-				tvState.setText("Подержанный");
+				tvState.setText(getString(R.string.itemUsed));
 			}
 
 
@@ -99,12 +97,10 @@ public class BBDetailedActivity extends Activity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_detailedview, menu);
-		meEdit = menu.findItem(R.id.menuDetailedViewEdit);
-		meDelete = menu.findItem(R.id.menuDetailedViewDelete);
-
-
+	public boolean onCreateOptionsMenu(Menu meActionBar) {
+		getMenuInflater().inflate(R.menu.menu_detailedview, meActionBar);
+		miEdit = meActionBar.findItem(R.id.menuDetailedViewEdit);
+		miDelete = meActionBar.findItem(R.id.menuDetailedViewDelete);
 		return true;
 	}
 
@@ -112,11 +108,11 @@ public class BBDetailedActivity extends Activity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		/*Buttons allow only if user is create item*/
 		if (bulletin.getContact_uid().equals(Contact.getUid())) {
-			meEdit.setVisible(true);
-			meDelete.setVisible(true);
+			miEdit.setVisible(true);
+			miDelete.setVisible(true);
 		} else {
-			meEdit.setVisible(false);
-			meDelete.setVisible(false);
+			miEdit.setVisible(false);
+			miDelete.setVisible(false);
 		}
 
 		return super.onPrepareOptionsMenu(menu);
@@ -147,29 +143,27 @@ public class BBDetailedActivity extends Activity {
 	}
 
 	class BitmapWorkerTaskDetailed extends AsyncTask<Integer, Void, Bitmap> {
-		private final WeakReference<ImageView> imageViewReference;
-		private int id = 0;
+		private final WeakReference<ImageView> wrImageViewReference;
+		private int bulletinId = 0;
 
 		public BitmapWorkerTaskDetailed(ImageView imageView) {
 			// Use a WeakReference to ensure the ImageView can be garbage collected
-			imageViewReference = new WeakReference<ImageView>(imageView);
+			wrImageViewReference = new WeakReference<ImageView>(imageView);
 		}
 
 		// Decode ivImage in background.
 		@Override
 		protected Bitmap doInBackground(Integer... params) {
-			id = params[0];
-			Log.v(Constants.LOG_TAG, "do in background started");
-			return Images.loadImage(id, 100, 100);
+			bulletinId = params[0];
+			return Images.loadImage(bulletinId, Constants.IMAGE_WIDTH, Constants.IMAGE_HEIHT);
 		}
 
 		// Once complete, see if ImageView is still around and set bitmap.
 		@Override
 		protected void onPostExecute(Bitmap bitmap) {
-			if (imageViewReference != null && bitmap != null) {
-				final ImageView imageView = imageViewReference.get();
+			if (wrImageViewReference != null && bitmap != null) {
+				final ImageView imageView = wrImageViewReference.get();
 				if (imageView != null) {
-					Log.v(Constants.LOG_TAG, "ivImage setting");
 					imageView.setImageBitmap(bitmap);
 				}
 			}

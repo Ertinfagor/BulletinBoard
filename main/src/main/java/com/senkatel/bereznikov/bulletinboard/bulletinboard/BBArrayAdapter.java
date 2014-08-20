@@ -62,12 +62,12 @@ public class BBArrayAdapter extends ArrayAdapter<Bulletin> {
 
 
 	class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
-		private final WeakReference<ImageView> ivrImageReference;
+		private final WeakReference<ImageView> wrImageViewReference;
 		private int bulletinId = 0;
 
 		public BitmapWorkerTask(ImageView imageView) {
 			// Use a WeakReference to ensure the ImageView can be garbage collected
-			ivrImageReference = new WeakReference<ImageView>(imageView);
+			wrImageViewReference = new WeakReference<ImageView>(imageView);
 		}
 
 		// Decode image in background.
@@ -80,8 +80,8 @@ public class BBArrayAdapter extends ArrayAdapter<Bulletin> {
 		// Once complete, see if ImageView is still around and set bitmap.
 		@Override
 		protected void onPostExecute(Bitmap bitmap) {
-			if (ivrImageReference != null && bitmap != null) {
-				final ImageView imageView = ivrImageReference.get();
+			if (wrImageViewReference != null && bitmap != null) {
+				final ImageView imageView = wrImageViewReference.get();
 				if (imageView != null) {
 					imageView.setImageBitmap(bitmap);
 				}
