@@ -16,4 +16,7 @@
     <string name="Minimum">Минимум</string>
     <string name="edit">Редактировать</string>
     <string name="delete">Удалить</string>
+    <string name="needSetCost">Укажите цену</string>
+    <string name="needSetDetail">Укажите детальную информацию</string>
+    <string name="needSetTitle">Укажите заголовок</string>
 </resources>

@@ -114,11 +114,11 @@ public class AddBulletinActivity extends Activity {
 	private void post() {
 
 		if (edTitle.getText().toString().trim().equals("")) {
-			edTitle.setError("Укажите заголовок");
+			edTitle.setError(getString(R.string.needSetTitle));
 		} else if (edText.getText().toString().trim().equals("")) {
-			edText.setError("Укажите детальную информацию");
+			edText.setError(getString(R.string.needSetDetail));
 		} else if (edPrice.getText().toString().trim().equals("")) {
-			edPrice.setError("Укажите цену");
+			edPrice.setError(getString(R.string.needSetCost));
 		} else {
 			Bulletin newBulletin = new Bulletin();
 
