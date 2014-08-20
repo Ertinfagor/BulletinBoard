@@ -4,12 +4,15 @@ package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.senkatel.bereznikov.bulletinboard.contacts.BulletinContact;
+import com.senkatel.bereznikov.bulletinboard.contacts.Contact;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
+/*Class implements container for one bulletin entry
+* Class relates to Bulletins */
 public class Bulletin implements Parcelable{
 	public static final Parcelable.Creator<Bulletin> CREATOR = new Parcelable.Creator<Bulletin>() {
 		public Bulletin createFromParcel(Parcel in) {
@@ -20,7 +23,7 @@ public class Bulletin implements Parcelable{
 		}
 	};
 
-	private Bitmap image;
+	private Bitmap image; //Uses only to send bulletin by url and temporary, main images container is Image Class
 	private int id = -1;
 	private String title = null;
 	private String text = null;
@@ -30,36 +33,9 @@ public class Bulletin implements Parcelable{
 	private List<Integer> categories = new ArrayList<Integer>();
 	private boolean state = true;
 	private Date date;
-
-	public Bulletin(int id, String title, String text, int city_id, String contact_uid, float price) {
-		this.id = id;
-		this.title = title;
-		this.text = text;
-		this.city_id = city_id;
-		this.contact_uid = contact_uid;
-		this.price = price;
-	}
-
-	private Bulletin(Parcel parcel) {
-
-		int[] ints = new int[2];
-		String[] strings = new String[3];
-
-		parcel.readIntArray(ints);
-		parcel.readStringArray(strings);
-
-		this.price = parcel.readFloat();
-
-		this.id = ints[0];
-		this.city_id = ints[1];
-
-		this.title = strings[0];
-		this.text = strings[1];
-		this.contact_uid = strings[2];
-		parcel.readList(this.categories,Integer.class.getClassLoader());
+	private BulletinContact contact;
 
 
-	}
 
 	public Bulletin() {
 	}
@@ -76,6 +52,7 @@ public class Bulletin implements Parcelable{
 				'}';
 	}
 
+	/*Getters and setters*/
 	public int getId() {
 		return id;
 	}
@@ -141,10 +118,6 @@ public class Bulletin implements Parcelable{
 	}
 
 	public List<Integer> getCategories() {
-		categories.add(1);
-		categories.add(2);
-		categories.add(3);
-
 		return categories;
 	}
 
@@ -160,6 +133,38 @@ public class Bulletin implements Parcelable{
 		this.categories = categories;
 	}
 
+	public BulletinContact getContact() {
+		return contact;
+	}
+
+	public void setContact(BulletinContact contact) {
+		this.contact = contact;
+	}
+
+	/*Parcable Implementation*/
+	private Bulletin(Parcel parcel) {
+
+		int[] ints = new int[2];
+		String[] strings = new String[3];
+
+		parcel.readIntArray(ints);
+		parcel.readStringArray(strings);
+
+		this.price = parcel.readFloat();
+
+		this.id = ints[0];
+		this.city_id = ints[1];
+
+		this.title = strings[0];
+		this.text = strings[1];
+		this.contact_uid = strings[2];
+		parcel.readList(this.categories,Integer.class.getClassLoader());
+		this.contact = parcel.readParcelable(Contact.class.getClassLoader());
+		this.date = new Date(parcel.readLong());
+
+
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;
@@ -173,6 +178,8 @@ public class Bulletin implements Parcelable{
 		parcel.writeIntArray(ints);
 		parcel.writeStringArray(strings);
 		parcel.writeFloat(this.price);
-		parcel.writeList(categories);
+		parcel.writeList(this.categories);
+		parcel.writeParcelable(this.contact,0);
+		parcel.writeLong(this.date.getTime());
 	}
 }

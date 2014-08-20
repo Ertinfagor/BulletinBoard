@@ -8,12 +8,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
+import com.senkatel.bereznikov.bulletinboard.categories.Categories;
 import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.contacts.Contact;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.Images;
-import com.senkatel.bereznikov.bulletinboard.util.ParseJson;
 
 import java.lang.ref.WeakReference;
 
@@ -21,18 +21,24 @@ import java.lang.ref.WeakReference;
  * Created by Bereznik on 17.08.2014.
  */
 public class BBDetailedActivity extends Activity {
-	private ImageView image;
-	private EditText title;
-	private EditText text;
-	private EditText contact_uid;
-	private EditText price;
-	private Spinner spnCity;
+	private ImageView ivImage;
+	private TextView tvTitle;
+	private TextView tvText;
+	private TextView tvCity;
+	private TextView tvCategories;
+	private TextView tvContactName;
+	private TextView tvContactPhone;
+	private TextView tvContactEmail;
+	private TextView tvDate;
+	private TextView tvPrice;
+	private TextView tvState;
+
 
 	private Bitmap bitmap= null;
 
-	private ArrayAdapter<String>citiesAdapter;
 
-	private boolean isEditable = false;
+
+
 
 	private Bulletin bulletin;
 
@@ -45,50 +51,58 @@ public class BBDetailedActivity extends Activity {
 
 
 
-		citiesAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_layout,Cities.getCitiesList());
-		citiesAdapter.setDropDownViewResource( R.layout.spinner_layout);
+		ivImage =(ImageView)findViewById(R.id.ivBBGridActivityDetailed);
 
-		title = (EditText)findViewById(R.id.edBBDetailedTitle);
-		text = (EditText)findViewById(R.id.edBBDetailedText);
-		contact_uid = (EditText)findViewById(R.id.edBBDetailedContact);
-		price = (EditText)findViewById(R.id.edBBDetailedPrice);
-		spnCity = (Spinner)findViewById(R.id.spnBBDetailedCity);
-		image =(ImageView)findViewById(R.id.ivBBGridActivityDetailed);
+		tvTitle = (TextView)findViewById(R.id.edBBDetailedTitle);
+		tvText = (TextView)findViewById(R.id.edBBDetailedText);
+		tvCity = (TextView)findViewById(R.id.edBBDetailedCity);
+		tvCategories = (TextView)findViewById(R.id.edBBDetailedCategories);
+		tvContactName = (TextView)findViewById(R.id.edBBDetailedContactName);
+		tvContactPhone = (TextView)findViewById(R.id.edBBDetailedContactPhone);
+		tvContactEmail = (TextView)findViewById(R.id.edBBDetailedContactEmail);
+		tvDate = (TextView)findViewById(R.id.edBBDetailedDate);
+		tvPrice = (TextView)findViewById(R.id.edBBDetailedPrice);
+		tvState = (TextView)findViewById(R.id.edBBDetailedState);
 
-		//sync tesa = new sync();
-		//tesa.execute();
 
-		spnCity.setAdapter(citiesAdapter);
-		spnCity.setPrompt("Title");
-		spnCity.setSelection(0);
+
+
+
 
 		if (getIntent().hasExtra("bulletin")){
 			Bundle extras = getIntent().getExtras();
-			isEditable = true;
+
 			bulletin = extras.getParcelable("bulletin");
-			Log.v(Constants.LOG_TAG,"Image loading started");
-			BitmapWorkerTaskDetailed loadImage = new BitmapWorkerTaskDetailed(image);
+
+			BitmapWorkerTaskDetailed loadImage = new BitmapWorkerTaskDetailed(ivImage);
 			loadImage.execute(bulletin.getId());
 
-			title.setText(bulletin.getTitle());
-			text.setText(bulletin.getText());
-			contact_uid.setText(bulletin.getContact_uid());
-			spnCity.setSelection(citiesAdapter.getPosition(Cities.getName((bulletin.getCity_id()))));
-			price.setText(Float.toString(bulletin.getPrice()));
+			tvTitle.setText(bulletin.getTitle());
+			tvText.setText(bulletin.getText());
+			tvCity.setText(Cities.getName(bulletin.getCity_id()));
+			String categories = "";
+			for (int i : bulletin.getCategories()){
+				categories += Categories.getName(i)+ " ";
+			}
+			tvCategories.setText(categories);
 
-			title.setEnabled(false);
-			text.setEnabled(false);
-			spnCity.setEnabled(false);
-			contact_uid.setEnabled(false);
-			price.setEnabled(false);
+			tvContactName.setText(bulletin.getContact().getName() + " " + bulletin.getContact().getLastName() );
+			tvContactPhone.setText(bulletin.getContact().getPhone());
+			tvContactEmail.setText(bulletin.getContact().getEmail());
+
+			tvDate.setText(bulletin.getDate().toString());
+			tvPrice.setText(String.valueOf(bulletin.getPrice()));
+			if (bulletin.isState()){
+				tvState.setText("Новый");
+			}else {
+				tvState.setText("Подержанный");
+			}
+
 
 			if (bulletin.getContact_uid().equals(Contact.getUid())){
 
-				title.setEnabled(true);
-				text.setEnabled(true);
-				spnCity.setEnabled(true);
-				contact_uid.setEnabled(true);
-				price.setEnabled(true);
+
+
 			}
 		}else {
 
@@ -100,57 +114,10 @@ public class BBDetailedActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (getIntent().hasExtra("city")) {
-			spnCity.setSelection(citiesAdapter.getPosition(Cities.getName(getIntent().getIntExtra("city", -1))));
 
-
-			Log.v(Constants.LOG_TAG, "Filter city " + Bulletins.getFilter());
-		}/* else if (getIntent().hasExtra("category")) {
-			getIntent().getIntExtra("category", -1));
-			Log.v(Constants.LOG_TAG, "Filter category " + Bulletins.getFilter());
-		}*/
 	}
 
-	public void onBBDetailedOk(View view){
 
-		if( title.getText().toString().trim().equals(""))
-		{
-			title.setError( "Укажите заголовок" );
-		}else if ( text.getText().toString().trim().equals(""))
-		{
-			text.setError( "Укажите детальную информацию" );
-		}else if ( price.getText().toString().trim().equals(""))
-		{
-			price.setError("Укажите цену");
-		}else {
-			Bulletin newBulletin =new Bulletin();
-
-			newBulletin.setTitle(title.getText().toString());
-			newBulletin.setText(text.getText().toString());
-			newBulletin.setCity_id(Integer.valueOf(Cities.getId((String) spnCity.getSelectedItem())));
-			newBulletin.setContact_uid(Contact.getUid());
-			newBulletin.setPrice(Float.valueOf(price.getText().toString()));
-
-			if (isEditable){
-				newBulletin.setId(bulletin.getId());
-					Bulletins.putBulletin(newBulletin);
-
-			}else {
-				Bulletins.postBulletin(newBulletin);
-
-			}
-
-			Intent intent = new Intent(this, BBGridActivity.class);
-			startActivity(intent);
-
-		}
-	}
-	public void onBBDetailedDelete(View view){
-
-		Bulletins.deleteBulletin(bulletin);
-		Intent intent = new Intent(this, BBGridActivity.class);
-		startActivity(intent);
-	}
 
 	class BitmapWorkerTaskDetailed extends AsyncTask<Integer, Void, Bitmap> {
 		private final WeakReference<ImageView> imageViewReference;
@@ -161,7 +128,7 @@ public class BBDetailedActivity extends Activity {
 			imageViewReference = new WeakReference<ImageView>(imageView);
 		}
 
-		// Decode image in background.
+		// Decode ivImage in background.
 		@Override
 		protected Bitmap doInBackground(Integer... params) {
 			id = params[0];
@@ -175,7 +142,7 @@ public class BBDetailedActivity extends Activity {
 			if (imageViewReference != null && bitmap != null) {
 				final ImageView imageView = imageViewReference.get();
 				if (imageView != null) {
-					Log.v(Constants.LOG_TAG,"image setting");
+					Log.v(Constants.LOG_TAG,"ivImage setting");
 					imageView.setImageBitmap(bitmap);
 				}
 			}

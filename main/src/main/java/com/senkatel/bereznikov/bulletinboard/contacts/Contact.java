@@ -3,6 +3,8 @@ package com.senkatel.bereznikov.bulletinboard.contacts;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.util.Log;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
@@ -10,8 +12,10 @@ import com.senkatel.bereznikov.bulletinboard.util.ParseJson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
 
-public class Contact {
+
+public class Contact  {
 
 	private static String name = "";
 	private static String lastName = "";
@@ -163,5 +167,7 @@ public static boolean init(Context context){
 		});
 		thread.start();
 	}
+
+
 
 }

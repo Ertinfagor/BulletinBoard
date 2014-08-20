@@ -2,14 +2,14 @@ package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 
 import android.content.Context;
 import android.util.Log;
+import com.senkatel.bereznikov.bulletinboard.contacts.BulletinContact;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
-import com.senkatel.bereznikov.bulletinboard.util.MainSync;
 import com.senkatel.bereznikov.bulletinboard.util.ParseJson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -28,8 +28,8 @@ public class Bulletins {
 	private static int citiesFilterId = -1;
 	private static String costFilterMax = "";
 	private static String costFilterMin = "";
-	private static float costFilterMaxVale = -1;
-	private static float costFilterMinVale = -1;
+	private static float costFilterMaxValue = -1;
+	private static float costFilterMinValue = -1;
 
 
 
@@ -63,8 +63,34 @@ public class Bulletins {
 				bulletin.setText(jsonBulletin.getString("text"));
 				bulletin.setCity_id(jsonBulletin.getInt("city_id"));
 				bulletin.setContact_uid(jsonBulletin.getString("contact_uid"));
+				/*Parse contact object*/
+				JSONObject jsonObjectContact = jsonBulletin.getJSONObject("contact");
+				BulletinContact bulletinContact = new BulletinContact();
+				bulletinContact.setName(jsonObjectContact.getString("name"));
+				bulletinContact.setLastName(jsonObjectContact.getString("lastname"));
+				bulletinContact.setEmail(jsonObjectContact.getString("email"));
+				bulletinContact.setPhone(jsonObjectContact.getString("phone"));
+				bulletinContact.setUid(jsonObjectContact.getString("uid"));
+				bulletin.setContact(bulletinContact);
+				/*Parse categories array*/
+				JSONArray jsonArrayCategories = jsonBulletin.getJSONArray("categories");
+				int k = jsonArrayCategories.length();
+				List<Integer> listCategories = new ArrayList<Integer>();
+				for (int j=0 ; j<k; j++){
+					listCategories.add(jsonArrayCategories.getInt(j));
+				}
+				bulletin.setCategories(listCategories);
+				/*Parse int to bool*/
+				if(jsonBulletin.getInt("state")==0){
+					bulletin.setState(true);
+				}else {
+					bulletin.setState(false);
+				}
 				bulletin.setPrice(jsonBulletin.getLong("price"));
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+				/*Parse date*/
+				SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATEFORMAT);
+				bulletin.setDate(sdf.parse(jsonBulletin.getString("date")));
+
 
 				tempBulletins.add(bulletin);
 			}
@@ -114,7 +140,7 @@ public class Bulletins {
 	public static void setFilterCostMax(Float costMax){
 		costFilterMax = "";
 		costFilterMax ="pricemore="+costMax;
-		costFilterMaxVale = costMax;
+		costFilterMaxValue = costMax;
 		buildFilter();
 
 	}
@@ -122,7 +148,7 @@ public class Bulletins {
 	public static void setFilterCostMin(Float costMin){
 		costFilterMin = "";
 		costFilterMin ="priceless="+costMin;
-		costFilterMinVale = costMin;
+		costFilterMinValue = costMin;
 		buildFilter();
 
 	}
@@ -148,6 +174,7 @@ public class Bulletins {
 			filter += costFilterMin;
 
 		}
+		Log.v(Constants.LOG_TAG,"Filter Test: " + filter);
 	}
 
 
@@ -155,8 +182,12 @@ public class Bulletins {
 		filter = "?";
 		categoriesFilter=null;
 		citiesFilter=null;
+		costFilterMax=null;
+		costFilterMin=null;
 		categoriesFilterId = -1;
 		citiesFilterId = -1;
+		costFilterMaxValue = -1;
+		costFilterMinValue = -1;
 
 
 	}
@@ -178,6 +209,12 @@ public class Bulletins {
 					postJsonObj.put("city_id", bulletin.getCity_id());
 					postJsonObj.put("contact_uid", bulletin.getContact_uid());
 					postJsonObj.put("price", bulletin.getPrice());
+					/*convert bool to int*/
+					if (bulletin.isState()) {
+						postJsonObj.put("state", 1);
+					}else{
+						postJsonObj.put("state", 0);
+					}
 
 					JSONArray categories = new JSONArray();
 					List<Integer> categoriesIds = bulletin.getCategories();
@@ -212,7 +249,12 @@ public class Bulletins {
 					putJsonObj.put("city_id", bulletin.getCity_id());
 					putJsonObj.put("contact_uid", bulletin.getContact_uid());
 					putJsonObj.put("price", bulletin.getPrice());
-
+					/*convert bool to int*/
+					if (bulletin.isState()) {
+						putJsonObj.put("state", 1);
+					}else{
+						putJsonObj.put("state", 0);
+					}
 
 					JSONArray categories = new JSONArray();
 					List<Integer> categoriesIds = bulletin.getCategories();
@@ -256,5 +298,13 @@ public class Bulletins {
 
 	public static int getCityFilterId() {
 		return citiesFilterId;
+	}
+
+	public static float getCostFilterMaxValue() {
+		return costFilterMaxValue;
+	}
+
+	public static float getCostFilterMinValue() {
+		return costFilterMinValue;
 	}
 }
