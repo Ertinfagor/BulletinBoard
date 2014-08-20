@@ -18,7 +18,12 @@ import com.senkatel.bereznikov.bulletinboard.util.Images;
 
 import java.lang.ref.WeakReference;
 
-
+/**
+ * Class BBDetailedActivity
+ * Implements interface of Detailed view Bulletin
+ * If userId is the same as Creator of viewed bulletin additional buttons Edit/Delete set visible
+ * Implements Load image on separate thread
+ */
 public class BBDetailedActivity extends Activity {
 	private ImageView ivImage;
 	private TextView tvTitle;

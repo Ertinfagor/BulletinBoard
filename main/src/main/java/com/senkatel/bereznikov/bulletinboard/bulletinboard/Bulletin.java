@@ -11,8 +11,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/*Class implements container for one bulletin entry
-* Class relates to Bulletins */
+/**Class Bulletin
+ * Class is Parcelable
+ * Implements container for one bulletin entry
+* Class relates to Bulletins
+*/
+
 public class Bulletin implements Parcelable{
 	public static final Parcelable.Creator<Bulletin> CREATOR = new Parcelable.Creator<Bulletin>() {
 		public Bulletin createFromParcel(Parcel in) {
@@ -53,6 +57,8 @@ public class Bulletin implements Parcelable{
 	}
 
 	/*Getters and setters*/
+
+
 	public int getIntBulletinId() {
 		return intBulletinId;
 	}

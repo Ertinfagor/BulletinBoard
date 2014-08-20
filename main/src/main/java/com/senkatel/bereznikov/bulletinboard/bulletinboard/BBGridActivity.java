@@ -25,6 +25,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Main Interface Class BBGridActivity GridView that show all loaded Bulletins
+ * Run periodical update task by ScheduledExecutorService in separate thread
+ * Have force update task running in separate thread
+ * Change names of filter buttons
+ */
 public class BBGridActivity extends Activity {
 	private GridView gvBB;
 	private BBArrayAdapter bbArrayAdapter;
@@ -153,7 +159,7 @@ public class BBGridActivity extends Activity {
 			miCategoryFilterBB.setTitle(Categories.getName(Bulletins.getCategoryFilterId()));
 		}
 
-		if (Bulletins.getFilter() != "?") {
+		if (Bulletins.getsFilter() != "?") {
 			miResetFiltersBB.setVisible(true);
 		}
 		return super.onPrepareOptionsMenu(menu);
@@ -200,7 +206,7 @@ public class BBGridActivity extends Activity {
 				boolReturn = true;
 				break;
 			case R.id.menubbgridactivityCostFilter:
-				intent = new Intent(getApplicationContext(), CostFilterActivity.class);
+				intent = new Intent(getApplicationContext(), PriceFilterActivity.class);
 				startActivity(intent);
 				boolReturn = true;
 				break;

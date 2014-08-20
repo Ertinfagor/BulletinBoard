@@ -6,8 +6,11 @@ import android.view.View;
 import android.widget.EditText;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 
-
-public class CostFilterActivity extends Activity {
+/**
+ * Class PriceFilterActivity
+ * Implements simple interface for filtering by Max/Min price
+ */
+public class PriceFilterActivity extends Activity {
 	private EditText edMax;
 	private EditText edMin;
 
@@ -24,11 +27,11 @@ public class CostFilterActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (Bulletins.getCostFilterMaxValue() != -1) {
-			edMax.setText(String.valueOf(Bulletins.getCostFilterMaxValue()));
+		if (Bulletins.getfPriceFilterMaxValue() != -1) {
+			edMax.setText(String.valueOf(Bulletins.getfPriceFilterMaxValue()));
 		}
-		if (Bulletins.getCostFilterMinValue() != -1) {
-			edMin.setText(String.valueOf(Bulletins.getCostFilterMinValue()));
+		if (Bulletins.getfPriceFilterMinValue() != -1) {
+			edMin.setText(String.valueOf(Bulletins.getfPriceFilterMinValue()));
 		}
 	}
 
@@ -50,10 +53,10 @@ public class CostFilterActivity extends Activity {
 			max = min;
 		}
 		if (min != -1) {
-			Bulletins.setFilterCostMin(min);
+			Bulletins.setFilterPriceMin(min);
 		}
 		if (max != -1) {
-			Bulletins.setFilterCostMax(max);
+			Bulletins.setFilterPriceMax(max);
 
 		}
 		finish();

@@ -14,22 +14,28 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Created by Bereznik on 16.08.2014.
+ * Class Bulletins
+ * Implements collection of Bulletins
+ * Implements Filter
+ * Implements GET request
+ * Implements POST request
+ * Implements DELETE request
+ *
  */
 public class Bulletins {
-	private static CopyOnWriteArrayList<Bulletin> bulletins = new CopyOnWriteArrayList<Bulletin>();
+	private static CopyOnWriteArrayList<Bulletin> arrayBulletins = new CopyOnWriteArrayList<Bulletin>();
 
-	private static CopyOnWriteArrayList<Integer> indexes = new CopyOnWriteArrayList<Integer>();
+	private static CopyOnWriteArrayList<Integer> arrayIndexes = new CopyOnWriteArrayList<Integer>();
 	private Context context;
-	private static String filter = "?";
-	private static String categoriesFilter = "";
-	private static String citiesFilter = "";
-	private static int categoriesFilterId = -1;
-	private static int citiesFilterId = -1;
-	private static String costFilterMax = "";
-	private static String costFilterMin = "";
-	private static float costFilterMaxValue = -1;
-	private static float costFilterMinValue = -1;
+	private static String sFilter = "?";
+	private static String sCategoriesFilter = "";
+	private static String sCitiesFilter = "";
+	private static int iCategoriesFilterId = -1;
+	private static int iCitiesFilterId = -1;
+	private static String sPriceFilterMax = "";
+	private static String sPriceFilterMin = "";
+	private static float fPriceFilterMaxValue = -1;
+	private static float fPriceFilterMinValue = -1;
 
 
 
@@ -37,12 +43,160 @@ public class Bulletins {
 		this.context = context;
 	}
 
+	/**
+	 *
+	 * @param id get bulletin from bulletins list
+	 * @return Bulletin
+	 */
+	public static Bulletin get(int id){
+		if (id >= 0) {
+			try {
+				return arrayBulletins.get(id);
+			} catch (Exception e) {
+				Log.e(Constants.LOG_TAG, "Bulletins get error: " + e.toString());
+				return new Bulletin();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Used for GridView
+	 * @return List of all Bulletins
+	 */
+	public static  CopyOnWriteArrayList<Bulletin> getAll(){
+		return Bulletins.arrayBulletins;
+
+	}
+
+	/**
+	 * Add to Filter string substring of category filter, and save appropriate value for future usage
+	 * @param categoriesId Id of filtered category
+	 */
+	public static void setFilterCategories(int categoriesId){
+		sCategoriesFilter = "";
+		sCategoriesFilter = "category=" + categoriesId;
+		iCategoriesFilterId = categoriesId;
+		buildFilter();
+
+
+	}
+
+	/**
+	 * Add to Filter string substring of city filter, and save appropriate value for future usage
+	 * @param cityId  Id of filtered city
+	 */
+	public static void setFilterCity(int cityId){
+		sCitiesFilter = "";
+		sCitiesFilter = "city="+cityId;
+		iCitiesFilterId = cityId;
+		buildFilter();
+
+	}
+
+	/**
+	 *  Add to Filter string substring of maximum price filter, and save appropriate value for future usage
+	 * @param costMax value of maximum price
+	 */
+	public static void setFilterPriceMax(Float costMax){
+		sPriceFilterMax = "";
+		sPriceFilterMax ="pricemore="+costMax;
+		fPriceFilterMaxValue = costMax;
+		buildFilter();
+
+	}
+
+	/**
+	 * Add to Filter string substring of minimum price filter, and save appropriate value for future usage
+	 * @param costMin value of minimum price
+	 */
+	public static void setFilterPriceMin(Float costMin){
+		sPriceFilterMin = "";
+		sPriceFilterMin ="priceless="+costMin;
+		fPriceFilterMinValue = costMin;
+		buildFilter();
+
+	}
+
+	/**
+	 * Put together all filter substrings and form request string for server
+	 */
+	private static void buildFilter(){
+		sFilter = "?";
+		if (!sCategoriesFilter.equals("")){
+			sFilter += sCategoriesFilter;
+
+		}
+		if (!sCitiesFilter.equals("")){
+			if (!sFilter.endsWith("?")){
+				sFilter +="&";}
+			sFilter += sCitiesFilter;
+
+		}
+		if (!sPriceFilterMax.equals("")){
+			if (!sFilter.endsWith("?")){
+				sFilter +="&";}
+			sFilter += sPriceFilterMax;
+
+		}
+		if (!sPriceFilterMin.equals("")){
+			if (!sFilter.endsWith("?")){
+				sFilter +="&";}
+			sFilter += sPriceFilterMin;
+
+		}
+		Log.v(Constants.LOG_TAG,"Filter Test: " + sFilter);
+	}
+
+	/**
+	 * return all filter values to its default settings
+	 */
+	public static void resetFilter(){
+		sFilter = "?";
+		sCategoriesFilter =null;
+		sCitiesFilter =null;
+		sPriceFilterMax =null;
+		sPriceFilterMin =null;
+		iCategoriesFilterId = -1;
+		iCitiesFilterId = -1;
+		fPriceFilterMaxValue = -1;
+		fPriceFilterMinValue = -1;
+
+
+	}
+
+	public static String getsFilter(){
+		return sFilter;
+	}
+
+	public static int getCategoryFilterId() {
+		return iCategoriesFilterId;
+	}
+
+	public static int getCityFilterId() {
+		return iCitiesFilterId;
+	}
+
+	public static float getfPriceFilterMaxValue() {
+		return fPriceFilterMaxValue;
+	}
+
+	public static float getfPriceFilterMinValue() {
+		return fPriceFilterMinValue;
+	}
+
+
+	/**
+	 * Forms GET request from base address + directory bulletin and filter string and call ParseJson Class to get JSON Array
+	 * Parse JSON Array and set values for bulletins
+	 * Must use Thread or AsyncTask to Implement this method
+	 * @param url base address of server
+	 */
 	public static void getBulletins(String url) {
 
 		url += Constants.BULLETIN;
-		if (!filter.equals("?")){
-			url+=filter;
-
+		if (!sFilter.equals("?")){
+			url+= sFilter;
 		}
 
 		CopyOnWriteArrayList<Bulletin> tempBulletins = new CopyOnWriteArrayList<Bulletin>();
@@ -56,7 +210,7 @@ public class Bulletins {
 			for (int i = 0; i < l; i++) {
 				JSONObject jsonBulletin = jsonArrayBulletins.getJSONObject(i);
 				index = jsonBulletin.getInt("Id");
-				indexes.add(index);
+				arrayIndexes.add(index);
 				Bulletin bulletin = new Bulletin();
 				bulletin.setIntBulletinId(index);
 				bulletin.setsTitle(jsonBulletin.getString("title"));
@@ -97,105 +251,19 @@ public class Bulletins {
 		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "getBulletins error: " + e.toString());
 		}
-		synchronized (bulletins){
-			bulletins.clear();
-			bulletins.addAll(tempBulletins);
+		synchronized (arrayBulletins){
+			arrayBulletins.clear();
+			arrayBulletins.addAll(tempBulletins);
 
 		}
 	}
 
-	public static Bulletin get(int id){
-		if (id >= 0) {//TODO Подумать как решить не через exception
-			try {
-				return bulletins.get(id);
-			} catch (Exception e) {
-				Log.e(Constants.LOG_TAG, "Bulletins get error: " + e.toString());
-				return new Bulletin();
-			}
-		}
-		return null;
-	}
-
-	public static  CopyOnWriteArrayList<Bulletin> getAll(){
-		return Bulletins.bulletins;
-
-	}
-
-	public static void setFilterCategories(int categoriesId){
-		categoriesFilter = "";
-		categoriesFilter = "category=" + categoriesId;
-		categoriesFilterId = categoriesId;
-		buildFilter();
-
-
-	}
-	public static void setFilterCity(int cityId){
-		citiesFilter = "";
-		citiesFilter = "city="+cityId;
-		citiesFilterId = cityId;
-		buildFilter();
-
-	}
-
-	public static void setFilterCostMax(Float costMax){
-		costFilterMax = "";
-		costFilterMax ="pricemore="+costMax;
-		costFilterMaxValue = costMax;
-		buildFilter();
-
-	}
-
-	public static void setFilterCostMin(Float costMin){
-		costFilterMin = "";
-		costFilterMin ="priceless="+costMin;
-		costFilterMinValue = costMin;
-		buildFilter();
-
-	}
-
-	private static void buildFilter(){
-		filter = "?";
-		if (!categoriesFilter.equals("")){
-			filter+=categoriesFilter;
-
-		}
-		if (!citiesFilter.equals("")){
-			if (!filter.endsWith("?")){filter+="&";}
-			filter += citiesFilter;
-
-		}
-		if (!costFilterMax.equals("")){
-			if (!filter.endsWith("?")){filter+="&";}
-			filter += costFilterMax;
-
-		}
-		if (!costFilterMin.equals("")){
-			if (!filter.endsWith("?")){filter+="&";}
-			filter += costFilterMin;
-
-		}
-		Log.v(Constants.LOG_TAG,"Filter Test: " + filter);
-	}
-
-
-	public static void resetFilter(){
-		filter = "?";
-		categoriesFilter=null;
-		citiesFilter=null;
-		costFilterMax=null;
-		costFilterMin=null;
-		categoriesFilterId = -1;
-		citiesFilterId = -1;
-		costFilterMaxValue = -1;
-		costFilterMinValue = -1;
-
-
-	}
-
-	public static String getFilter(){
-		return filter;
-	}
-
+	/**
+	 * Forms POST request to send new bulletin to server
+	 * Executed on separate thread
+	 * After POST Text data receive ID of bulletin and send image
+	 * @param bulletin bulletin that will sended
+	 */
 	public static void postBulletin(final Bulletin  bulletin) {
 		Thread thread = new Thread(new Runnable() {
 			@Override
@@ -236,6 +304,13 @@ public class Bulletins {
 		});
 		thread.start();
 	}
+
+	/**
+	 * Forms PUT request to send edited bulletin to server
+	 * Executed on separate thread
+	 *
+	 * @param bulletin edited bulletin that will sended
+	 */
 	public static void putBulletin(final Bulletin  bulletin) {
 		Thread thread = new Thread(new Runnable() {
 			@Override
@@ -264,6 +339,8 @@ public class Bulletins {
 
 					putJsonObj.put("categories", categories);
 					ParseJson.putJson(url, putJsonObj);
+					String imageurl = Constants.URL + Constants.BULLETIN + "/" + bulletin.getIntBulletinId() + "/image";
+					ParseJson.postImage(imageurl,bulletin.getBmpImage());
 
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t PUT Category: " + e.toString());
@@ -274,6 +351,11 @@ public class Bulletins {
 		thread.start();
 	}
 
+	/**
+	 * Send DELETE command to server
+	 * Executed on separate thread
+	 * @param bulletin bulletin that's will be deleted
+	 */
 	public static void deleteBulletin(final Bulletin  bulletin) {
 		Thread thread = new Thread(new Runnable() {
 			@Override
@@ -291,20 +373,4 @@ public class Bulletins {
 		thread.start();
 	}
 
-
-	public static int getCategoryFilterId() {
-		return categoriesFilterId;
-	}
-
-	public static int getCityFilterId() {
-		return citiesFilterId;
-	}
-
-	public static float getCostFilterMaxValue() {
-		return costFilterMaxValue;
-	}
-
-	public static float getCostFilterMinValue() {
-		return costFilterMinValue;
-	}
 }

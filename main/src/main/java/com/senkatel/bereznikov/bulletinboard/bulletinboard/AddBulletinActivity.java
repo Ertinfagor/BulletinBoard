@@ -22,6 +22,14 @@ import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Class AddBulletinActivity
+ * Implements interface of Add/Edit Bulletin
+ * Implements ActionBar
+ * Implements Load image on separate thread
+ * Implements Get image from Storage
+ */
 public class AddBulletinActivity extends Activity {
 
 	private ImageView ivImage;
@@ -84,8 +92,6 @@ public class AddBulletinActivity extends Activity {
 		}
 
 		spnCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				String categoriesString = "";

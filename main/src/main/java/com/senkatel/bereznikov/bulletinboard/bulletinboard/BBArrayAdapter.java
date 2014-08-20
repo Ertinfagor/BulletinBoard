@@ -16,7 +16,11 @@ import com.senkatel.bereznikov.bulletinboard.util.Images;
 
 import java.lang.ref.WeakReference;
 
-
+/**
+ * Class BBArrayAdapter
+ * Implements ArrayAdapter for main GridView
+ * Implements Load image on separate thread
+ */
 public class BBArrayAdapter extends ArrayAdapter<Bulletin> {
 	private final Activity actMainContext;
 
