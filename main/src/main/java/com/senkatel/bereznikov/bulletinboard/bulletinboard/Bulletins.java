@@ -8,6 +8,8 @@ import com.senkatel.bereznikov.bulletinboard.util.ParseJson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -20,10 +22,15 @@ public class Bulletins {
 	private static CopyOnWriteArrayList<Integer> indexes = new CopyOnWriteArrayList<Integer>();
 	private Context context;
 	private static String filter = "?";
-	private static String categoriesFilter = null;
-	private static String citiesFilter = null;
+	private static String categoriesFilter = "";
+	private static String citiesFilter = "";
 	private static int categoriesFilterId = -1;
 	private static int citiesFilterId = -1;
+	private static String costFilterMax = "";
+	private static String costFilterMin = "";
+	private static float costFilterMaxVale = -1;
+	private static float costFilterMinVale = -1;
+
 
 
 	public Bulletins(Context context) {
@@ -57,6 +64,8 @@ public class Bulletins {
 				bulletin.setCity_id(jsonBulletin.getInt("city_id"));
 				bulletin.setContact_uid(jsonBulletin.getString("contact_uid"));
 				bulletin.setPrice(jsonBulletin.getLong("price"));
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
 				tempBulletins.add(bulletin);
 			}
 		} catch (Exception e) {
@@ -87,7 +96,7 @@ public class Bulletins {
 	}
 
 	public static void setFilterCategories(int categoriesId){
-		categoriesFilter = null;
+		categoriesFilter = "";
 		categoriesFilter = "category=" + categoriesId;
 		categoriesFilterId = categoriesId;
 		buildFilter();
@@ -95,22 +104,48 @@ public class Bulletins {
 
 	}
 	public static void setFilterCity(int cityId){
-		citiesFilter = null;
+		citiesFilter = "";
 		citiesFilter = "city="+cityId;
 		citiesFilterId = cityId;
 		buildFilter();
 
 	}
 
+	public static void setFilterCostMax(Float costMax){
+		costFilterMax = "";
+		costFilterMax ="pricemore="+costMax;
+		costFilterMaxVale = costMax;
+		buildFilter();
+
+	}
+
+	public static void setFilterCostMin(Float costMin){
+		costFilterMin = "";
+		costFilterMin ="priceless="+costMin;
+		costFilterMinVale = costMin;
+		buildFilter();
+
+	}
+
 	private static void buildFilter(){
 		filter = "?";
-		if (categoriesFilter!=null){
+		if (!categoriesFilter.equals("")){
 			filter+=categoriesFilter;
 
 		}
-		if (citiesFilter!=null){
+		if (!citiesFilter.equals("")){
 			if (!filter.endsWith("?")){filter+="&";}
 			filter += citiesFilter;
+
+		}
+		if (!costFilterMax.equals("")){
+			if (!filter.endsWith("?")){filter+="&";}
+			filter += costFilterMax;
+
+		}
+		if (!costFilterMin.equals("")){
+			if (!filter.endsWith("?")){filter+="&";}
+			filter += costFilterMin;
 
 		}
 	}
@@ -152,7 +187,10 @@ public class Bulletins {
 
 					postJsonObj.put("categories", categories);
 
-					ParseJson.postJson(url, postJsonObj);
+					JSONObject result = ParseJson.postJson(url, postJsonObj);
+					String imageurl = Constants.URL + Constants.BULLETIN + "/" + result.getInt("Id") + "/image";
+					ParseJson.postImage(imageurl,bulletin.getImage());
+
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t POST Category: " + e.toString());
 				}
@@ -184,6 +222,7 @@ public class Bulletins {
 
 					putJsonObj.put("categories", categories);
 					ParseJson.putJson(url, putJsonObj);
+
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t PUT Category: " + e.toString());
 				}

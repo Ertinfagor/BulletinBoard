@@ -2,29 +2,31 @@ package com.senkatel.bereznikov.bulletinboard.contacts;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.ParseJson;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
 public class Contact {
 
-	private static String name;
-	private static String lastName;
-	private static String email;
-	private static String phone;
-	private static String uid;
+	private static String name = "";
+	private static String lastName = "";
+	private static String email = "";
+	private static String phone = "";
+	private static String uid = "";
 	private static Context context;
+	private static boolean exist = false;
 
 
 
 public static boolean init(Context context){
 	Contact.context = context;
-	loadPreferences();
-	return name != null;
+	loadContact();
+	return exist;
 
 }
 
@@ -64,20 +66,23 @@ public static boolean init(Context context){
 		return uid;
 	}
 
+	public static boolean isExist() {
+		return exist;
+	}
+
+	public static void setExist(boolean exist) {
+		Contact.exist = exist;
+	}
+
 	public static void save(){
-		savePreferences();
+		saveContact();
 
 	}
 
-	/*Generate User ID yb checking MAC addres of the device*/
-	private static void generateUid(){
-		WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-		WifiInfo info = manager.getConnectionInfo();
-		uid = info.getMacAddress();
 
-	}
-	private static void savePreferences(){
-		generateUid();
+	private static void saveContact(){
+		uid =  Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+		Log.v(Constants.LOG_TAG,"UID: " + uid);
 		SharedPreferences preferences = context.getSharedPreferences("contact", Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = preferences.edit();
 		editor.putString("name", name);
@@ -86,40 +91,77 @@ public static boolean init(Context context){
 		editor.putString("phone", phone);
 		editor.putString("uid", uid);
 		editor.commit();
+		uploadContact();
+		exist = true;
+
+		Log.v(Constants.LOG_TAG,"Preferences Saved, uid: " + uid);
+	}
+	private static void loadContact(){
+		try {
+			SharedPreferences preferences = context.getSharedPreferences("contact", Context.MODE_PRIVATE);
+			name = preferences.getString("name", null);
+			lastName = preferences.getString("lastName", null);
+			email = preferences.getString("email", null);
+			phone = preferences.getString("phone", null);
+			uid = preferences.getString("uid", null);
+		}catch (Exception e){
+
+			Log.e(Constants.LOG_TAG,"Can`t load preferences: " + e.toString());
+		}
+		try {
+			Log.e(Constants.LOG_TAG,"UID " + uid);
+			if (uid == null) {
+
+				Contact.setExist(false);
+			} else {
+				Contact.setExist(true);
+			}
+		}catch (Exception e){
+
+			Log.e(Constants.LOG_TAG,"Can`t set exist: " + e.toString());
+		}
+
+	}
+
+	public static void uploadContact(){
+
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
+				boolean existInDb = true;
+				try {
+					String getUrl = Constants.URL + Constants.CONTACT;
+					getUrl += "/" + uid;
+					ParseJson.getJson(getUrl);
+
+				}catch (JSONException e1) {
+					existInDb = false;
+				}
+				catch (Exception e){
+					Log.e(Constants.LOG_TAG,"Can`t GET preferences: " + e.toString());
+				}
 				try {
 
-					String url = Constants.URL + Constants.CONTACT;
+					String postUrl = Constants.URL + Constants.CONTACT;
 					JSONObject jsonobj = new JSONObject();
 					jsonobj.put("name", name);
 					jsonobj.put("lastname", lastName);
 					jsonobj.put("email", email);
 					jsonobj.put("phone", phone);
 					jsonobj.put("uid", uid);
-					ParseJson.postJson(url,jsonobj);
+					if (existInDb){
+						postUrl += "/" + uid;
+						ParseJson.putJson(postUrl, jsonobj);
+					}else {
+						ParseJson.postJson(postUrl, jsonobj);
+					}
+					Log.v(Constants.LOG_TAG,"Exist: " + existInDb);
 				}catch (Exception e){
 					Log.e(Constants.LOG_TAG,"Can`t POST preferences: " + e.toString());
 				}
 			}
 		});
 		thread.start();
-
-		Log.v(Constants.LOG_TAG,"Preferences Saved");
 	}
-	private static void loadPreferences(){
-		SharedPreferences preferences = context.getSharedPreferences("contact", Context.MODE_PRIVATE);
-		name =preferences.getString("name",null);
-		lastName=preferences.getString("lastName", null);
-		email=preferences.getString("email", null);
-		phone=preferences.getString("phone", null);
-		uid=preferences.getString("uid", null);
-		Log.v(Constants.LOG_TAG,"Preferences Loaded");
-
-
-	}
-
-
 
 }

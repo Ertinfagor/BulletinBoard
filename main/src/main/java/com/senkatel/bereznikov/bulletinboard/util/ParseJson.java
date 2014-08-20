@@ -33,7 +33,7 @@ import java.io.*;
 public class ParseJson {
 
 /*Get JSON Array from http*/
-	public static JSONArray getJson(String url){
+	public static JSONArray getJson(String url) throws Exception{
 
 		InputStream rawContent = null;
 		String jsonRawString = null;
@@ -61,70 +61,72 @@ public class ParseJson {
 				}
 				rawContent.close();
 				jsonRawString = sb.toString();
+				resultJSONArray = new JSONArray(jsonRawString);
 			} catch (IOException e) {
 				Log.e(Constants.LOG_TAG, "getJson Error parsing string: " + e.toString());
-			}
-			try {
-				resultJSONArray = new JSONArray(jsonRawString);
-
-			} catch (JSONException e) {
-				Log.e(Constants.LOG_TAG, "getJson Error parsing JSON: " + e.toString());
+			} catch (JSONException e1) {
+				Log.e(Constants.LOG_TAG, "getJson Error parsing JSON: " + e1.toString());
+				throw new JSONException(jsonRawString);
+			}catch (Exception e2){
+				Log.e(Constants.LOG_TAG, "getJson Error: " + e2.toString());
 			}
 		}
 		return resultJSONArray;
 
 	}
-	public static JSONObject postJson(String url, JSONObject jsonObject){
+	public static JSONObject postJson(String url, JSONObject jsonObject) throws Exception{
 		JSONObject json = null;
+		String responseText = null;
 		try {
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 			HttpPost httppostreq = new HttpPost(url);
-			String responseText = null;
 			StringEntity se = new StringEntity(jsonObject.toString(),HTTP.UTF_8);
 			se.setContentType("application/json;charset=UTF-8");
-			se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
 			httppostreq.setEntity(se);
 			HttpResponse httpresponse = httpclient.execute(httppostreq);
 			responseText = EntityUtils.toString(httpresponse.getEntity());
 			json = new JSONObject(responseText);
-			Log.v(Constants.LOG_TAG, "POST: " + json.toString());
+		}catch (JSONException e1){
+			throw new JSONException(responseText);
 		} catch (Exception e) {
 			Log.e("log_tag", "POST: " + e.toString());
 		}
 		return json;
 
 	}
-	public static JSONObject putJson(String url, JSONObject jsonObject){
+	public static JSONObject putJson(String url, JSONObject jsonObject)throws Exception{
 		JSONObject json = null;
+		String responseText = null;
 		try {
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 			HttpPut httpputreq = new HttpPut(url);
-			String responseText = null;
-			StringEntity se = new StringEntity(jsonObject.toString(),HTTP.UTF_8);
+			StringEntity se = new StringEntity(jsonObject.toString(), HTTP.UTF_8);
 			se.setContentType("application/json;charset=UTF-8");
-			se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
 			httpputreq.setEntity(se);
 			HttpResponse httpresponse = httpclient.execute(httpputreq);
 			responseText = EntityUtils.toString(httpresponse.getEntity());
 			json = new JSONObject(responseText);
-			Log.v(Constants.LOG_TAG, "PUT: " + json.toString());
+		}catch (JSONException e1){
+			throw new JSONException(responseText);
 		} catch (Exception e) {
 			Log.e("log_tag", "PUT: " + e.toString());
+			throw new JSONException(responseText);
 		}
 		return json;
 
 	}
 
-	public static JSONObject deleteJson(String url){
+	public static JSONObject deleteJson(String url)throws Exception{
 		JSONObject json = null;
+		String responseText = null;
 		try {
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 			HttpDelete httpdeletereq = new HttpDelete(url);
-			String responseText = null;
 			HttpResponse httpresponse = httpclient.execute(httpdeletereq);
 			responseText = EntityUtils.toString(httpresponse.getEntity());
 			json = new JSONObject(responseText);
-			Log.v(Constants.LOG_TAG, "Delete: " + json.toString());
+		}catch (JSONException e1){
+			throw new JSONException(responseText);
 		} catch (Exception e) {
 			Log.e("log_tag", "Delete: " + e.toString());
 		}
@@ -132,7 +134,7 @@ public class ParseJson {
 
 	}
 
-	public static void postImage(String url, Bitmap image){
+	public static void postImage(String url, Bitmap image)throws Exception{
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			image.compress(Bitmap.CompressFormat.JPEG, 75, bos);
@@ -154,7 +156,7 @@ public class ParseJson {
 
 	}
 
-	public static Bitmap getImage(String url){
+	public static Bitmap getImage(String url)throws Exception{
 
 			InputStream rawContent = null;
 			Bitmap resultBitmap = null;

@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
 
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView"
             android:src="@drawable/nonimage"
-            android:minWidth="200dp" android:minHeight="200dp"/>
+            android:minWidth="200dp" android:minHeight="200dp" android:scaleType="fitXY" />
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,26 +72,7 @@
             android:inputType="number"
             />
 
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ok"
-            android:id="@+id/btnBBDetailedOk"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:onClick="onBBDetailedOk"
-            android:layout_alignRight="@+id/imageView"
-            android:layout_alignEnd="@+id/imageView"/>
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Delete"
-            android:id="@+id/btnBBDetailedDelete"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/btnBBDetailedOk"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:onClick="onBBDetailedDelete"/>
+
 
 </RelativeLayout>
+    </ScrollView>

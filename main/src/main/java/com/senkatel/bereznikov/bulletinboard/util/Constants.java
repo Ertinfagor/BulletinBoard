@@ -12,4 +12,6 @@ public interface Constants {
 	public static final String CONTACT = "/contact";
 	public static final boolean NEW = true;
 	public static final boolean EXIST = false;
+	public static final int IMAGE_HEIHT = 100;
+	public static final int IMAGE_WIDTH = 100;
 }

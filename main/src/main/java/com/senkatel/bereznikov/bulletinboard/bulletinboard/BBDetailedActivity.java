@@ -12,7 +12,10 @@ import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.contacts.Contact;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
+import com.senkatel.bereznikov.bulletinboard.util.Images;
 import com.senkatel.bereznikov.bulletinboard.util.ParseJson;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by Bereznik on 17.08.2014.
@@ -24,8 +27,7 @@ public class BBDetailedActivity extends Activity {
 	private EditText contact_uid;
 	private EditText price;
 	private Spinner spnCity;
-	private Button buttonOK;
-	private Button buttonDelete;
+
 	private Bitmap bitmap= null;
 
 	private ArrayAdapter<String>citiesAdapter;
@@ -50,14 +52,11 @@ public class BBDetailedActivity extends Activity {
 		text = (EditText)findViewById(R.id.edBBDetailedText);
 		contact_uid = (EditText)findViewById(R.id.edBBDetailedContact);
 		price = (EditText)findViewById(R.id.edBBDetailedPrice);
-		buttonOK = (Button)findViewById(R.id.btnBBDetailedOk);
-		buttonDelete = (Button)findViewById(R.id.btnBBDetailedDelete);
 		spnCity = (Spinner)findViewById(R.id.spnBBDetailedCity);
-		buttonOK.setVisibility(View.INVISIBLE);
-		buttonDelete.setVisibility(View.INVISIBLE);
 		image =(ImageView)findViewById(R.id.imageView);
-		sync tesa = new sync();
-		tesa.execute();
+
+		//sync tesa = new sync();
+		//tesa.execute();
 
 		spnCity.setAdapter(citiesAdapter);
 		spnCity.setPrompt("Title");
@@ -67,6 +66,8 @@ public class BBDetailedActivity extends Activity {
 			Bundle extras = getIntent().getExtras();
 			isEditable = true;
 			bulletin = extras.getParcelable("bulletin");
+			BitmapWorkerTask loadImage = new BitmapWorkerTask(image);
+			loadImage.execute();
 
 			title.setText(bulletin.getTitle());
 			text.setText(bulletin.getText());
@@ -81,10 +82,7 @@ public class BBDetailedActivity extends Activity {
 			price.setEnabled(false);
 
 			if (bulletin.getContact_uid().equals(Contact.getUid())){
-				buttonOK.setVisibility(View.VISIBLE);
-				buttonOK.setText("Редактировать");
-				buttonDelete.setVisibility(View.VISIBLE);
-				buttonDelete.setText("Удалить");
+
 				title.setEnabled(true);
 				text.setEnabled(true);
 				spnCity.setEnabled(true);
@@ -92,8 +90,7 @@ public class BBDetailedActivity extends Activity {
 				price.setEnabled(true);
 			}
 		}else {
-			buttonOK.setVisibility(View.VISIBLE);
-			buttonOK.setText("Создать");
+
 
 
 		}
@@ -173,6 +170,35 @@ public class BBDetailedActivity extends Activity {
 			super.onPostExecute(aVoid);
 			if (bitmap!=null) {
 				image.setImageBitmap(bitmap);
+			}
+		}
+	}
+
+	class BitmapWorkerTask extends AsyncTask<Void, Void, Bitmap> {
+		private final WeakReference<ImageView> imageViewReference;
+
+		public BitmapWorkerTask(ImageView imageView) {
+			// Use a WeakReference to ensure the ImageView can be garbage collected
+			imageViewReference = new WeakReference<ImageView>(imageView);
+		}
+
+		// Decode image in background.
+		@Override
+		protected Bitmap doInBackground(Void... params) {
+
+			Log.v(Constants.LOG_TAG, "BWT; " + bulletin.getId());
+
+			return Images.loadImage(bulletin.getId());
+		}
+
+		// Once complete, see if ImageView is still around and set bitmap.
+		@Override
+		protected void onPostExecute(Bitmap bitmap) {
+			if (imageViewReference != null && bitmap != null) {
+				final ImageView imageView = imageViewReference.get();
+				if (imageView != null) {
+					imageView.setImageBitmap(bitmap);
+				}
 			}
 		}
 	}

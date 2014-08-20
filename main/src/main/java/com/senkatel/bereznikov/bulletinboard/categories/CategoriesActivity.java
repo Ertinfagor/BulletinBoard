@@ -12,14 +12,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.senkatel.bereznikov.bulletinboard.bulletinboard.BBDetailedActivity;
 import com.senkatel.bereznikov.bulletinboard.bulletinboard.BBGridActivity;
 import com.senkatel.bereznikov.bulletinboard.bulletinboard.Bulletins;
 import com.senkatel.bereznikov.bulletinboard.cities.Cities;
-import com.senkatel.bereznikov.bulletinboard.cities.CitiesActivity;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
-import com.senkatel.bereznikov.bulletinboard.util.MainSync;
 
 
 public class CategoriesActivity extends Activity{
@@ -73,7 +70,7 @@ public class CategoriesActivity extends Activity{
 			lvCategories.setItemChecked(categoriesAdapter.getPosition(Categories.getName(Bulletins.getCategoryFilterId())),true);
 		}
 		try {
-			UpdateCategories updateNow = new UpdateCategories();
+			Update updateNow = new Update();
 			updateNow.execute();
 		}catch (Exception e){
 			Log.e(Constants.LOG_TAG, "Cannot start Categories update task: " + e.toString());
@@ -97,7 +94,7 @@ public class CategoriesActivity extends Activity{
 		switch (item.getItemId()) {
 			case R.id.menuFilterUpdate:
 				try {
-					UpdateCategories updateNow = new UpdateCategories();
+					Update updateNow = new Update();
 					updateNow.execute();
 				}catch (Exception e){
 					Log.e(Constants.LOG_TAG, "Cannot start Categories update task: " + e.toString());
@@ -112,7 +109,7 @@ public class CategoriesActivity extends Activity{
 		return ret;
 	}
 
-	private class UpdateCategories extends AsyncTask<Void, Void, Void> {
+	private class Update extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected void onProgressUpdate(Void... values) {
 			super.onProgressUpdate(values);
@@ -122,7 +119,8 @@ public class CategoriesActivity extends Activity{
 		protected Void doInBackground(Void... params) {
 			try {
 				Categories.update(Constants.URL);
-				Log.v(Constants.LOG_TAG, "Refresh ");
+				Bulletins.getBulletins(Constants.URL);
+				Cities.update(Constants.URL);
 			} catch (Exception e) {
 				Log.e(Constants.LOG_TAG, "Can`t get categories: " + e.toString());
 				Toast.makeText(getApplicationContext(), getString(R.string.ErrorConnectToServer), Toast.LENGTH_LONG).show();
@@ -132,8 +130,13 @@ public class CategoriesActivity extends Activity{
 		@Override
 		protected void onPostExecute(Void aVoid) {
 			super.onPostExecute(aVoid);
-			categoriesAdapter.notifyDataSetChanged();
-			menuItemRefreshCategory.setActionView(null);
+			try {
+				categoriesAdapter.notifyDataSetChanged();
+				menuItemRefreshCategory.setActionView(null);
+			}catch (Exception e){
+				Log.e(Constants.LOG_TAG, "Can`t after Categories: " + e.toString());
+
+			}
 		}
 	}
 

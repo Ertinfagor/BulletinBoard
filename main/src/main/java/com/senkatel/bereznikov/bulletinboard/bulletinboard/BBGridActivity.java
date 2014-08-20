@@ -17,8 +17,10 @@ import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.cities.CitiesActivity;
 import com.senkatel.bereznikov.bulletinboard.contacts.Contact;
 import com.senkatel.bereznikov.bulletinboard.contacts.ContactActivity;
+import com.senkatel.bereznikov.bulletinboard.main.PreferencesActivity;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
+import com.senkatel.bereznikov.bulletinboard.util.Images;
 import com.senkatel.bereznikov.bulletinboard.util.MainSync;
 
 import java.util.concurrent.Executors;
@@ -33,7 +35,7 @@ public class BBGridActivity extends Activity {
 	private MenuItem menuItemCityBB;
 	private MenuItem menuItemResetFiltersBB;
 
-	UpdateBulletins updateNow = new UpdateBulletins();
+	Update updateNow = new Update();
 
 	ScheduledExecutorService updateBB  = Executors.newSingleThreadScheduledExecutor();
 	private Runnable updateNotifierTask = new Runnable() {
@@ -63,6 +65,9 @@ public class BBGridActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_bbgrid);
 		getActionBar().setHomeButtonEnabled(true);
+		getActionBar().setTitle("");
+
+		Images.init();
 
 
 		gvBB = (GridView) findViewById(R.id.gridView);
@@ -112,7 +117,7 @@ public class BBGridActivity extends Activity {
 			Log.e(Constants.LOG_TAG, "GetIntent error: " + e.toString());
 		}
 		try {
-			UpdateBulletins updateNow = new UpdateBulletins();
+			Update updateNow = new Update();
 			updateNow.execute();
 		}catch (Exception e){
 			Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
@@ -175,14 +180,13 @@ public class BBGridActivity extends Activity {
 				ret = true;
 				break;
 			case R.id.menubbgridactivityNewBulletin:
-				intent = new Intent(getApplicationContext(), BBDetailedActivity.class);
+				intent = new Intent(getApplicationContext(), AddBulletinActivity.class);
 				startActivity(intent);
 				ret = true;
 				break;
 			case R.id.menubbgridactivityUpdate:
 				try {
-					UpdateBulletins updateNow = new UpdateBulletins();
-					updateNow.execute();
+					MainSync.syncAll();
 				}catch (Exception e){
 					Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 				}
@@ -191,7 +195,7 @@ public class BBGridActivity extends Activity {
 			case R.id.menubbgridactivityResetFilters:
 				Bulletins.resetFilter();
 				try {
-					UpdateBulletins updateNow = new UpdateBulletins();
+					Update updateNow = new Update();
 					updateNow.execute();
 				}catch (Exception e){
 					Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
@@ -199,6 +203,16 @@ public class BBGridActivity extends Activity {
 				menuItemResetFiltersBB.setVisible(false);
 				menuItemCategoryBB.setTitle(getString(R.string.BBMainCategories));
 				menuItemCityBB.setTitle(getString(R.string.BBMainCity));
+				ret = true;
+				break;
+			case R.id.menubbgridactivityCostFilter:
+				intent = new Intent(getApplicationContext(), CostFilterActivity.class);
+				startActivity(intent);
+				ret = true;
+				break;
+			case R.id.menubbgridactivitPreferences:
+				intent = new Intent(getApplicationContext(), PreferencesActivity.class);
+				startActivity(intent);
 				ret = true;
 				break;
 			default:
@@ -209,7 +223,7 @@ public class BBGridActivity extends Activity {
 	}
 
 
-	private class UpdateBulletins extends AsyncTask<Void, Void, Void> {
+	private class Update extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected void onProgressUpdate(Void... values) {
 			super.onProgressUpdate(values);
@@ -220,6 +234,8 @@ public class BBGridActivity extends Activity {
 		protected Void doInBackground(Void... params) {
 			try {
 				Bulletins.getBulletins(Constants.URL);
+				Categories.update(Constants.URL);
+				Cities.update(Constants.URL);
 			} catch (Exception e) {
 				Log.e(Constants.LOG_TAG, "Can`t get bulletins: " + e.toString());
 				Toast.makeText(getApplicationContext(),getString(R.string.ErrorConnectToServer), Toast.LENGTH_LONG).show();

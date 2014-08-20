@@ -1,6 +1,7 @@
 package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -19,6 +20,7 @@ public class Bulletin implements Parcelable{
 		}
 	};
 
+	private Bitmap image;
 	private int id = -1;
 	private String title = null;
 	private String text = null;
@@ -26,8 +28,8 @@ public class Bulletin implements Parcelable{
 	private String contact_uid = null;
 	private float price = 0;
 	private List<Integer> categories = new ArrayList<Integer>();
-	//state
-	//private Date date = null;
+	private boolean state = true;
+	private Date date;
 
 	public Bulletin(int id, String title, String text, int city_id, String contact_uid, float price) {
 		this.id = id;
@@ -55,6 +57,8 @@ public class Bulletin implements Parcelable{
 		this.text = strings[1];
 		this.contact_uid = strings[2];
 		parcel.readList(this.categories,Integer.class.getClassLoader());
+
+
 	}
 
 	public Bulletin() {
@@ -120,12 +124,36 @@ public class Bulletin implements Parcelable{
 		this.price = price;
 	}
 
+	public boolean isState() {
+		return state;
+	}
+
+	public void setState(boolean state) {
+		this.state = state;
+	}
+
+	public Bitmap getImage() {
+		return image;
+	}
+
+	public void setImage(Bitmap image) {
+		this.image = image;
+	}
+
 	public List<Integer> getCategories() {
 		categories.add(1);
 		categories.add(2);
 		categories.add(3);
 
 		return categories;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public void setCategories(List<Integer> categories) {

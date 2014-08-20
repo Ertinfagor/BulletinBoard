@@ -17,7 +17,6 @@ import com.senkatel.bereznikov.bulletinboard.bulletinboard.Bulletins;
 import com.senkatel.bereznikov.bulletinboard.categories.Categories;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
-import com.senkatel.bereznikov.bulletinboard.util.MainSync;
 
 /**
  * Created by Bereznik on 16.08.2014.
@@ -75,7 +74,7 @@ public class CitiesActivity extends Activity {
 			lvCities.setItemChecked(citiesAdapter.getPosition(Cities.getName(Bulletins.getCityFilterId())),true);
 		}
 		try {
-			UpdateCities updateNow = new UpdateCities();
+			Update updateNow = new Update();
 			updateNow.execute();
 		}catch (Exception e){
 			Log.e(Constants.LOG_TAG, "Cannot start Cities update task: " + e.toString());
@@ -101,7 +100,7 @@ public class CitiesActivity extends Activity {
 		switch (item.getItemId()) {
 			case R.id.menuFilterUpdate:
 				try {
-					UpdateCities updateNow = new UpdateCities();
+					Update updateNow = new Update();
 					updateNow.execute();
 				}catch (Exception e){
 					Log.e(Constants.LOG_TAG, "Cannot start Cities update task: " + e.toString());
@@ -117,7 +116,7 @@ public class CitiesActivity extends Activity {
 	}
 
 
-	private class UpdateCities extends AsyncTask<Void, Void, Void> {
+	private class Update extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected void onProgressUpdate(Void... values) {
 			super.onProgressUpdate(values);
@@ -127,7 +126,8 @@ public class CitiesActivity extends Activity {
 		protected Void doInBackground(Void... params) {
 			try {
 				Cities.update(Constants.URL);
-				Log.v(Constants.LOG_TAG, "Refresh ");
+				Bulletins.getBulletins(Constants.URL);
+				Categories.update(Constants.URL);
 			} catch (Exception e) {
 				Log.e(Constants.LOG_TAG, "Can`t get Cities: " + e.toString());
 				Toast.makeText(getApplicationContext(), getString(R.string.ErrorConnectToServer), Toast.LENGTH_LONG).show();
@@ -137,8 +137,13 @@ public class CitiesActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void aVoid) {
 			super.onPostExecute(aVoid);
-			citiesAdapter.notifyDataSetChanged();
-			menuItemRefreshCity.setActionView(null);
+			try {
+				citiesAdapter.notifyDataSetChanged();
+				menuItemRefreshCity.setActionView(null);
+			}catch (Exception e){
+				Log.e(Constants.LOG_TAG, "Can`t after Cities: " + e.toString());
+
+			}
 
 		}
 	}
