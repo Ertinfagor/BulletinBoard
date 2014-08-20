@@ -13,7 +13,8 @@ import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 
 /**
- * Created by Bereznik on 20.08.2014.
+ * Class CategoryAddActivity
+ * Implements interface for adding new Category
  */
 public class CategoryAddActivity extends Activity {
 	EditText addItem;

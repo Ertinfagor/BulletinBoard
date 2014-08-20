@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Main Interface Class BBGridActivity GridView that show all loaded Bulletins
  * Run periodical update task by ScheduledExecutorService in separate thread
- * Have force update task running in separate thread
+ * Has force update task running in separate thread
  * Change names of filter buttons
  */
 public class BBGridActivity extends Activity {
@@ -51,8 +51,8 @@ public class BBGridActivity extends Activity {
 		public void run() {
 			try {
 				Bulletins.getBulletins(Constants.URL);
-				Categories.update(Constants.URL);
-				Cities.update(Constants.URL);
+				Categories.getCategories(Constants.URL);
+				Cities.getCities(Constants.URL);
 
 				if (bbArrayAdapter != null) {
 					runOnUiThread(runUpdateNotifierTask);
@@ -119,7 +119,7 @@ public class BBGridActivity extends Activity {
 			Log.e(Constants.LOG_TAG, "GetIntent error: " + e.toString());
 		}
 		try {
-			new ForseUpdate().execute();
+			new ForceUpdate().execute();
 		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 		}
@@ -187,7 +187,7 @@ public class BBGridActivity extends Activity {
 				break;
 			case R.id.menubbgridactivityUpdate:
 				try {
-					new ForseUpdate().execute();
+					new ForceUpdate().execute();
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 				}
@@ -196,7 +196,7 @@ public class BBGridActivity extends Activity {
 			case R.id.menubbgridactivityResetFilters:
 				Bulletins.resetFilter();
 				try {
-					new ForseUpdate().execute();
+					new ForceUpdate().execute();
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 				}
@@ -223,7 +223,7 @@ public class BBGridActivity extends Activity {
 	}
 
 
-	private class ForseUpdate extends AsyncTask<Void, Void, Void> {
+	private class ForceUpdate extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected void onProgressUpdate(Void... values) {
 			super.onProgressUpdate(values);
@@ -234,8 +234,8 @@ public class BBGridActivity extends Activity {
 		protected Void doInBackground(Void... params) {
 			try {
 				Bulletins.getBulletins(Constants.URL);
-				Categories.update(Constants.URL);
-				Cities.update(Constants.URL);
+				Categories.getCategories(Constants.URL);
+				Cities.getCities(Constants.URL);
 			} catch (Exception e) {
 				Log.e(Constants.LOG_TAG, "Can`t get bulletins: " + e.toString());
 			}

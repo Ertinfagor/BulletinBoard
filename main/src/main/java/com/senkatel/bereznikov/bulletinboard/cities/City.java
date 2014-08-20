@@ -4,15 +4,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Bereznik on 16.08.2014.
+ * Class City
+ * Class is Parcelable
+ * Implements container for one City entry
+ * Class relates to Cities
  */
 public class City implements Parcelable {
-	private int id;
-	private String name;
+	private int intCityId;
+	private String sCityName;
 
 
 	public static final Parcelable.Creator<City> CREATOR = new Parcelable.Creator<City>() {
-		// распаковываем объект из Parcel
+
 		public City createFromParcel(Parcel in) {
 			return new City(in);
 		}
@@ -23,9 +26,36 @@ public class City implements Parcelable {
 	};
 
 
+	public City() {
+	}
+	/*Getters and setters*/
+	public int getId() {
+		return intCityId;
+	}
+
+	public void setId(int id) {
+		this.intCityId = id;
+	}
+
+	public String getName() {
+		return sCityName;
+	}
+
+	public void setName(String name) {
+		this.sCityName = name;
+	}
+
+	@Override
+	public String toString() {
+		return "City{" +
+				"intCityId=" + intCityId +
+				", sCityName='" + sCityName + '\'' +
+				'}';
+	}
+	/*Implements Parcelable*/
 	private City(Parcel parcel){
-		id = parcel.readInt();
-		name = parcel.readString();
+		intCityId = parcel.readInt();
+		sCityName = parcel.readString();
 	}
 
 	@Override
@@ -35,34 +65,7 @@ public class City implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel parcel, int i) {
-		parcel.writeInt(id);
-		parcel.writeString(name);
-	}
-
-	public City() {
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public String toString() {
-		return "City{" +
-				"id=" + id +
-				", name='" + name + '\'' +
-				'}';
+		parcel.writeInt(intCityId);
+		parcel.writeString(sCityName);
 	}
 }

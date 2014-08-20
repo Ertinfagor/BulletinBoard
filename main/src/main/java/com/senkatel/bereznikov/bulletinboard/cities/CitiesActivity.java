@@ -19,7 +19,10 @@ import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 
 /**
- * Created by Bereznik on 16.08.2014.
+ * Class CitiesActivity
+ * Implements ListView of Cities to filter
+ * Load from Bulletins previously saved value of filter
+ * Has force update task running in separate thread
  */
 public class CitiesActivity extends Activity {
 	private ListView lvCities;
@@ -74,10 +77,9 @@ public class CitiesActivity extends Activity {
 			lvCities.setItemChecked(citiesAdapter.getPosition(Cities.getName(Bulletins.getCityFilterId())),true);
 		}
 		try {
-			Update updateNow = new Update();
-			updateNow.execute();
+			new ForceUpdate().execute();
 		}catch (Exception e){
-			Log.e(Constants.LOG_TAG, "Cannot start Cities update task: " + e.toString());
+			Log.e(Constants.LOG_TAG, "Cannot start Cities getCities task: " + e.toString());
 		}
 	}
 
@@ -100,10 +102,9 @@ public class CitiesActivity extends Activity {
 		switch (item.getItemId()) {
 			case R.id.menuFilterUpdate:
 				try {
-					Update updateNow = new Update();
-					updateNow.execute();
+					new ForceUpdate().execute();
 				}catch (Exception e){
-					Log.e(Constants.LOG_TAG, "Cannot start Cities update task: " + e.toString());
+					Log.e(Constants.LOG_TAG, "Cannot start Cities getCities task: " + e.toString());
 				}
 				ret = true;
 				break;
@@ -116,7 +117,7 @@ public class CitiesActivity extends Activity {
 	}
 
 
-	private class Update extends AsyncTask<Void, Void, Void> {
+	private class ForceUpdate extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected void onProgressUpdate(Void... values) {
 			super.onProgressUpdate(values);
@@ -125,9 +126,9 @@ public class CitiesActivity extends Activity {
 		@Override
 		protected Void doInBackground(Void... params) {
 			try {
-				Cities.update(Constants.URL);
+				Cities.getCities(Constants.URL);
 				Bulletins.getBulletins(Constants.URL);
-				Categories.update(Constants.URL);
+				Categories.getCategories(Constants.URL);
 			} catch (Exception e) {
 				Log.e(Constants.LOG_TAG, "Can`t get Cities: " + e.toString());
 				Toast.makeText(getApplicationContext(), getString(R.string.ErrorConnectToServer), Toast.LENGTH_LONG).show();

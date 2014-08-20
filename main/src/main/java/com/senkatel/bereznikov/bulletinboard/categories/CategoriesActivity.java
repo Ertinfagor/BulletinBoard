@@ -18,7 +18,12 @@ import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 
-
+/**
+ * Class CategoriesActivity
+ * Implements ListView of Categories to filter
+ * Load from Bulletins previously saved value of filter
+ * Has force update task running in separate thread
+ */
 public class CategoriesActivity extends Activity{
 	private ListView lvCategories;
 	ArrayAdapter<String> categoriesAdapter;
@@ -36,7 +41,7 @@ public class CategoriesActivity extends Activity{
 
 		lvCategories.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-		categoriesAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_single_choice,Categories.getCategoriesList());
+		categoriesAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_single_choice,Categories.getListCategoriesNames());
 
 		lvCategories.setAdapter(categoriesAdapter);
 
@@ -70,10 +75,9 @@ public class CategoriesActivity extends Activity{
 			lvCategories.setItemChecked(categoriesAdapter.getPosition(Categories.getName(Bulletins.getCategoryFilterId())),true);
 		}
 		try {
-			Update updateNow = new Update();
-			updateNow.execute();
+			new ForceUpdate().execute();
 		}catch (Exception e){
-			Log.e(Constants.LOG_TAG, "Cannot start Categories update task: " + e.toString());
+			Log.e(Constants.LOG_TAG, "Cannot start Categories getCategories task: " + e.toString());
 		}
 	}
 
@@ -94,10 +98,9 @@ public class CategoriesActivity extends Activity{
 		switch (item.getItemId()) {
 			case R.id.menuFilterUpdate:
 				try {
-					Update updateNow = new Update();
-					updateNow.execute();
+					new ForceUpdate().execute();
 				}catch (Exception e){
-					Log.e(Constants.LOG_TAG, "Cannot start Categories update task: " + e.toString());
+					Log.e(Constants.LOG_TAG, "Cannot start Categories getCategories task: " + e.toString());
 				}
 				ret = true;
 				break;
@@ -109,7 +112,7 @@ public class CategoriesActivity extends Activity{
 		return ret;
 	}
 
-	private class Update extends AsyncTask<Void, Void, Void> {
+	private class ForceUpdate extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected void onProgressUpdate(Void... values) {
 			super.onProgressUpdate(values);
@@ -118,9 +121,9 @@ public class CategoriesActivity extends Activity{
 		@Override
 		protected Void doInBackground(Void... params) {
 			try {
-				Categories.update(Constants.URL);
+				Categories.getCategories(Constants.URL);
 				Bulletins.getBulletins(Constants.URL);
-				Cities.update(Constants.URL);
+				Cities.getCities(Constants.URL);
 			} catch (Exception e) {
 				Log.e(Constants.LOG_TAG, "Can`t get categories: " + e.toString());
 				Toast.makeText(getApplicationContext(), getString(R.string.ErrorConnectToServer), Toast.LENGTH_LONG).show();

@@ -56,7 +56,7 @@ public class AddBulletinActivity extends Activity {
 		setContentView(R.layout.activity_addbulletin);
 
 		adapterCity = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_layout, Cities.getCitiesList());
-		adapterCategories = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_layout, Categories.getCategoriesList());
+		adapterCategories = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_layout, Categories.getListCategoriesNames());
 
 		adapterCity.setDropDownViewResource(R.layout.spinner_layout);
 		adapterCategories.setDropDownViewResource(R.layout.spinner_layout);

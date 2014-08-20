@@ -7,7 +7,10 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 
-
+/**
+ * Class CityAddActivity
+ * Implements interface for Add new City
+ */
 public class CityAddActivity extends Activity {
 	EditText addItem;
 	@Override

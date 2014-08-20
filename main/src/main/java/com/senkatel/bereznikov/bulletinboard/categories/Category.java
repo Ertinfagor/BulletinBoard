@@ -4,15 +4,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Bereznik on 16.08.2014.
+ * Class Category
+ * Class is Parcelable
+ * Implements container for one Category entry
+ * Class relates to Categories
  */
 public class Category implements Parcelable {
-	private int id;
-	private String name;
+	private int intCategoryId;
+	private String sCategoryName;
 
 
 	public static final Parcelable.Creator<Category> CREATOR = new Parcelable.Creator<Category>() {
-		// распаковываем объект из Parcel
+
 		public Category createFromParcel(Parcel in) {
 			return new Category(in);
 		}
@@ -23,11 +26,40 @@ public class Category implements Parcelable {
 	};
 
 
-	private Category(Parcel parcel){
-		id = parcel.readInt();
-		name = parcel.readString();
+
+
+	public Category() {
+	}
+	/*Getters and Setters*/
+	public int getId() {
+		return intCategoryId;
 	}
 
+	public void setId(int id) {
+		this.intCategoryId = id;
+	}
+
+	public String getName() {
+		return sCategoryName;
+	}
+
+	public void setName(String name) {
+		this.sCategoryName = name;
+	}
+
+	@Override
+	public String toString() {
+		return "Category{" +
+				"intCategoryId=" + intCategoryId +
+				", sCategoryName='" + sCategoryName + '\'' +
+				'}';
+	}
+
+	private Category(Parcel parcel){
+		intCategoryId = parcel.readInt();
+		sCategoryName = parcel.readString();
+	}
+	/*Parcelable implementation*/
 	@Override
 	public int describeContents() {
 		return 0;
@@ -35,34 +67,7 @@ public class Category implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel parcel, int i) {
-		parcel.writeInt(id);
-		parcel.writeString(name);
-	}
-
-	public Category() {
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public String toString() {
-		return "Category{" +
-				"id=" + id +
-				", name='" + name + '\'' +
-				'}';
+		parcel.writeInt(intCategoryId);
+		parcel.writeString(sCategoryName);
 	}
 }

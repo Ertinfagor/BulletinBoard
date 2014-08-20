@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**Class Bulletin
+/**
+ * Class Bulletin
  * Class is Parcelable
  * Implements container for one bulletin entry
 * Class relates to Bulletins
