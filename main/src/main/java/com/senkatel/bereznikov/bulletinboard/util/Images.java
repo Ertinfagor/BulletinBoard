@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.LruCache;
+import android.widget.ArrayAdapter;
+import com.senkatel.bereznikov.bulletinboard.bulletinboard.BBArrayAdapter;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -60,7 +63,6 @@ public class Images {
 
 
 	public static Bitmap loadImage(int id) {
-		Log.v(Constants.LOG_TAG, "ID: " + id);
 		Bitmap resultBitmap = getBitmapFromMemCache(id);
 		if (resultBitmap == null) {
 			String url = Constants.URL + Constants.BULLETIN + "/" + id + "/image";
@@ -74,6 +76,48 @@ public class Images {
 		return resultBitmap;
 
 	}
+
+	public static Bitmap loadImage(int id, int width, int height) {
+		Log.v(Constants.LOG_TAG, "ID: " + id);
+		Bitmap resultBitmap = getBitmapFromMemCache(id);
+		Bitmap scaledBitmap = null;
+		if (resultBitmap == null) {
+			String url = Constants.URL + Constants.BULLETIN + "/" + id + "/image";
+			InputStream imageStream = getImageStreamFromUrl(url);
+			resultBitmap = BitmapFactory.decodeStream(imageStream);
+
+			if (resultBitmap != null) {
+				scaledBitmap = Bitmap.createScaledBitmap(resultBitmap,width,height,false);
+				addBitmapToMemoryCache(id, scaledBitmap);
+
+			}
+
+		}else {
+			scaledBitmap = Bitmap.createScaledBitmap(resultBitmap,width,height,false);
+		}
+
+		//resultBitmap = getResizedBitmap(resultBitmap, heigt,width);
+		return scaledBitmap;
+
+	}
+	public static Bitmap loadImage(int id, BBArrayAdapter adapter) {
+
+		Log.v(Constants.LOG_TAG, "ID: " + id);
+		Bitmap resultBitmap = getBitmapFromMemCache(id);
+		if (resultBitmap == null) {
+			String url = Constants.URL + Constants.BULLETIN + "/" + id + "/image";
+			InputStream imageStream = getImageStreamFromUrl(url);
+			resultBitmap = BitmapFactory.decodeStream(imageStream);
+
+			if (resultBitmap != null) {
+				addBitmapToMemoryCache(id, resultBitmap);
+			}
+		}
+		adapter.notifyDataSetChanged();
+		return resultBitmap;
+
+	}
+
 
 	public static Bitmap loadImage(Uri path, int id, Activity activity) {
 		Bitmap resultBitmap = null;
@@ -146,6 +190,32 @@ public class Images {
 		}
 		return rawContent;
 
+	}
+
+
+	public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+
+		int width = bm.getWidth();
+
+		int height = bm.getHeight();
+
+		float scaleWidth = ((float) newWidth) / width;
+
+		float scaleHeight = ((float) newHeight) / height;
+
+// create a matrix for the manipulation
+
+		Matrix matrix = new Matrix();
+
+// resize the bit map
+
+		matrix.postScale(scaleWidth, scaleHeight);
+
+// recreate the new Bitmap
+
+		Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+
+		return resizedBitmap;
 	}
 
 

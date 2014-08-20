@@ -53,7 +53,7 @@ public class BBDetailedActivity extends Activity {
 		contact_uid = (EditText)findViewById(R.id.edBBDetailedContact);
 		price = (EditText)findViewById(R.id.edBBDetailedPrice);
 		spnCity = (Spinner)findViewById(R.id.spnBBDetailedCity);
-		image =(ImageView)findViewById(R.id.imageView);
+		image =(ImageView)findViewById(R.id.ivBBGridActivityDetailed);
 
 		//sync tesa = new sync();
 		//tesa.execute();
@@ -66,8 +66,9 @@ public class BBDetailedActivity extends Activity {
 			Bundle extras = getIntent().getExtras();
 			isEditable = true;
 			bulletin = extras.getParcelable("bulletin");
-			BitmapWorkerTask loadImage = new BitmapWorkerTask(image);
-			loadImage.execute();
+			Log.v(Constants.LOG_TAG,"Image loading started");
+			BitmapWorkerTaskDetailed loadImage = new BitmapWorkerTaskDetailed(image);
+			loadImage.execute(bulletin.getId());
 
 			title.setText(bulletin.getTitle());
 			text.setText(bulletin.getText());
@@ -151,44 +152,21 @@ public class BBDetailedActivity extends Activity {
 		startActivity(intent);
 	}
 
-	private class sync extends AsyncTask<Void, Void, Void> {
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			try {
-			Bulletins.getBulletins(Constants.URL);
-			String url = Constants.URL+Constants.BULLETIN +"/" + bulletin.getId() + "/image";
-			bitmap = ParseJson.getImage(url);}
-			catch (Exception e){
-				Log.v(Constants.LOG_TAG,"test");
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void aVoid) {
-			super.onPostExecute(aVoid);
-			if (bitmap!=null) {
-				image.setImageBitmap(bitmap);
-			}
-		}
-	}
-
-	class BitmapWorkerTask extends AsyncTask<Void, Void, Bitmap> {
+	class BitmapWorkerTaskDetailed extends AsyncTask<Integer, Void, Bitmap> {
 		private final WeakReference<ImageView> imageViewReference;
+		private int id = 0;
 
-		public BitmapWorkerTask(ImageView imageView) {
+		public BitmapWorkerTaskDetailed(ImageView imageView) {
 			// Use a WeakReference to ensure the ImageView can be garbage collected
 			imageViewReference = new WeakReference<ImageView>(imageView);
 		}
 
 		// Decode image in background.
 		@Override
-		protected Bitmap doInBackground(Void... params) {
-
-			Log.v(Constants.LOG_TAG, "BWT; " + bulletin.getId());
-
-			return Images.loadImage(bulletin.getId());
+		protected Bitmap doInBackground(Integer... params) {
+			id = params[0];
+			Log.v(Constants.LOG_TAG,"do in background started");
+			return Images.loadImage(id,100,100);
 		}
 
 		// Once complete, see if ImageView is still around and set bitmap.
@@ -197,9 +175,12 @@ public class BBDetailedActivity extends Activity {
 			if (imageViewReference != null && bitmap != null) {
 				final ImageView imageView = imageViewReference.get();
 				if (imageView != null) {
+					Log.v(Constants.LOG_TAG,"image setting");
 					imageView.setImageBitmap(bitmap);
 				}
 			}
+
 		}
+
 	}
 }
