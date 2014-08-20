@@ -12,7 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import com.senkatel.bereznikov.bulletinboard.categories.Categories;
+import com.senkatel.bereznikov.bulletinboard.categories.CategoryAddActivity;
 import com.senkatel.bereznikov.bulletinboard.cities.Cities;
+import com.senkatel.bereznikov.bulletinboard.cities.CityAddActivity;
 import com.senkatel.bereznikov.bulletinboard.contacts.Contact;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
@@ -197,9 +199,13 @@ public class AddBulletinActivity extends Activity {
 				ret = true;
 				break;
 			case R.id.menuaddbulletinAddCategory:
+				intent = new Intent(getApplicationContext(), CategoryAddActivity.class);
+				startActivityForResult(intent,0);
 				ret = true;
 				break;
 			case R.id.menuaddbulletinAddCity:
+				intent = new Intent(getApplicationContext(), CityAddActivity.class);
+				startActivityForResult(intent,0);
 				ret = true;
 				break;
 			default:

@@ -23,6 +23,8 @@
         <activity android:name="com.senkatel.bereznikov.bulletinboard.bulletinboard.AddBulletinActivity"/>
         <activity android:name=".PreferencesActivity"/>
         <activity android:name="com.senkatel.bereznikov.bulletinboard.bulletinboard.CostFilterActivity"/>
+        <activity android:name="com.senkatel.bereznikov.bulletinboard.cities.CityAddActivity"/>
+        <activity android:name="com.senkatel.bereznikov.bulletinboard.categories.CategoryAddActivity"/>
 
     </application>
 
