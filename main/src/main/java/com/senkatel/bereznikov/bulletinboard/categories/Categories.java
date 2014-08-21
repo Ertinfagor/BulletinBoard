@@ -62,7 +62,7 @@ public class Categories {
 		CopyOnWriteArrayList<Category> tempCategories = new CopyOnWriteArrayList<Category>();
 		try {
 
-			JSONArray jsonArrayCategories = ParseJson.getJson(url);
+			JSONArray jsonArrayCategories = ParseJson.getJsonArray(url);
 
 			int l = jsonArrayCategories.length();
 			int index = -1;

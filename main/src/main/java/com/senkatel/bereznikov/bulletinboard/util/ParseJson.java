@@ -37,11 +37,59 @@ public class ParseJson {
 	 * @return Loaded JSON Array
 	 * @throws Exception
 	 */
-	public static JSONArray getJson(String url) throws Exception {
+	public static JSONArray getJsonArray(String url) throws Exception {
 
 		InputStream isRawContent = null;
 		String sJSONRawString = null;
 		JSONArray jaResultJSONArray = null;
+
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpGet httpget = new HttpGet(url);
+			HttpResponse response = httpclient.execute(httpget);
+			HttpEntity entity = response.getEntity();
+			isRawContent = entity.getContent();
+
+		} catch (Exception e) {
+			Log.e(Constants.LOG_TAG, "getJsonArray Network error" + e.toString());
+
+		}
+		if (isRawContent != null) {
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(isRawContent, "UTF-8"), 8);
+				StringBuilder sb = new StringBuilder();
+				String line;
+				while ((line = reader.readLine()) != null) {
+					sb.append(line);
+					sb.append("\n");
+				}
+				isRawContent.close();
+				sJSONRawString = sb.toString();
+				jaResultJSONArray = new JSONArray(sJSONRawString);
+			} catch (IOException e) {
+				Log.e(Constants.LOG_TAG, "getJsonArray Error parsing string: " + e.toString());
+			} catch (JSONException e1) {
+				Log.e(Constants.LOG_TAG, "getJsonArray Error parsing JSON: " + e1.toString());
+				throw new JSONException(sJSONRawString);
+			} catch (Exception e2) {
+				Log.e(Constants.LOG_TAG, "getJsonArray Error: " + e2.toString());
+			}
+		}
+		return jaResultJSONArray;
+
+	}
+	/**
+	 * GET JSON Array from http
+	 *
+	 * @param url URL string for load
+	 * @return Loaded JSON Array
+	 * @throws Exception
+	 */
+	public static JSONObject getJsonObject(String url) throws Exception {
+
+		InputStream isRawContent = null;
+		String sJSONRawString = null;
+		JSONObject jaResultJSONObject = null;
 
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
@@ -65,7 +113,7 @@ public class ParseJson {
 				}
 				isRawContent.close();
 				sJSONRawString = sb.toString();
-				jaResultJSONArray = new JSONArray(sJSONRawString);
+				jaResultJSONObject = new JSONObject(sJSONRawString);
 			} catch (IOException e) {
 				Log.e(Constants.LOG_TAG, "getJson Error parsing string: " + e.toString());
 			} catch (JSONException e1) {
@@ -75,7 +123,7 @@ public class ParseJson {
 				Log.e(Constants.LOG_TAG, "getJson Error: " + e2.toString());
 			}
 		}
-		return jaResultJSONArray;
+		return jaResultJSONObject;
 
 	}
 
@@ -85,7 +133,6 @@ public class ParseJson {
 	 * @param url        URL string for upload
 	 * @param jsonObject JSON Object that will be loaded
 	 * @return server response
-	 * @throws Exception
 	 * @throws Exception
 	 */
 	public static JSONObject postJson(String url, JSONObject jsonObject) throws Exception {

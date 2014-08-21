@@ -202,7 +202,7 @@ public class Bulletins {
 		CopyOnWriteArrayList<Bulletin> tempBulletins = new CopyOnWriteArrayList<Bulletin>();
 		try {
 
-			JSONArray jsonArrayBulletins = ParseJson.getJson(url);
+			JSONArray jsonArrayBulletins = ParseJson.getJsonArray(url);
 
 			int l = jsonArrayBulletins.length();
 			int index = -1;

@@ -62,7 +62,7 @@ public class Cities {
 		CopyOnWriteArrayList<City> tempCities = new CopyOnWriteArrayList<City>();
 		try {
 
-			JSONArray jsonArrayCities = ParseJson.getJson(url);
+			JSONArray jsonArrayCities = ParseJson.getJsonArray(url);
 
 			int l = jsonArrayCities.length();
 			int index = -1;

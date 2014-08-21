@@ -2,17 +2,12 @@ package com.senkatel.bereznikov.bulletinboard.contacts;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.provider.Settings;
 import android.util.Log;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.ParseJson;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Date;
 
 /**
  * Static Class Contact
@@ -154,7 +149,7 @@ public static boolean init(Context context){
 				try {
 					String getUrl = Constants.URL + Constants.CONTACT;
 					getUrl += "/" + uid;
-					ParseJson.getJson(getUrl);
+					ParseJson.getJsonObject(getUrl);
 
 				}catch (JSONException e1) {
 					existInDb = false;
