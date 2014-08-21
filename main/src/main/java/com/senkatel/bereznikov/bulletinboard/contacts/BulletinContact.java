@@ -1,20 +1,14 @@
 package com.senkatel.bereznikov.bulletinboard.contacts;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.provider.Settings;
-import android.util.Log;
-import com.senkatel.bereznikov.bulletinboard.util.Constants;
-import com.senkatel.bereznikov.bulletinboard.util.ParseJson;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.Date;
-
-/*Class implements container for contacts
-* Class relates to bulletin */
+/**
+ * Class BulletinContact
+ * Class Parcelable
+ * Implements container for contacts
+	* Class relates to bulletin
+ * */
 public class BulletinContact implements Parcelable{
 	public static final Parcelable.Creator<BulletinContact> CREATOR = new Parcelable.Creator<BulletinContact>() {
 		public BulletinContact createFromParcel(Parcel in) {
@@ -25,22 +19,24 @@ public class BulletinContact implements Parcelable{
 		}
 	};
 
-	private  String name = "";
-	private  String lastName = "";
-	private  String email = "";
-	private  String phone = "";
-	private  String uid = "";
+	private  String sName = "";
+	private  String sLastName = "";
+	private  String sEmail = "";
+	private  String sPhone = "";
+	private  String sUid = "";
 
 	public BulletinContact() {
 	}
 
-	/*Create non-static instance of curent user Contact for sending*/
+	/**
+	 * Create non-static instance of curent user Contact for sending
+	*/
 	public BulletinContact(Contact contact) {
-		this.name = Contact.getName();
-		this.lastName = Contact.getLastName();
-		this.email = Contact.getEmail();
-		this.phone = Contact.getPhone();
-		this.uid = Contact.getUid();
+		this.sName = Contact.getName();
+		this.sLastName = Contact.getLastName();
+		this.sEmail = Contact.getEmail();
+		this.sPhone = Contact.getPhone();
+		this.sUid = Contact.getUid();
 
 	}
 
@@ -49,56 +45,56 @@ public class BulletinContact implements Parcelable{
 /*Getters and setters*/
 
 	public  String getName() {
-		return name;
+		return sName;
 	}
 
 	public  void setName(String name) {
-		this.name = name;
+		this.sName = name;
 	}
 
 	public  String getLastName() {
-		return lastName;
+		return sLastName;
 	}
 
 	public  void setLastName(String lastName) {
-		this.lastName = lastName;
+		this.sLastName = lastName;
 	}
 
 	public  String getPhone() {
-		return phone;
+		return sPhone;
 	}
 
 	public  void setPhone(String phone) {
-		this.phone = phone;
+		this.sPhone = phone;
 	}
 
 	public  String getEmail() {
-		return email;
+		return sEmail;
 	}
 
 	public  void setEmail(String email) {
-		this.email = email;
+		this.sEmail = email;
 	}
 
 	public  String getUid() {
-		return uid;
+		return sUid;
 	}
 
 	public void setUid(String uid) {
-		this.uid = uid;
+		this.sUid = uid;
 	}
 
 
-	/*Parcable Implementation*/
+	/*Parcelable Implementation*/
 	private BulletinContact(Parcel parcel) {
 
 		String[] strings = new String[5];
 		parcel.readStringArray(strings);
-		this.name = strings[0];
-		this.lastName = strings[1];
-		this.phone = strings[2];
-		this.email = strings[3];
-		this.uid = strings[4];
+		this.sName = strings[0];
+		this.sLastName = strings[1];
+		this.sPhone = strings[2];
+		this.sEmail = strings[3];
+		this.sUid = strings[4];
 
 
 
@@ -112,7 +108,7 @@ public class BulletinContact implements Parcelable{
 	@Override
 	public void writeToParcel(Parcel parcel, int i) {
 
-		String[] strings = {this.name,this.lastName,this.phone,this.email,this.uid};
+		String[] strings = {this.sName,this.sLastName,this.sPhone,this.sEmail,this.sUid};
 
 		parcel.writeStringArray(strings);
 

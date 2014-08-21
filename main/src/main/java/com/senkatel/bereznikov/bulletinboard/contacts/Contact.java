@@ -14,7 +14,12 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-
+/**
+ * Static Class Contact
+ * Implements Contact of current user
+ * For identification use ANDROID_ID
+ * Implements Save and load prefernces
+ */
 public class Contact  {
 
 	private static String name = "";
@@ -83,7 +88,9 @@ public static boolean init(Context context){
 
 	}
 
-
+	/**
+	 * Generate unique ID and save class
+	 */
 	private static void saveContact(){
 		uid =  Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 		Log.v(Constants.LOG_TAG,"UID: " + uid);
@@ -100,6 +107,10 @@ public static boolean init(Context context){
 
 		Log.v(Constants.LOG_TAG,"Preferences Saved, uid: " + uid);
 	}
+
+	/**
+	 * Try to load svaed class and if able to load set exist to true
+	 */
 	private static void loadContact(){
 		try {
 			SharedPreferences preferences = context.getSharedPreferences("contact", Context.MODE_PRIVATE);
@@ -113,13 +124,14 @@ public static boolean init(Context context){
 			Log.e(Constants.LOG_TAG,"Can`t load preferences: " + e.toString());
 		}
 		try {
-			Log.e(Constants.LOG_TAG,"UID " + uid);
+
 			if (uid == null) {
 
 				Contact.setExist(false);
 			} else {
 				Contact.setExist(true);
 			}
+
 		}catch (Exception e){
 
 			Log.e(Constants.LOG_TAG,"Can`t set exist: " + e.toString());
@@ -127,6 +139,12 @@ public static boolean init(Context context){
 
 	}
 
+	/**
+	 * upload contact to server using ParseJson
+	 * First GET Request
+	 * If Get Request returns value use PUT else POST
+	 * Execute in separate thread
+	 */
 	public static void uploadContact(){
 
 		Thread thread = new Thread(new Runnable() {
