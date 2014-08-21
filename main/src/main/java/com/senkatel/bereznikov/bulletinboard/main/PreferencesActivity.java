@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import com.senkatel.bereznikov.bulletinboard.contacts.ContactActivity;
 
-
+/**
+ * Class PreferencesActivity
+ * Implements Interface for edit preferences
+ */
 public class PreferencesActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
