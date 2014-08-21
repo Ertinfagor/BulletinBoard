@@ -1,8 +1,6 @@
 package com.senkatel.bereznikov.bulletinboard.util;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 import android.util.Log;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -12,81 +10,97 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
-
-
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.*;
 
 
 /**
- * Created by Bereznik on 16.08.2014.
+ * Static Class ParseJson
+ * Implements functionality work with server
  */
 public class ParseJson {
 
-/*Get JSON Array from http*/
-	public static JSONArray getJson(String url) throws Exception{
 
-		InputStream rawContent = null;
-		String jsonRawString = null;
-		JSONArray resultJSONArray = null;
+	/**
+	 * GET JSON Array from http
+	 *
+	 * @param url URL string for load
+	 * @return Loaded JSON Array
+	 * @throws Exception
+	 */
+	public static JSONArray getJson(String url) throws Exception {
+
+		InputStream isRawContent = null;
+		String sJSONRawString = null;
+		JSONArray jaResultJSONArray = null;
 
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpGet httpget = new HttpGet(url);
 			HttpResponse response = httpclient.execute(httpget);
 			HttpEntity entity = response.getEntity();
-			rawContent = entity.getContent();
+			isRawContent = entity.getContent();
 
-		}catch (Exception e) {
+		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "getJson Network error" + e.toString());
 
 		}
-		if (rawContent != null) {
+		if (isRawContent != null) {
 			try {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(rawContent, "UTF-8"), 8);//Было  iso-8859-1
+				BufferedReader reader = new BufferedReader(new InputStreamReader(isRawContent, "UTF-8"), 8);
 				StringBuilder sb = new StringBuilder();
 				String line;
 				while ((line = reader.readLine()) != null) {
 					sb.append(line);
 					sb.append("\n");
 				}
-				rawContent.close();
-				jsonRawString = sb.toString();
-				resultJSONArray = new JSONArray(jsonRawString);
+				isRawContent.close();
+				sJSONRawString = sb.toString();
+				jaResultJSONArray = new JSONArray(sJSONRawString);
 			} catch (IOException e) {
 				Log.e(Constants.LOG_TAG, "getJson Error parsing string: " + e.toString());
 			} catch (JSONException e1) {
 				Log.e(Constants.LOG_TAG, "getJson Error parsing JSON: " + e1.toString());
-				throw new JSONException(jsonRawString);
-			}catch (Exception e2){
+				throw new JSONException(sJSONRawString);
+			} catch (Exception e2) {
 				Log.e(Constants.LOG_TAG, "getJson Error: " + e2.toString());
 			}
 		}
-		return resultJSONArray;
+		return jaResultJSONArray;
 
 	}
-	public static JSONObject postJson(String url, JSONObject jsonObject) throws Exception{
+
+	/**
+	 * POST JSON Array from http
+	 *
+	 * @param url        URL string for upload
+	 * @param jsonObject JSON Object that will be loaded
+	 * @return server response
+	 * @throws Exception
+	 * @throws Exception
+	 */
+	public static JSONObject postJson(String url, JSONObject jsonObject) throws Exception {
 		JSONObject json = null;
 		String responseText = null;
 		try {
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 			HttpPost httppostreq = new HttpPost(url);
-			StringEntity se = new StringEntity(jsonObject.toString(),HTTP.UTF_8);
+			StringEntity se = new StringEntity(jsonObject.toString(), HTTP.UTF_8);
 			se.setContentType("application/json;charset=UTF-8");
 			httppostreq.setEntity(se);
 			HttpResponse httpresponse = httpclient.execute(httppostreq);
 			responseText = EntityUtils.toString(httpresponse.getEntity());
 			json = new JSONObject(responseText);
-		}catch (JSONException e1){
+		} catch (JSONException e1) {
 			throw new JSONException(responseText);
 		} catch (Exception e) {
 			Log.e("log_tag", "POST: " + e.toString());
@@ -94,7 +108,16 @@ public class ParseJson {
 		return json;
 
 	}
-	public static JSONObject putJson(String url, JSONObject jsonObject)throws Exception{
+
+	/**
+	 * PUT JSON Array from http
+	 *
+	 * @param url        URL string for upload
+	 * @param jsonObject JSON Object that will be loaded
+	 * @return server response
+	 * @throws Exception
+	 */
+	public static JSONObject putJson(String url, JSONObject jsonObject) throws Exception {
 		JSONObject json = null;
 		String responseText = null;
 		try {
@@ -106,7 +129,7 @@ public class ParseJson {
 			HttpResponse httpresponse = httpclient.execute(httpputreq);
 			responseText = EntityUtils.toString(httpresponse.getEntity());
 			json = new JSONObject(responseText);
-		}catch (JSONException e1){
+		} catch (JSONException e1) {
 			throw new JSONException(responseText);
 		} catch (Exception e) {
 			Log.e("log_tag", "PUT: " + e.toString());
@@ -116,7 +139,14 @@ public class ParseJson {
 
 	}
 
-	public static JSONObject deleteJson(String url)throws Exception{
+	/**
+	 * DELETE object in server
+	 *
+	 * @param url URL string for delete
+	 * @return server response
+	 * @throws Exception
+	 */
+	public static JSONObject deleteJson(String url) throws Exception {
 		JSONObject json = null;
 		String responseText = null;
 		try {
@@ -125,7 +155,7 @@ public class ParseJson {
 			HttpResponse httpresponse = httpclient.execute(httpdeletereq);
 			responseText = EntityUtils.toString(httpresponse.getEntity());
 			json = new JSONObject(responseText);
-		}catch (JSONException e1){
+		} catch (JSONException e1) {
 			throw new JSONException(responseText);
 		} catch (Exception e) {
 			Log.e("log_tag", "Delete: " + e.toString());
@@ -134,7 +164,24 @@ public class ParseJson {
 
 	}
 
-	public static void postImage(String url, Bitmap image)throws Exception{
+	/**
+	 * Load Image on server
+	 * Using externale apache libraries
+	 * for compile on Intelij IDEA change in build.gradle:
+	 * packagingOptions{
+	 * <p/>
+	 * exclude 'META-INF/DEPENDENCIES'
+	 * exclude 'META-INF/NOTICE'
+	 * exclude 'META-INF/LICENSE'
+	 * exclude 'META-INF/NOTICE.txt'
+	 * exclude 'META-INF/LICENSE.txt'
+	 * }
+	 *
+	 * @param url   URL for upload
+	 * @param image Bitmap for Upload
+	 * @throws Exception
+	 */
+	public static void postImage(String url, Bitmap image) throws Exception {
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			image.compress(Bitmap.CompressFormat.JPEG, 75, bos);
@@ -149,31 +196,11 @@ public class ParseJson {
 			httpClient.execute(postRequest);
 
 		} catch (Exception e) {
-			// handle exception here
 			Log.e(e.getClass().getName(), e.getMessage());
 		}
 
 
 	}
 
-	public static Bitmap getImage(String url)throws Exception{
-
-			InputStream rawContent = null;
-			Bitmap resultBitmap = null;
-
-			try {
-				HttpClient httpclient = new DefaultHttpClient();
-				HttpGet httpget = new HttpGet(url);
-				HttpResponse response = httpclient.execute(httpget);
-				HttpEntity entity = response.getEntity();
-				rawContent = entity.getContent();
-				resultBitmap = BitmapFactory.decodeStream(rawContent);
-			}catch (Exception e) {
-				Log.e(Constants.LOG_TAG, "getBitmap Network error" + e.toString());
-
-			}
-	return resultBitmap;
-
-	}
 
 }
