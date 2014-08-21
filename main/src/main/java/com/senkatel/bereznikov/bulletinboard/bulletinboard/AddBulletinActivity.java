@@ -53,7 +53,7 @@ public class AddBulletinActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_addbulletin);
+		setContentView(R.layout.activity_add_bulletin);
 
 		adapterCity = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_layout, Cities.getCitiesList());
 		adapterCategories = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_layout, Categories.getListCategoriesNames());
@@ -185,7 +185,7 @@ public class AddBulletinActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_addbulletin, menu);
+		getMenuInflater().inflate(R.menu.menu_add_bulletin, menu);
 		return true;
 	}
 

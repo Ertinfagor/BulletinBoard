@@ -67,7 +67,7 @@ public class BBGridActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_bbgrid);
+		setContentView(R.layout.activity_bb_grid);
 		sesPeriodicUpdate.scheduleWithFixedDelay(runPeriodicUpdateTask, 0, Constants.UPDATE_INTERVAL, TimeUnit.SECONDS);
 		getActionBar().setTitle("");
 
@@ -140,7 +140,7 @@ public class BBGridActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_bbgrid, menu);
+		getMenuInflater().inflate(R.menu.menu_bb_grid, menu);
 		miRefreshBB = menu.findItem(R.id.menubbgridactivityUpdate);
 		miCategoryFilterBB = menu.findItem(R.id.menubbgridactivityCategory);
 		miCityFilterBB = menu.findItem(R.id.menubbgridactivityCity);

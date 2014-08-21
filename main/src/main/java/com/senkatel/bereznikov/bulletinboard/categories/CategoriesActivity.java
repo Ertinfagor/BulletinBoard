@@ -116,7 +116,7 @@ public class CategoriesActivity extends Activity{
 		@Override
 		protected void onProgressUpdate(Void... values) {
 			super.onProgressUpdate(values);
-			menuItemRefreshCategory.setActionView(R.layout.progressbar_layout);
+
 		}
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -126,7 +126,7 @@ public class CategoriesActivity extends Activity{
 				Cities.getCities(Constants.URL);
 			} catch (Exception e) {
 				Log.e(Constants.LOG_TAG, "Can`t get categories: " + e.toString());
-				Toast.makeText(getApplicationContext(), getString(R.string.ErrorConnectToServer), Toast.LENGTH_LONG).show();
+
 			}
 			return null;
 		}
@@ -135,7 +135,7 @@ public class CategoriesActivity extends Activity{
 			super.onPostExecute(aVoid);
 			try {
 				categoriesAdapter.notifyDataSetChanged();
-				menuItemRefreshCategory.setActionView(null);
+
 			}catch (Exception e){
 				Log.e(Constants.LOG_TAG, "Can`t after Categories: " + e.toString());
 

@@ -121,7 +121,7 @@ public class CitiesActivity extends Activity {
 		@Override
 		protected void onProgressUpdate(Void... values) {
 			super.onProgressUpdate(values);
-			menuItemRefreshCity.setActionView(R.layout.progressbar_layout);
+
 		}
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -131,7 +131,7 @@ public class CitiesActivity extends Activity {
 				Categories.getCategories(Constants.URL);
 			} catch (Exception e) {
 				Log.e(Constants.LOG_TAG, "Can`t get Cities: " + e.toString());
-				Toast.makeText(getApplicationContext(), getString(R.string.ErrorConnectToServer), Toast.LENGTH_LONG).show();
+
 			}
 			return null;
 		}
@@ -140,7 +140,7 @@ public class CitiesActivity extends Activity {
 			super.onPostExecute(aVoid);
 			try {
 				citiesAdapter.notifyDataSetChanged();
-				menuItemRefreshCity.setActionView(null);
+
 			}catch (Exception e){
 				Log.e(Constants.LOG_TAG, "Can`t after Cities: " + e.toString());
 

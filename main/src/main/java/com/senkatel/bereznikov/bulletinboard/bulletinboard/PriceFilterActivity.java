@@ -17,7 +17,7 @@ public class PriceFilterActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activiti_costfilter);
+		setContentView(R.layout.activiti_price_filter);
 		edMax = (EditText) findViewById(R.id.edCostFilterMax);
 		edMin = (EditText) findViewById(R.id.edCostFilterMin);
 

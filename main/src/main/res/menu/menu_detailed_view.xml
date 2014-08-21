@@ -3,11 +3,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
             android:id="@+id/menuDetailedViewEdit"
+            android:icon="@drawable/edit"
             android:showAsAction="ifRoom|withText"
             android:title="@string/edit">
     </item>
     <item
             android:id="@+id/menuDetailedViewDelete"
+            android:icon="@drawable/delete"
             android:showAsAction="ifRoom|withText"
             android:title="@string/delete">
     </item>

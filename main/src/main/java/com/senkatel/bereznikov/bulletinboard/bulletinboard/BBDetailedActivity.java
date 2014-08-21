@@ -45,7 +45,7 @@ public class BBDetailedActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_bbdetailed);
+		setContentView(R.layout.activity_bb_detailed);
 
 
 		ivImage = (ImageView) findViewById(R.id.ivBBGridActivityDetailed);
@@ -103,7 +103,7 @@ public class BBDetailedActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu meActionBar) {
-		getMenuInflater().inflate(R.menu.menu_detailedview, meActionBar);
+		getMenuInflater().inflate(R.menu.menu_detailed_view, meActionBar);
 		miEdit = meActionBar.findItem(R.id.menuDetailedViewEdit);
 		miDelete = meActionBar.findItem(R.id.menuDetailedViewDelete);
 		return true;
