@@ -82,10 +82,7 @@ public class BBGridActivity extends Activity {
 		gvBB.setAdapter(bbArrayAdapter);
 
 
-		if (!Contact.init(this)) {
-			Intent intent = new Intent(this, ContactActivity.class);
-			startActivity(intent);
-		}
+
 
 
 		gvBB.setOnItemClickListener(new AdapterView.OnItemClickListener() {

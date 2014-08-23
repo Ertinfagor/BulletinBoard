@@ -16,6 +16,7 @@ import com.senkatel.bereznikov.bulletinboard.categories.CategoryAddActivity;
 import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.cities.CityAddActivity;
 import com.senkatel.bereznikov.bulletinboard.contacts.Contact;
+import com.senkatel.bereznikov.bulletinboard.contacts.ContactActivity;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 
@@ -72,6 +73,11 @@ public class AddBulletinActivity extends Activity {
 
 		spnCity.setAdapter(adapterCity);
 		spnCategories.setAdapter(adapterCategories);
+
+		if (!Contact.init(this)) {
+			Intent intent = new Intent(this, ContactActivity.class);
+			startActivity(intent);
+		}
 
 
 		if (getIntent().hasExtra("bulletin")) {
