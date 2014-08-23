@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import com.senkatel.bereznikov.bulletinboard.main.R;
+import com.senkatel.bereznikov.bulletinboard.util.Filter;
 
 /**
  * Class PriceFilterActivity
@@ -27,11 +28,11 @@ public class PriceFilterActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (Bulletins.getfPriceFilterMaxValue() != -1) {
-			edMax.setText(String.valueOf(Bulletins.getfPriceFilterMaxValue()));
+		if (Filter.getfPriceFilterMaxValue() != -1) {
+			edMax.setText(String.valueOf(Filter.getfPriceFilterMaxValue()));
 		}
-		if (Bulletins.getfPriceFilterMinValue() != -1) {
-			edMin.setText(String.valueOf(Bulletins.getfPriceFilterMinValue()));
+		if (Filter.getfPriceFilterMinValue() != -1) {
+			edMin.setText(String.valueOf(Filter.getfPriceFilterMinValue()));
 		}
 	}
 
@@ -53,10 +54,10 @@ public class PriceFilterActivity extends Activity {
 			max = min;
 		}
 		if (min != -1) {
-			Bulletins.setFilterPriceMin(min);
+			Filter.setFilterPriceMin(min);
 		}
 		if (max != -1) {
-			Bulletins.setFilterPriceMax(max);
+			Filter.setFilterPriceMax(max);
 
 		}
 		finish();

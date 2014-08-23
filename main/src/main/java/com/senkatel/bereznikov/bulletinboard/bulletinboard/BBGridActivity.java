@@ -19,6 +19,7 @@ import com.senkatel.bereznikov.bulletinboard.contacts.ContactActivity;
 import com.senkatel.bereznikov.bulletinboard.main.PreferencesActivity;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
+import com.senkatel.bereznikov.bulletinboard.util.Filter;
 import com.senkatel.bereznikov.bulletinboard.util.Images;
 
 import java.util.concurrent.Executors;
@@ -78,8 +79,6 @@ public class BBGridActivity extends Activity {
 		bbArrayAdapter = new BBArrayAdapter(this, R.layout.grid_layout);
 
 
-		//MainSync.syncAll();
-
 		gvBB.setAdapter(bbArrayAdapter);
 
 
@@ -108,11 +107,11 @@ public class BBGridActivity extends Activity {
 		try {
 
 			if (getIntent().hasExtra("city")) {
-				int id = getIntent().getIntExtra("city", -1);
-				Bulletins.setFilterCity(id);
+
+				Filter.setFilterCity(getIntent().getIntExtra("city", -1));
 			}
 			if (getIntent().hasExtra("category")) {
-				Bulletins.setFilterCategories(getIntent().getIntExtra("category", -1));
+				Filter.setFilterCategories(getIntent().getIntExtra("category", -1));
 			}
 		} catch (Exception e) {
 
@@ -123,6 +122,7 @@ public class BBGridActivity extends Activity {
 		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 		}
+		new ForceUpdate().execute();
 	}
 
 	@Override
@@ -152,14 +152,14 @@ public class BBGridActivity extends Activity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 
-		if (Bulletins.getCityFilterId() != -1) {
-			miCityFilterBB.setTitle(Cities.getName(Bulletins.getCityFilterId()));
+		if (Filter.getCityFilterId() != -1) {
+			miCityFilterBB.setTitle(Cities.getName(Filter.getCityFilterId()));
 		}
-		if (Bulletins.getCategoryFilterId() != -1) {
-			miCategoryFilterBB.setTitle(Categories.getName(Bulletins.getCategoryFilterId()));
+		if (Filter.getCategoryFilterId() != -1) {
+			miCategoryFilterBB.setTitle(Categories.getName(Filter.getCategoryFilterId()));
 		}
 
-		if (Bulletins.getsFilter() != "?") {
+		if (Filter.isFilter()) {
 			miResetFiltersBB.setVisible(true);
 		}
 		return super.onPrepareOptionsMenu(menu);
@@ -194,7 +194,7 @@ public class BBGridActivity extends Activity {
 				boolReturn = true;
 				break;
 			case R.id.menubbgridactivityResetFilters:
-				Bulletins.resetFilter();
+				Filter.resetFilter();
 				try {
 					new ForceUpdate().execute();
 				} catch (Exception e) {

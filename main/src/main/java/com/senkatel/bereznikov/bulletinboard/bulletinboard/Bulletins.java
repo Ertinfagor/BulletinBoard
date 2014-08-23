@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import com.senkatel.bereznikov.bulletinboard.contacts.BulletinContact;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
+import com.senkatel.bereznikov.bulletinboard.util.Filter;
 import com.senkatel.bereznikov.bulletinboard.util.ParseJson;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,15 +28,7 @@ public class Bulletins {
 
 	private static CopyOnWriteArrayList<Integer> arrayIndexes = new CopyOnWriteArrayList<Integer>();
 	private Context context;
-	private static String sFilter = "?";
-	private static String sCategoriesFilter = "";
-	private static String sCitiesFilter = "";
-	private static int iCategoriesFilterId = -1;
-	private static int iCitiesFilterId = -1;
-	private static String sPriceFilterMax = "";
-	private static String sPriceFilterMin = "";
-	private static float fPriceFilterMaxValue = -1;
-	private static float fPriceFilterMinValue = -1;
+
 
 
 
@@ -69,121 +62,8 @@ public class Bulletins {
 
 	}
 
-	/**
-	 * Add to Filter string substring of category filter, and save appropriate value for future usage
-	 * @param categoriesId Id of filtered category
-	 */
-	public static void setFilterCategories(int categoriesId){
-		sCategoriesFilter = "";
-		sCategoriesFilter = "category=" + categoriesId;
-		iCategoriesFilterId = categoriesId;
-		buildFilter();
 
 
-	}
-
-	/**
-	 * Add to Filter string substring of city filter, and save appropriate value for future usage
-	 * @param cityId  Id of filtered city
-	 */
-	public static void setFilterCity(int cityId){
-		sCitiesFilter = "";
-		sCitiesFilter = "city="+cityId;
-		iCitiesFilterId = cityId;
-		buildFilter();
-
-	}
-
-	/**
-	 *  Add to Filter string substring of maximum price filter, and save appropriate value for future usage
-	 * @param costMax value of maximum price
-	 */
-	public static void setFilterPriceMax(Float costMax){
-		sPriceFilterMax = "";
-		sPriceFilterMax ="pricemore="+costMax;
-		fPriceFilterMaxValue = costMax;
-		buildFilter();
-
-	}
-
-	/**
-	 * Add to Filter string substring of minimum price filter, and save appropriate value for future usage
-	 * @param costMin value of minimum price
-	 */
-	public static void setFilterPriceMin(Float costMin){
-		sPriceFilterMin = "";
-		sPriceFilterMin ="priceless="+costMin;
-		fPriceFilterMinValue = costMin;
-		buildFilter();
-
-	}
-
-	/**
-	 * Put together all filter substrings and form request string for server
-	 */
-	private static void buildFilter(){
-		sFilter = "?";
-		if (!sCategoriesFilter.equals("")){
-			sFilter += sCategoriesFilter;
-
-		}
-		if (!sCitiesFilter.equals("")){
-			if (!sFilter.endsWith("?")){
-				sFilter +="&";}
-			sFilter += sCitiesFilter;
-
-		}
-		if (!sPriceFilterMax.equals("")){
-			if (!sFilter.endsWith("?")){
-				sFilter +="&";}
-			sFilter += sPriceFilterMax;
-
-		}
-		if (!sPriceFilterMin.equals("")){
-			if (!sFilter.endsWith("?")){
-				sFilter +="&";}
-			sFilter += sPriceFilterMin;
-
-		}
-		Log.v(Constants.LOG_TAG,"Filter Test: " + sFilter);
-	}
-
-	/**
-	 * return all filter values to its default settings
-	 */
-	public static void resetFilter(){
-		sFilter = "?";
-		sCategoriesFilter =null;
-		sCitiesFilter =null;
-		sPriceFilterMax =null;
-		sPriceFilterMin =null;
-		iCategoriesFilterId = -1;
-		iCitiesFilterId = -1;
-		fPriceFilterMaxValue = -1;
-		fPriceFilterMinValue = -1;
-
-
-	}
-
-	public static String getsFilter(){
-		return sFilter;
-	}
-
-	public static int getCategoryFilterId() {
-		return iCategoriesFilterId;
-	}
-
-	public static int getCityFilterId() {
-		return iCitiesFilterId;
-	}
-
-	public static float getfPriceFilterMaxValue() {
-		return fPriceFilterMaxValue;
-	}
-
-	public static float getfPriceFilterMinValue() {
-		return fPriceFilterMinValue;
-	}
 
 
 	/**
@@ -195,10 +75,10 @@ public class Bulletins {
 	public static void getBulletins(String url) {
 
 		url += Constants.BULLETIN;
-		if (!sFilter.equals("?")){
-			url+= sFilter;
+		if (Filter.isFilter()){
+			url+= Filter.getsFilter();
 		}
-
+Log.v(Constants.LOG_TAG, "Url: "+url);
 		CopyOnWriteArrayList<Bulletin> tempBulletins = new CopyOnWriteArrayList<Bulletin>();
 		try {
 

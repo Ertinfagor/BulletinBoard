@@ -97,23 +97,29 @@ public class Images {
 	 * @return Scaled bitmap
 	 */
 	public static Bitmap loadImage(int id, int width, int height) {
-		Bitmap resultBitmap = getBitmapFromMemCache(id);
 		Bitmap scaledBitmap = null;
-		if (resultBitmap == null) {
-			String url = Constants.URL + Constants.BULLETIN + "/" + id + "/image";
-			InputStream imageStream = getImageStreamFromUrl(url);
-			resultBitmap = BitmapFactory.decodeStream(imageStream);
+		try {
+			Bitmap resultBitmap = getBitmapFromMemCache(id);
 
-			if (resultBitmap != null) {
+			if (resultBitmap == null) {
+				String url = Constants.URL + Constants.BULLETIN + "/" + id + "/image";
+				InputStream imageStream = getImageStreamFromUrl(url);
+				resultBitmap = BitmapFactory.decodeStream(imageStream);
+
+				if (resultBitmap != null) {
+					scaledBitmap = Bitmap.createScaledBitmap(resultBitmap, width, height, false);
+					addBitmapToMemoryCache(id, scaledBitmap);
+
+				}
+
+			} else {
 				scaledBitmap = Bitmap.createScaledBitmap(resultBitmap, width, height, false);
-				addBitmapToMemoryCache(id, scaledBitmap);
-
 			}
+		}catch (Exception e){
 
-		} else {
-			scaledBitmap = Bitmap.createScaledBitmap(resultBitmap, width, height, false);
+			Log.e(Constants.LOG_TAG, "loadImage load image error" + e.toString());
 		}
-		return scaledBitmap;
+			return scaledBitmap;
 
 	}
 
@@ -140,6 +146,7 @@ public class Images {
 			HttpResponse response = httpclient.execute(httpget);
 			HttpEntity entity = response.getEntity();
 			rawContent = entity.getContent();
+
 		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "getBitmap Network error" + e.toString());
 

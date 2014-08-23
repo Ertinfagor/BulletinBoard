@@ -17,6 +17,7 @@ import com.senkatel.bereznikov.bulletinboard.bulletinboard.Bulletins;
 import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
+import com.senkatel.bereznikov.bulletinboard.util.Filter;
 
 /**
  * Class CategoriesActivity
@@ -71,8 +72,8 @@ public class CategoriesActivity extends Activity{
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (Bulletins.getCategoryFilterId()!=-1){
-			lvCategories.setItemChecked(categoriesAdapter.getPosition(Categories.getName(Bulletins.getCategoryFilterId())),true);
+		if (Filter.getCategoryFilterId()!=-1){
+			lvCategories.setItemChecked(categoriesAdapter.getPosition(Categories.getName(Filter.getCategoryFilterId())),true);
 		}
 		try {
 			new ForceUpdate().execute();
