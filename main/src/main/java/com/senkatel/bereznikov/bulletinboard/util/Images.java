@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.util.LruCache;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -14,7 +15,9 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -25,15 +28,17 @@ import java.util.List;
  */
 public class Images {
 	private static LruCache<Integer, Bitmap> mMemoryCache;
+	static int maxMemory;
 
 	/**
 	 * Init Memory Cache
+	 * calculates cache size
 	 */
 	public static void init() {
 		// Get max available VM memory, exceeding this amount will throw an
 		// OutOfMemory exception. Stored in kilobytes as LruCache takes an
 		// int in its constructor.
-		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+		maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
 		// Use 1/8th of the available memory for this memory cache.
 		final int cacheSize = maxMemory / Constants.MEMORY_CACHE_USAGE_DIVISOR;
@@ -58,6 +63,7 @@ public class Images {
 	public static void addBitmapToMemoryCache(Integer key, Bitmap bitmap) {
 		if (getBitmapFromMemCache(key) == null) {
 			mMemoryCache.put(key, bitmap);
+			Log.v(Constants.LOG_TAG, " Bitmap added to cache. Cache size: " + mMemoryCache.size()+"/"+mMemoryCache.maxSize());
 		}
 	}
 
@@ -68,30 +74,10 @@ public class Images {
 	 * @return bitmap
 	 */
 	public static Bitmap getBitmapFromMemCache(Integer key) {
+		Log.v(Constants.LOG_TAG, " Bitmap loaded from cache. Cache size: " + mMemoryCache.size()+"/"+mMemoryCache.maxSize());
 		return mMemoryCache.get(key);
 	}
 
-
-	/**
-	 * Try to load bitmap from cache if no load from server
-	 *
-	 * @param id Bulletin id
-	 * @return bitmap
-	 */
-	public static Bitmap loadImage(int id) {
-		Bitmap resultBitmap = getBitmapFromMemCache(id);
-		if (resultBitmap == null) {
-			String url = Constants.URL + Constants.BULLETIN + "/" + id + "/image";
-			InputStream imageStream = getImageStreamFromUrl(url);
-			resultBitmap = BitmapFactory.decodeStream(imageStream);
-
-			if (resultBitmap != null) {
-				addBitmapToMemoryCache(id, resultBitmap);
-			}
-		}
-		return resultBitmap;
-
-	}
 
 	/**
 	 * Try to load bitmap from cache if no load from server
@@ -102,29 +88,23 @@ public class Images {
 	 * @return Scaled bitmap
 	 */
 	public static Bitmap loadImage(int id, int width, int height) {
-		Bitmap scaledBitmap = null;
+		Bitmap resultBitmap = null;
 		try {
-			Bitmap resultBitmap = getBitmapFromMemCache(id);
-
+			resultBitmap = getBitmapFromMemCache(id);
 			if (resultBitmap == null) {
 				String url = Constants.URL + Constants.BULLETIN + "/" + id + Constants.IMAGE;
 				InputStream imageStream = getImageStreamFromUrl(url);
-				resultBitmap = BitmapFactory.decodeStream(imageStream);
-
+				resultBitmap = decodeSampledBitmapFromStream(imageStream,width,height);
 				if (resultBitmap != null) {
-					scaledBitmap = Bitmap.createScaledBitmap(resultBitmap, width, height, false);
-					addBitmapToMemoryCache(id, scaledBitmap);
-
+					addBitmapToMemoryCache(id, resultBitmap);
 				}
 
-			} else {
-				scaledBitmap = Bitmap.createScaledBitmap(resultBitmap, width, height, false);
 			}
 		}catch (Exception e){
 
 			Log.e(Constants.LOG_TAG, "loadImage load image error" + e.toString());
 		}
-			return scaledBitmap;
+			return resultBitmap;
 
 	}
 
@@ -140,11 +120,14 @@ public class Images {
 
 	}
 
+	/**
+	 * Load InputStream with image from server
+	 * @param url server url
+	 * @return InputStream with image
+	 */
 	public static InputStream getImageStreamFromUrl(String url) {
 
 		InputStream rawContent = null;
-
-
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpGet httpget = new HttpGet(url);
@@ -163,7 +146,7 @@ public class Images {
 
 	/**
 	 * Load Image on server
-	 * Using externale apache libraries
+	 * Using external apache libraries
 	 * for compile on Intelij IDEA change in build.gradle:
 	 * packagingOptions{
 	 * <p/>
@@ -197,5 +180,79 @@ public class Images {
 		}
 
 
+	}
+
+	/**
+	 * Calculates level of cropping image
+	 * @param options loaded Bitmap options for cropped Bitmap
+	 * @param reqWidth required width
+	 * @param reqHeight required height
+	 * @return cropping ratio
+	 */
+	public static int calculateInSampleSize(
+			BitmapFactory.Options options, int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
+
+		if (height > reqHeight || width > reqWidth) {
+
+			final int halfHeight = height / 2;
+			final int halfWidth = width / 2;
+
+			// Calculate the largest inSampleSize value that is a power of 2 and keeps both
+			// height and width larger than the requested height and width.
+			while ((halfHeight / inSampleSize) > reqHeight
+					&& (halfWidth / inSampleSize) > reqWidth) {
+				inSampleSize *= 2;
+			}
+		}
+
+		return inSampleSize;
+	}
+
+	/**
+	 * Get bitmap correct size
+	 * Use apache common-io IOUtils
+	 * changes to build.grandle:
+	 *  exclude 'org/apache/commons/io/FileUtilsTestDataCR.dat'
+	 *  exclude 'org/apache/commons/io/FileUtilsTestDataCRLF.dat'
+	 *  exclude 'org/apache/commons/io/FileUtilsTestDataLF.dat'
+	 *  exclude 'org/apache/commons/io/testfileBOM.xml'
+	 *  exclude 'org/apache/commons/io/testfileNoBOM.xml'
+	 *  exclude 'test-file-20byteslength.bin'
+	 *  exclude 'test-file-empty.bin'
+	 *  exclude 'test-file-iso8859-1-shortlines-win-linebr.bin'
+	 *  exclude 'test-file-iso8859-1.bin'
+	 *  exclude 'test-file-shiftjis.bin'
+	 *  exclude 'test-file-utf16be.bin'
+	 * @param inputStream Bitmap InputStream for scaling
+	 * @param reqWidth required width
+	 * @param reqHeight required height
+	 * @return scaled Bitmap
+	 */
+	public static Bitmap decodeSampledBitmapFromStream(InputStream inputStream, int reqWidth, int reqHeight) {
+
+		try {
+			byte[] bytes = IOUtils.toByteArray(inputStream);
+
+
+			// First decode with inJustDecodeBounds=true to check dimensions
+			final BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+
+			// Calculate inSampleSize
+			options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+			// Decode bitmap with inSampleSize set
+			options.inJustDecodeBounds = false;
+
+			return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+		} catch (IOException e) {
+			Log.e(Constants.LOG_TAG, "Can`t decode Bitmap" + e.toString());
+		}
+		return null;
 	}
 }

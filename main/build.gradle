@@ -20,6 +20,20 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/LICENSE.txt'
+
+        exclude 'org/apache/commons/io/FileUtilsTestDataCR.dat'
+        exclude 'org/apache/commons/io/FileUtilsTestDataCRLF.dat'
+        exclude 'org/apache/commons/io/FileUtilsTestDataLF.dat'
+        exclude 'org/apache/commons/io/testfileBOM.xml'
+        exclude 'org/apache/commons/io/testfileNoBOM.xml'
+        exclude 'test-file-20byteslength.bin'
+        exclude 'test-file-empty.bin'
+        exclude 'test-file-iso8859-1-shortlines-win-linebr.bin'
+        exclude 'test-file-iso8859-1.bin'
+        exclude 'test-file-shiftjis.bin'
+        exclude 'test-file-utf16be.bin'
+
+
     }
 
     compileSdkVersion 17
