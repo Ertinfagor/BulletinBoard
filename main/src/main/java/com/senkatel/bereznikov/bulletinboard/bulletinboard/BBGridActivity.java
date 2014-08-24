@@ -1,6 +1,7 @@
 package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -221,9 +222,20 @@ public class BBGridActivity extends Activity {
 
 
 	private class ForceUpdate extends AsyncTask<Void, Void, Void> {
+		private ProgressDialog Dialog;
 		@Override
 		protected void onProgressUpdate(Void... values) {
 			super.onProgressUpdate(values);
+
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			Dialog = new ProgressDialog(BBGridActivity.this);
+			Dialog.setMessage("Загрузка");
+			Dialog.show();
+
 
 		}
 
@@ -242,7 +254,12 @@ public class BBGridActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void aVoid) {
 			super.onPostExecute(aVoid);
+
 			bbArrayAdapter.notifyDataSetChanged();
+			if(Dialog.isShowing())
+			{
+				Dialog.dismiss();
+			}
 
 		}
 	}

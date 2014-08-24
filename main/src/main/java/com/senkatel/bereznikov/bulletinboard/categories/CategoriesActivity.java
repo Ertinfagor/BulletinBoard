@@ -1,6 +1,7 @@
 package com.senkatel.bereznikov.bulletinboard.categories;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -114,11 +115,15 @@ public class CategoriesActivity extends Activity{
 	}
 
 	private class ForceUpdate extends AsyncTask<Void, Void, Void> {
+		private ProgressDialog Dialog;
 		@Override
-		protected void onProgressUpdate(Void... values) {
-			super.onProgressUpdate(values);
-
+		protected void onPreExecute() {
+			super.onPreExecute();
+			Dialog = new ProgressDialog(CategoriesActivity.this);
+			Dialog.setMessage("Загрузка");
+			Dialog.show();
 		}
+
 		@Override
 		protected Void doInBackground(Void... params) {
 			try {
@@ -134,12 +139,10 @@ public class CategoriesActivity extends Activity{
 		@Override
 		protected void onPostExecute(Void aVoid) {
 			super.onPostExecute(aVoid);
-			try {
-				categoriesAdapter.notifyDataSetChanged();
-
-			}catch (Exception e){
-				Log.e(Constants.LOG_TAG, "Can`t after Categories: " + e.toString());
-
+			categoriesAdapter.notifyDataSetChanged();
+			if(Dialog.isShowing())
+			{
+				Dialog.dismiss();
 			}
 		}
 	}

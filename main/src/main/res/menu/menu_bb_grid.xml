@@ -8,6 +8,12 @@
             android:title="@string/BBMainUpdate">
     </item>
     <item
+            android:id="@+id/menubbgridactivityNewBulletin"
+            android:icon="@drawable/add"
+            android:showAsAction="always|withText"
+            android:title="@string/BBMainNewBulletin">
+    </item>
+    <item
             android:id="@+id/menubbgridactivityCategory"
             android:icon="@drawable/category_filter"
             android:showAsAction="always|withText"
@@ -20,18 +26,23 @@
             android:title="@string/BBMainCity">
     </item>
     <item
+            android:id="@+id/menubbgridactivityMyBullein"
+            android:showAsAction="ifRoom|withText"
+            android:title="@string/my_bulletin">
+    </item>
+    <item
+            android:id="@+id/menubbgridactivityTag"
+            android:icon="@drawable/city_filter"
+            android:showAsAction="ifRoom|withText"
+            android:title="@string/tag">
+    </item>
+    <item
             android:id="@+id/menubbgridactivityResetFilters"
-
             android:showAsAction="ifRoom|withText"
             android:visible="false"
             android:title="@string/BBMainNewResetFilters">
     </item>
-    <item
-            android:id="@+id/menubbgridactivityNewBulletin"
-            android:icon="@drawable/add"
-            android:showAsAction="ifRoom|withText"
-            android:title="@string/BBMainNewBulletin">
-    </item>
+
     <item
             android:id="@+id/menubbgridactivityCostFilter"
             android:icon="@drawable/cost_filter"

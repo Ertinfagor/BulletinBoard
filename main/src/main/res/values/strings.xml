@@ -21,4 +21,6 @@
     <string name="needSetTitle">Укажите заголовок</string>
     <string name="itemNew">Новый</string>
     <string name="itemUsed">Подержанный</string>
+    <string name="my_bulletin">Мои объявления</string>
+    <string name="tag">Поиск</string>
 </resources>

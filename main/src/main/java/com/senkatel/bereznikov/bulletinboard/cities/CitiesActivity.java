@@ -1,6 +1,7 @@
 package com.senkatel.bereznikov.bulletinboard.cities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -119,11 +120,16 @@ public class CitiesActivity extends Activity {
 
 
 	private class ForceUpdate extends AsyncTask<Void, Void, Void> {
-		@Override
-		protected void onProgressUpdate(Void... values) {
-			super.onProgressUpdate(values);
+		private ProgressDialog Dialog;
 
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			Dialog = new ProgressDialog(CitiesActivity.this);
+			Dialog.setMessage("Загрузка");
+			Dialog.show();
 		}
+
 		@Override
 		protected Void doInBackground(Void... params) {
 			try {
@@ -139,12 +145,11 @@ public class CitiesActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void aVoid) {
 			super.onPostExecute(aVoid);
-			try {
-				citiesAdapter.notifyDataSetChanged();
+			citiesAdapter.notifyDataSetChanged();
 
-			}catch (Exception e){
-				Log.e(Constants.LOG_TAG, "Can`t after Cities: " + e.toString());
-
+			if(Dialog.isShowing())
+			{
+				Dialog.dismiss();
 			}
 
 		}
