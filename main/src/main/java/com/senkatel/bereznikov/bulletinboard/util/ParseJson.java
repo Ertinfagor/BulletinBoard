@@ -210,7 +210,7 @@ public class ParseJson {
 		return json;
 
 	}
-
+/*
 	/**
 	 * Load Image on server
 	 * Using externale apache libraries
@@ -227,7 +227,7 @@ public class ParseJson {
 	 * @param url   URL for upload
 	 * @param image Bitmap for Upload
 	 * @throws Exception
-	 */
+	 *//*
 	public static void postImage(String url, Bitmap image) throws Exception {
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -247,7 +247,7 @@ public class ParseJson {
 		}
 
 
-	}
+	}*/
 
 
 }

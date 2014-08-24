@@ -8,8 +8,13 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -152,6 +157,45 @@ public class Images {
 
 		}
 		return rawContent;
+
+	}
+
+
+	/**
+	 * Load Image on server
+	 * Using externale apache libraries
+	 * for compile on Intelij IDEA change in build.gradle:
+	 * packagingOptions{
+	 * <p/>
+	 * exclude 'META-INF/DEPENDENCIES'
+	 * exclude 'META-INF/NOTICE'
+	 * exclude 'META-INF/LICENSE'
+	 * exclude 'META-INF/NOTICE.txt'
+	 * exclude 'META-INF/LICENSE.txt'
+	 * }
+	 *
+	 * @param url   URL for upload
+	 * @param image Bitmap for Upload
+	 * @throws Exception
+	 */
+	public static void postImage(String url, Bitmap image) throws Exception {
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			image.compress(Bitmap.CompressFormat.JPEG, 75, bos);
+			byte[] data = bos.toByteArray();
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpPost postRequest = new HttpPost(url);
+			ByteArrayBody bab = new ByteArrayBody(data, "test.jpg");
+			MultipartEntity reqEntity = new MultipartEntity(
+					HttpMultipartMode.BROWSER_COMPATIBLE);
+			reqEntity.addPart("file", bab);
+			postRequest.setEntity(reqEntity);
+			httpClient.execute(postRequest);
+
+		} catch (Exception e) {
+			Log.e(e.getClass().getName(), e.getMessage());
+		}
+
 
 	}
 }

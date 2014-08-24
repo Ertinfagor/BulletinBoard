@@ -5,6 +5,7 @@ import android.util.Log;
 import com.senkatel.bereznikov.bulletinboard.contacts.BulletinContact;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.Filter;
+import com.senkatel.bereznikov.bulletinboard.util.Images;
 import com.senkatel.bereznikov.bulletinboard.util.ParseJson;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -174,7 +175,7 @@ Log.v(Constants.LOG_TAG, "Url: "+url);
 
 					JSONObject result = ParseJson.postJson(url, postJsonObj);
 					String imageurl = Constants.URL + Constants.BULLETIN + "/" + result.getInt("Id") + "/image";
-					ParseJson.postImage(imageurl,bulletin.getBmpImage());
+					Images.postImage(imageurl, bulletin.getBmpImage());
 
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t POST Category: " + e.toString());
@@ -220,7 +221,7 @@ Log.v(Constants.LOG_TAG, "Url: "+url);
 					putJsonObj.put("categories", categories);
 					ParseJson.putJson(url, putJsonObj);
 					String imageurl = Constants.URL + Constants.BULLETIN + "/" + bulletin.getIntBulletinId() + "/image";
-					ParseJson.postImage(imageurl,bulletin.getBmpImage());
+					Images.postImage(imageurl,bulletin.getBmpImage());
 
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t PUT Category: " + e.toString());
