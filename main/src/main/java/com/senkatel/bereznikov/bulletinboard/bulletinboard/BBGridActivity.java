@@ -15,8 +15,6 @@ import com.senkatel.bereznikov.bulletinboard.categories.Categories;
 import com.senkatel.bereznikov.bulletinboard.categories.CategoriesActivity;
 import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.cities.CitiesActivity;
-import com.senkatel.bereznikov.bulletinboard.contacts.Contact;
-import com.senkatel.bereznikov.bulletinboard.contacts.ContactActivity;
 import com.senkatel.bereznikov.bulletinboard.main.PreferencesActivity;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
@@ -181,6 +179,17 @@ public class BBGridActivity extends Activity {
 			case R.id.menubbgridactivityNewBulletin:
 				intent = new Intent(getApplicationContext(), AddBulletinActivity.class);
 				startActivity(intent);
+				boolReturn = true;
+				break;
+			case R.id.menubbgridactivityMyBulletin:
+				Filter.setFilterMyBulletins();
+				miCategoryFilterBB.setTitle(getString(R.string.BBMainCategories));
+				miCityFilterBB.setTitle(getString(R.string.BBMainCity));
+				try {
+					new ForceUpdate().execute();
+				} catch (Exception e) {
+					Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
+				}
 				boolReturn = true;
 				break;
 			case R.id.menubbgridactivityUpdate:

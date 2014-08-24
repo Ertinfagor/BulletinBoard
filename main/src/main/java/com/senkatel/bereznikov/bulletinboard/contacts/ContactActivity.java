@@ -67,8 +67,7 @@ public class ContactActivity extends Activity {
 			Contact.setPhone(etPhone.getText().toString());
 			Contact.setEmail(etEmail.getText().toString());
 			Contact.save();
-			Intent intent = new Intent(this, BBGridActivity.class);
-			startActivity(intent);
+			finish();
 
 		}
 

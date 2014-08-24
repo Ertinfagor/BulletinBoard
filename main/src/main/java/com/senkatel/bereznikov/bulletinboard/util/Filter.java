@@ -102,7 +102,9 @@ public class Filter {
 	 */
 	private static void buildFilter(){
 		if (myBulletins){
-			sFilter = "?uid=" + Contact.getUid();
+			if (!Contact.getUid().equals("")) {
+				sFilter = "?uid=" + Contact.getUid();
+			}
 		}else{
 		sFilter = "?";
 		if (!sCategoriesFilter.equals("")){
