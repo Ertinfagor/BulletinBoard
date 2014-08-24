@@ -1,7 +1,7 @@
 package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
+import android.app.*;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,12 +11,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import com.senkatel.bereznikov.bulletinboard.categories.Categories;
 import com.senkatel.bereznikov.bulletinboard.categories.CategoriesActivity;
 import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.cities.CitiesActivity;
 import com.senkatel.bereznikov.bulletinboard.main.PreferencesActivity;
 import com.senkatel.bereznikov.bulletinboard.main.R;
+import com.senkatel.bereznikov.bulletinboard.main.TagDialog;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.Filter;
 import com.senkatel.bereznikov.bulletinboard.util.Images;
@@ -31,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  * Has force update task running in separate thread
  * Change names of filter buttons
  */
-public class BBGridActivity extends Activity {
+public class BBGridActivity extends Activity{
 	private GridView gvBB;
 	private BBArrayAdapter bbArrayAdapter;
 	private MenuItem miRefreshBB;
@@ -82,8 +85,6 @@ public class BBGridActivity extends Activity {
 
 
 
-
-
 		gvBB.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -108,6 +109,9 @@ public class BBGridActivity extends Activity {
 			}
 			if (getIntent().hasExtra("category")) {
 				Filter.setFilterCategories(getIntent().getIntExtra("category", -1));
+			}
+			if (getIntent().hasExtra("tag")) {
+				Filter.setFilterTag(getIntent().getStringExtra("tag"));
 			}
 		} catch (Exception e) {
 
@@ -192,6 +196,17 @@ public class BBGridActivity extends Activity {
 				}
 				boolReturn = true;
 				break;
+			case R.id.menubbgridactivityTag:
+				FragmentTransaction ft = getFragmentManager().beginTransaction();
+				Fragment prev = getFragmentManager().findFragmentByTag("tag");
+				if (prev != null) {
+					ft.remove(prev);
+				}
+				ft.addToBackStack(null);
+				TagDialog newFragment = new TagDialog();
+				newFragment.show(ft, "tag");
+				boolReturn = true;
+				break;
 			case R.id.menubbgridactivityUpdate:
 				try {
 					new ForceUpdate().execute();
@@ -272,6 +287,7 @@ public class BBGridActivity extends Activity {
 
 		}
 	}
+
 }
 
 

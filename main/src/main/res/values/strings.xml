@@ -23,4 +23,5 @@
     <string name="itemUsed">Подержанный</string>
     <string name="my_bulletin">Мои объявления</string>
     <string name="tag">Поиск</string>
+    <string name="findtag">Поиск</string>
 </resources>
