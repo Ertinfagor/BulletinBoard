@@ -12,6 +12,7 @@ public interface Constants {
 	public static final String CATEGORY = "/category";
 	public static final String CITY = "/city";
 	public static final String CONTACT = "/contact";
+	public static final String IMAGE = "/image";
 	//new public static final String DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'";
 	public static final String DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ";
 	public static final int IMAGE_HEIHT = 100;

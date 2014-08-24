@@ -102,7 +102,7 @@ public class Images {
 			Bitmap resultBitmap = getBitmapFromMemCache(id);
 
 			if (resultBitmap == null) {
-				String url = Constants.URL + Constants.BULLETIN + "/" + id + "/image";
+				String url = Constants.URL + Constants.BULLETIN + "/" + id + Constants.IMAGE;
 				InputStream imageStream = getImageStreamFromUrl(url);
 				resultBitmap = BitmapFactory.decodeStream(imageStream);
 
