@@ -1,7 +1,10 @@
 package com.senkatel.bereznikov.bulletinboard.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.util.LruCache;
 import org.apache.commons.io.IOUtils;
@@ -17,7 +20,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -28,6 +30,7 @@ import java.util.List;
  */
 public class Images {
 	private static LruCache<Integer, Bitmap> mMemoryCache;
+	private  static byte[] tempByteArrayBitmap;
 	static int maxMemory;
 
 	/**
@@ -92,8 +95,7 @@ public class Images {
 			resultBitmap = getBitmapFromMemCache(id);
 			if (resultBitmap == null) {
 				String url = Constants.URL + Constants.BULLETIN + "/" + id + Constants.IMAGE;
-				InputStream imageStream = getImageStreamFromUrl(url);
-				resultBitmap = decodeSampledBitmapFromStream(imageStream,width,height);
+				resultBitmap = decodeBitmapFromByteArray(getByteArrayFromUrl(url), width, height);
 				if (resultBitmap != null) {
 					addBitmapToMemoryCache(id, resultBitmap);
 				}
@@ -124,21 +126,24 @@ public class Images {
 	 * @param url server url
 	 * @return InputStream with image
 	 */
-	public static InputStream getImageStreamFromUrl(String url) {
+	public static byte[] getByteArrayFromUrl(String url) {
 
 		InputStream rawContent = null;
+
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpGet httpget = new HttpGet(url);
 			HttpResponse response = httpclient.execute(httpget);
 			HttpEntity entity = response.getEntity();
 			rawContent = entity.getContent();
-
+			byte[] bytes = IOUtils.toByteArray(rawContent);
+			return bytes;
 		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "getBitmap Network error" + e.toString());
 
 		}
-		return rawContent;
+
+		return  null;
 
 	}
 
@@ -157,17 +162,14 @@ public class Images {
 	 * }
 	 *
 	 * @param url   URL for upload
-	 * @param image Bitmap for Upload
+	 * @param byteArrayBitmap Bitmap byte array for Upload
 	 * @throws Exception
 	 */
-	public static void postImage(String url, Bitmap image) throws Exception {
+	public static void postImage(String url, byte[] byteArrayBitmap) throws Exception {
 		try {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			image.compress(Bitmap.CompressFormat.JPEG, 75, bos);
-			byte[] data = bos.toByteArray();
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpPost postRequest = new HttpPost(url);
-			ByteArrayBody bab = new ByteArrayBody(data, "test.jpg");
+			ByteArrayBody bab = new ByteArrayBody(byteArrayBitmap, "test.jpg");
 			MultipartEntity reqEntity = new MultipartEntity(
 					HttpMultipartMode.BROWSER_COMPATIBLE);
 			reqEntity.addPart("file", bab);
@@ -226,21 +228,21 @@ public class Images {
 	 *  exclude 'test-file-iso8859-1.bin'
 	 *  exclude 'test-file-shiftjis.bin'
 	 *  exclude 'test-file-utf16be.bin'
-	 * @param inputStream Bitmap InputStream for scaling
+	 * @param imageByteArray Bitmap ByteArray for scaling
 	 * @param reqWidth required width
 	 * @param reqHeight required height
 	 * @return scaled Bitmap
 	 */
-	public static Bitmap decodeSampledBitmapFromStream(InputStream inputStream, int reqWidth, int reqHeight) {
+	public static Bitmap decodeBitmapFromByteArray(byte[] imageByteArray, int reqWidth, int reqHeight) {
 
 		try {
-			byte[] bytes = IOUtils.toByteArray(inputStream);
+
 
 
 			// First decode with inJustDecodeBounds=true to check dimensions
 			final BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inJustDecodeBounds = true;
-			BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+			BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, options);
 
 			// Calculate inSampleSize
 			options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
@@ -248,10 +250,70 @@ public class Images {
 			// Decode bitmap with inSampleSize set
 			options.inJustDecodeBounds = false;
 
-			return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
-		} catch (IOException e) {
+			return BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, options);
+		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "Can`t decode Bitmap" + e.toString());
 		}
 		return null;
+	}
+	public static Bitmap decodeBitmapFromFile(Uri uriFile, int reqWidth, int reqHeight, Context context) {
+
+		try {
+
+			InputStream input = context.getContentResolver().openInputStream(uriFile);
+
+			// First decode with inJustDecodeBounds=true to check dimensions
+			final BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(input,null,options);
+			input.close();
+			// Calculate inSampleSize
+			options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+			// Decode bitmap with inSampleSize set
+			options.inJustDecodeBounds = false;
+			InputStream inputSecond = context.getContentResolver().openInputStream(uriFile);
+			return BitmapFactory.decodeStream(inputSecond,null,options);
+		} catch (Exception e) {
+			Log.e(Constants.LOG_TAG, "Can`t decode Bitmap" + e.toString());
+		}
+		return null;
+	}
+
+	public static void setTempByteArrayBitmap(final Uri imagePath, final Context context){
+
+				try {
+					Bitmap tempBitmap = decodeBitmapFromFile(imagePath,Constants.IMAGE_WIDTH_MAX,Constants.IMAGE_HEIHT_MAX,context);
+					ByteArrayOutputStream stream = new ByteArrayOutputStream();
+					tempBitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
+					byte[] byteArray = stream.toByteArray();
+					tempByteArrayBitmap = byteArray;
+
+
+				} catch (Exception e) {
+					Log.e(Constants.LOG_TAG, "Can`t get image from file: " + e.toString());
+				}
+
+
+	}
+
+	public static Bitmap getTempBitmap(){
+try {
+	return decodeBitmapFromByteArray(tempByteArrayBitmap, Constants.IMAGE_WIDTH, Constants.IMAGE_HEIHT);
+}catch (Exception e){
+	Log.e(Constants.LOG_TAG, "Cant decode temp image: " + e.toString());
+}
+	return  null;
+	}
+
+	public static void uploadTemp(int id){
+		String url = Constants.URL + Constants.BULLETIN + "/" + id + Constants.IMAGE;
+		try {
+			postImage(url,tempByteArrayBitmap);
+		} catch (Exception e) {
+			Log.e(Constants.LOG_TAG, "Can`t POST image: " + e.toString());
+		}
+
+
 	}
 }

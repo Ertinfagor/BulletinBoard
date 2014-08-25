@@ -19,6 +19,7 @@ import com.senkatel.bereznikov.bulletinboard.contacts.Contact;
 import com.senkatel.bereznikov.bulletinboard.contacts.ContactActivity;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
+import com.senkatel.bereznikov.bulletinboard.util.Images;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -182,9 +183,16 @@ public class AddBulletinActivity extends Activity {
 				public void run() {
 					try {
 						Uri uriImagePath = data.getData();
-						bmpImage = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), uriImagePath);
-						Bitmap scaledBitmap = Bitmap.createScaledBitmap(bmpImage, Constants.IMAGE_WIDTH, Constants.IMAGE_HEIHT, false);
-						ivImage.setImageBitmap(scaledBitmap);
+						Images.setTempByteArrayBitmap(uriImagePath,getApplicationContext());
+				//		bmpImage = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), uriImagePath);
+				//		final Bitmap scaledBitmap = Bitmap.createScaledBitmap(bmpImage, Constants.IMAGE_WIDTH, Constants.IMAGE_HEIHT, false);
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								ivImage.setImageBitmap(Images.getTempBitmap());
+							}
+						});
+
 
 					} catch (Exception e) {
 						Log.e(Constants.LOG_TAG, "Can`t get image from file: " + e.toString());

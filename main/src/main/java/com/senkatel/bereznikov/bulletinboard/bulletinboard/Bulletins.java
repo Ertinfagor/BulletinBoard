@@ -174,8 +174,7 @@ public class Bulletins {
 					postJsonObj.put("categories", categories);
 
 					JSONObject result = ParseJson.postJson(url, postJsonObj);
-					String imageurl = Constants.URL + Constants.BULLETIN + "/" + result.getInt("Id") + "/image";
-					Images.postImage(imageurl, bulletin.getBmpImage());
+					Images.uploadTemp(result.getInt("Id"));
 
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t POST Category: " + e.toString());
@@ -220,8 +219,7 @@ public class Bulletins {
 
 					putJsonObj.put("categories", categories);
 					ParseJson.putJson(url, putJsonObj);
-					String imageurl = Constants.URL + Constants.BULLETIN + "/" + bulletin.getIntBulletinId() + "/image";
-					Images.postImage(imageurl,bulletin.getBmpImage());
+					Images.uploadTemp(bulletin.getIntBulletinId());
 
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t PUT Category: " + e.toString());
