@@ -55,7 +55,7 @@ public class Cities {
 	 * When execute method data load to temp array
 	 * @param url base address of server
 	 */
-	public static void getCities(String url) {
+	public synchronized static void getCities(String url) {
 
 		url += Constants.CITY;
 

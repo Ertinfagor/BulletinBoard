@@ -73,25 +73,21 @@ public class Bulletins {
 	 * Must use Thread or AsyncTask to Implement this method
 	 * @param url base address of server
 	 */
-	public static void getBulletins(String url) {
+	public synchronized static void getBulletins(String url) {
 
 		url += Constants.BULLETIN;
 		if (Filter.isFilter()){
 			url+= Filter.getsFilter();
 		}
-
 		CopyOnWriteArrayList<Bulletin> tempBulletins = new CopyOnWriteArrayList<Bulletin>();
 		try {
-
 			JSONArray jsonArrayBulletins = ParseJson.getJsonArray(url);
-
 			int l = jsonArrayBulletins.length();
 			int index = -1;
 
 			for (int i = 0; i < l; i++) {
 				JSONObject jsonBulletin = jsonArrayBulletins.getJSONObject(i);
 				index = jsonBulletin.getInt("Id");
-				arrayIndexes.add(index);
 				Bulletin bulletin = new Bulletin();
 				bulletin.setIntBulletinId(index);
 				bulletin.setsTitle(jsonBulletin.getString("title"));
@@ -132,11 +128,10 @@ public class Bulletins {
 		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "getBulletins error: " + e.toString());
 		}
-		synchronized (arrayBulletins){
 			arrayBulletins.clear();
 			arrayBulletins.addAll(tempBulletins);
 
-		}
+
 	}
 
 	/**

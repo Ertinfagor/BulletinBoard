@@ -5,10 +5,14 @@
                 android:layout_height="match_parent">
 
         <GridView
+                android:background="#ff2f2f2f"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/gridView"
                 android:clickable="false"
+
+                android:horizontalSpacing="2dp"
+                android:verticalSpacing="2dp"
                 >
 
         </GridView>

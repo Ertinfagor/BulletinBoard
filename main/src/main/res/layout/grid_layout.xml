@@ -2,7 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:orientation="vertical"
-                android:background="@drawable/border"
+                android:background="#fff8f8f8"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -17,7 +17,7 @@
             android:scaleType="fitXY"/>
 
     <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/txtGridLayoutTitle"
@@ -27,7 +27,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"/>
     <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/txtGridLayoutDescription"

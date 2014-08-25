@@ -96,6 +96,8 @@ public class AddBulletinActivity extends Activity {
 			String categories = "";
 			for (int id : bulletin.getListCategories()) {
 				categories += Categories.getName(id);
+				categories += " ";
+				categoriesIds.add(id);
 			}
 			tvCategories.setText(categories);
 		}
@@ -104,14 +106,13 @@ public class AddBulletinActivity extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-				String categoriesString = "";
+				String categoriesString = tvCategories.getText().toString();
 				if (!newSpnCategories) {
 					if (!categoriesIds.contains(Categories.getId(adapterCategories.getItem(position)))) {
 						categoriesIds.add(Categories.getId(adapterCategories.getItem(position)));
-						for (Integer categorieId : categoriesIds) {
-							categoriesString += Categories.getName(categorieId);
-							categoriesString += " ";
-						}
+						categoriesString += Categories.getName(Categories.getId(adapterCategories.getItem(position)));
+						categoriesString += " ";
+
 						tvCategories.setText(categoriesString);
 					}
 				}

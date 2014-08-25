@@ -55,7 +55,7 @@ public class Categories {
 	 * When execute method data load to temp array
 	 * @param url base address of server
 	 */
-	public static void getCategories(String url) {
+	public synchronized static void getCategories(String url) {
 
 		url += Constants.CATEGORY;
 
