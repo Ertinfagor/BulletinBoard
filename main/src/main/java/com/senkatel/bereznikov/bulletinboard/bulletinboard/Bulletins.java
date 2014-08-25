@@ -43,7 +43,7 @@ public class Bulletins {
 	 * @return Bulletin
 	 */
 	public static Bulletin get(int id){
-		if (id >= 0) {
+		if (id < arrayBulletins.size()) {
 			try {
 				return arrayBulletins.get(id);
 			} catch (Exception e) {
@@ -51,7 +51,7 @@ public class Bulletins {
 				return new Bulletin();
 			}
 		}
-		return null;
+		return new Bulletin();
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class Bulletins {
 			int l = jsonArrayBulletins.length();
 			int index = -1;
 
-			for (int i = 0; i < l; i++) {
+			for (int i = 0; i <jsonArrayBulletins.length(); i++) {
 				JSONObject jsonBulletin = jsonArrayBulletins.getJSONObject(i);
 				index = jsonBulletin.getInt("Id");
 				Bulletin bulletin = new Bulletin();

@@ -1,7 +1,6 @@
 package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 
 import android.app.*;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,13 +10,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import com.senkatel.bereznikov.bulletinboard.categories.Categories;
-import com.senkatel.bereznikov.bulletinboard.categories.CategoriesActivity;
+import com.senkatel.bereznikov.bulletinboard.categories.CategoriesDialog;
 import com.senkatel.bereznikov.bulletinboard.cities.Cities;
-import com.senkatel.bereznikov.bulletinboard.cities.CitiesActivity;
+import com.senkatel.bereznikov.bulletinboard.cities.CitiesDialog;
 import com.senkatel.bereznikov.bulletinboard.main.PreferencesActivity;
+import com.senkatel.bereznikov.bulletinboard.main.PriceDialog;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.main.TagDialog;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
@@ -99,7 +97,7 @@ public class BBGridActivity extends Activity{
 	@Override
 	protected void onResume() {
 		super.onResume();
-		bbArrayAdapter.notifyDataSetChanged();
+
 		boolean wasChanges = false;
 		try {
 
@@ -135,7 +133,7 @@ public class BBGridActivity extends Activity{
 		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 		}
-
+		bbArrayAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -184,13 +182,29 @@ public class BBGridActivity extends Activity{
 		Intent intent;
 		switch (item.getItemId()) {
 			case R.id.menubbgridactivityCategory:
-				intent = new Intent(this, CategoriesActivity.class);
-				startActivity(intent);
+				/*intent = new Intent(this, CategoriesActivity.class);
+				startActivity(intent);*/
+				FragmentTransaction ftCategories = getFragmentManager().beginTransaction();
+				Fragment fCategoriesPrev = getFragmentManager().findFragmentByTag("category");
+				if (fCategoriesPrev != null) {
+					ftCategories.remove(fCategoriesPrev);
+				}
+				ftCategories.addToBackStack(null);
+				CategoriesDialog fNewCategory = new CategoriesDialog();
+				fNewCategory.show(ftCategories, "category");
 				boolReturn = true;
 				break;
 			case R.id.menubbgridactivityCity:
-				intent = new Intent(this, CitiesActivity.class);
-				startActivity(intent);
+				/*intent = new Intent(this, CitiesActivity.class);
+				startActivity(intent);*/
+				FragmentTransaction ftCities = getFragmentManager().beginTransaction();
+				Fragment fCitiesPrev = getFragmentManager().findFragmentByTag("city");
+				if (fCitiesPrev != null) {
+					ftCities.remove(fCitiesPrev);
+				}
+				ftCities.addToBackStack(null);
+				CitiesDialog fCities = new CitiesDialog();
+				fCities.show(ftCities, "city");
 				boolReturn = true;
 				break;
 			case R.id.menubbgridactivityNewBulletin:
@@ -210,14 +224,14 @@ public class BBGridActivity extends Activity{
 				boolReturn = true;
 				break;
 			case R.id.menubbgridactivityTag:
-				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				Fragment prev = getFragmentManager().findFragmentByTag("tag");
-				if (prev != null) {
-					ft.remove(prev);
+				FragmentTransaction ftTag = getFragmentManager().beginTransaction();
+				Fragment fTagPrev = getFragmentManager().findFragmentByTag("tag");
+				if (fTagPrev != null) {
+					ftTag.remove(fTagPrev);
 				}
-				ft.addToBackStack(null);
-				TagDialog newFragment = new TagDialog();
-				newFragment.show(ft, "tag");
+				ftTag.addToBackStack(null);
+				TagDialog fTagNew = new TagDialog();
+				fTagNew.show(ftTag, "tag");
 				boolReturn = true;
 				break;
 			case R.id.menubbgridactivityUpdate:
@@ -241,8 +255,17 @@ public class BBGridActivity extends Activity{
 				boolReturn = true;
 				break;
 			case R.id.menubbgridactivityCostFilter:
-				intent = new Intent(getApplicationContext(), PriceFilterActivity.class);
-				startActivity(intent);
+				FragmentTransaction ftPrice = getFragmentManager().beginTransaction();
+				Fragment fPricePrev = getFragmentManager().findFragmentByTag("price");
+				if (fPricePrev != null) {
+					ftPrice.remove(fPricePrev);
+				}
+				ftPrice.addToBackStack(null);
+				PriceDialog fPrice = new PriceDialog();
+				fPrice.show(ftPrice, "price");
+
+				/*intent = new Intent(getApplicationContext(), PriceFilterActivity.class);
+				startActivity(intent);*/
 				boolReturn = true;
 				break;
 			case R.id.menubbgridactivitPreferences:
@@ -280,6 +303,12 @@ public class BBGridActivity extends Activity{
 		protected Void doInBackground(Void... params) {
 			try {
 				Bulletins.getBulletins(Constants.URL);
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						bbArrayAdapter.notifyDataSetChanged();
+					}
+				});
 				Categories.getCategories(Constants.URL);
 				Cities.getCities(Constants.URL);
 			} catch (Exception e) {
