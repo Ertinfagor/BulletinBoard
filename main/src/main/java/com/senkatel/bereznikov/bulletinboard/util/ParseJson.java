@@ -39,6 +39,7 @@ public class ParseJson {
 	 */
 	public static JSONArray getJsonArray(String url) throws Exception {
 
+		Log.v(Constants.LOG_TAG,"GET Array: " + url);
 		InputStream isRawContent = null;
 		String sJSONRawString = null;
 		JSONArray jaResultJSONArray = null;
@@ -86,7 +87,7 @@ public class ParseJson {
 	 * @throws Exception
 	 */
 	public static JSONObject getJsonObject(String url) throws Exception {
-
+		Log.v(Constants.LOG_TAG,"GET Object: " + url);
 		InputStream isRawContent = null;
 		String sJSONRawString = null;
 		JSONObject jaResultJSONObject = null;
@@ -136,6 +137,7 @@ public class ParseJson {
 	 * @throws Exception
 	 */
 	public static JSONObject postJson(String url, JSONObject jsonObject) throws Exception {
+		Log.v(Constants.LOG_TAG,"POST: " + url);
 		JSONObject json = null;
 		String responseText = null;
 		try {
@@ -165,6 +167,7 @@ public class ParseJson {
 	 * @throws Exception
 	 */
 	public static JSONObject putJson(String url, JSONObject jsonObject) throws Exception {
+		Log.v(Constants.LOG_TAG,"PUT: " + url);
 		JSONObject json = null;
 		String responseText = null;
 		try {
@@ -194,6 +197,7 @@ public class ParseJson {
 	 * @throws Exception
 	 */
 	public static JSONObject deleteJson(String url) throws Exception {
+		Log.v(Constants.LOG_TAG,"DELETE: " + url);
 		JSONObject json = null;
 		String responseText = null;
 		try {

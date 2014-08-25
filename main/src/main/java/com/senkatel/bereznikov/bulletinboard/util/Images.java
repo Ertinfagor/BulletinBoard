@@ -63,7 +63,7 @@ public class Images {
 	public static void addBitmapToMemoryCache(Integer key, Bitmap bitmap) {
 		if (getBitmapFromMemCache(key) == null) {
 			mMemoryCache.put(key, bitmap);
-			Log.v(Constants.LOG_TAG, " Bitmap added to cache. Cache size: " + mMemoryCache.size()+"/"+mMemoryCache.maxSize());
+
 		}
 	}
 
@@ -74,7 +74,6 @@ public class Images {
 	 * @return bitmap
 	 */
 	public static Bitmap getBitmapFromMemCache(Integer key) {
-		Log.v(Constants.LOG_TAG, " Bitmap loaded from cache. Cache size: " + mMemoryCache.size()+"/"+mMemoryCache.maxSize());
 		return mMemoryCache.get(key);
 	}
 

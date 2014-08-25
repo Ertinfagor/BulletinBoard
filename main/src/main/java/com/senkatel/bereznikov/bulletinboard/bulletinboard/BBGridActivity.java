@@ -100,18 +100,31 @@ public class BBGridActivity extends Activity{
 	protected void onResume() {
 		super.onResume();
 		bbArrayAdapter.notifyDataSetChanged();
-
+		boolean wasChanges = false;
 		try {
 
 			if (getIntent().hasExtra("city")) {
-
+				wasChanges = true;
 				Filter.setFilterCity(getIntent().getIntExtra("city", -1));
 			}
 			if (getIntent().hasExtra("category")) {
+				wasChanges = true;
 				Filter.setFilterCategories(getIntent().getIntExtra("category", -1));
 			}
 			if (getIntent().hasExtra("tag")) {
+				wasChanges = true;
 				Filter.setFilterTag(getIntent().getStringExtra("tag"));
+			}
+			if (getIntent().hasExtra("pricemin")) {
+				wasChanges = true;
+				Filter.setFilterPriceMin(getIntent().getFloatExtra("pricemin", -1));
+				Log.v(Constants.LOG_TAG, "Pricemin: " + Filter.getfPriceFilterMinValue());
+
+			}
+			if (getIntent().hasExtra("pricemax")) {
+				wasChanges = true;
+				Filter.setFilterPriceMax(getIntent().getFloatExtra("pricemax", -1));
+
 			}
 		} catch (Exception e) {
 
@@ -122,7 +135,7 @@ public class BBGridActivity extends Activity{
 		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 		}
-		new ForceUpdate().execute();
+
 	}
 
 	@Override

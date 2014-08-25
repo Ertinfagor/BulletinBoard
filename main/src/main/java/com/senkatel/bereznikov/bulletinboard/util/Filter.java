@@ -1,6 +1,5 @@
 package com.senkatel.bereznikov.bulletinboard.util;
 
-import android.util.Log;
 import com.senkatel.bereznikov.bulletinboard.contacts.Contact;
 
 /**
@@ -20,12 +19,14 @@ public class Filter {
 	private static String sPriceFilterMin = "";
 	private static float fPriceFilterMinValue = -1;
 	private static boolean myBulletins = false;
+
 	/**
 	 * Add to Filter string substring of category filter, and save appropriate value for future usage
 	 * reset My Bulletin filter
+	 *
 	 * @param categoriesId Id of filtered category
 	 */
-	public static void setFilterCategories(int categoriesId){
+	public static void setFilterCategories(int categoriesId) {
 		myBulletins = false;
 		sCategoriesFilter = "";
 		sCategoriesFilter = "category=" + categoriesId;
@@ -36,25 +37,27 @@ public class Filter {
 	/**
 	 * Add to Filter string substring of city filter, and save appropriate value for future usage
 	 * reset My Bulletin filter
-	 * @param cityId  Id of filtered city
+	 *
+	 * @param cityId Id of filtered city
 	 */
-	public static void setFilterCity(int cityId){
+	public static void setFilterCity(int cityId) {
 		myBulletins = false;
 		sCitiesFilter = "";
-		sCitiesFilter = "city="+cityId;
+		sCitiesFilter = "city=" + cityId;
 		iCitiesFilterId = cityId;
 		buildFilter();
 	}
 
 	/**
-	 *  Add to Filter string substring of maximum price filter, and save appropriate value for future usage
+	 * Add to Filter string substring of maximum price filter, and save appropriate value for future usage
 	 * reset My Bulletin filter
+	 *
 	 * @param costMax value of maximum price
 	 */
-	public static void setFilterPriceMax(Float costMax){
+	public static void setFilterPriceMax(Float costMax) {
 		myBulletins = false;
 		sPriceFilterMax = "";
-		sPriceFilterMax ="priceless="+costMax;
+		sPriceFilterMax = "priceless=" + costMax;
 		fPriceFilterMaxValue = costMax;
 		buildFilter();
 	}
@@ -62,12 +65,13 @@ public class Filter {
 	/**
 	 * Add to Filter string substring of minimum price filter, and save appropriate value for future usage
 	 * reset My Bulletin filter
+	 *
 	 * @param costMin value of minimum price
 	 */
-	public static void setFilterPriceMin(Float costMin){
+	public static void setFilterPriceMin(Float costMin) {
 		myBulletins = false;
 		sPriceFilterMin = "";
-		sPriceFilterMin ="pricemore="+costMin;
+		sPriceFilterMin = "pricemore=" + costMin;
 		fPriceFilterMinValue = costMin;
 		buildFilter();
 	}
@@ -75,13 +79,14 @@ public class Filter {
 	/**
 	 * filtering by tag name
 	 * reset My Bulletin filter
+	 *
 	 * @param tag
 	 */
-	public static void setFilterTag(String tag){
+	public static void setFilterTag(String tag) {
 		myBulletins = false;
-		sTagFilter ="";
-		sTagFilter = "tag="+tag;
-		sTagFilterValue =tag;
+		sTagFilter = "";
+		sTagFilter = "tag=" + tag;
+		sTagFilterValue = tag;
 		buildFilter();
 	}
 
@@ -89,7 +94,7 @@ public class Filter {
 	 * setting filter for bulletins
 	 * resets all other filter
 	 */
-	public static void setFilterMyBulletins(){
+	public static void setFilterMyBulletins() {
 		resetFilter();
 		myBulletins = true;
 		buildFilter();
@@ -100,49 +105,53 @@ public class Filter {
 	 * Put together all filter substrings and form request string for server
 	 * if my bulletins checked then only one filter
 	 */
-	private static void buildFilter(){
-		if (myBulletins){
+	private static void buildFilter() {
+		if (myBulletins) {
 			if (!Contact.getUid().equals("")) {
 				sFilter = "?uid=" + Contact.getUid();
 			}
-		}else{
-		sFilter = "?";
-		if (!sCategoriesFilter.equals("")){
-			sFilter += sCategoriesFilter;
+		} else {
+			sFilter = "?";
+			if (!sCategoriesFilter.equals("")) {
+				sFilter += sCategoriesFilter;
 
-		}
-		if (!sCitiesFilter.equals("")){
-			if (!sFilter.endsWith("?")){
-				sFilter +="&";}
-			sFilter += sCitiesFilter;
+			}
+			if (!sCitiesFilter.equals("")) {
+				if (!sFilter.endsWith("?")) {
+					sFilter += "&";
+				}
+				sFilter += sCitiesFilter;
 
-		}
-		if (!sPriceFilterMax.equals("")){
-			if (!sFilter.endsWith("?")){
-				sFilter +="&";}
-			sFilter += sPriceFilterMax;
+			}
+			if (!sPriceFilterMax.equals("")) {
+				if (!sFilter.endsWith("?")) {
+					sFilter += "&";
+				}
+				sFilter += sPriceFilterMax;
 
-		}
-		if (!sPriceFilterMin.equals("")){
-			if (!sFilter.endsWith("?")){
-				sFilter +="&";}
-			sFilter += sPriceFilterMin;
+			}
+			if (!sPriceFilterMin.equals("")) {
+				if (!sFilter.endsWith("?")) {
+					sFilter += "&";
+				}
+				sFilter += sPriceFilterMin;
 
-		}
-		if (!sTagFilter.equals("")){
-			if (!sFilter.endsWith("?")){
-				sFilter +="&";}
-			sFilter += sTagFilter;
+			}
+			if (!sTagFilter.equals("")) {
+				if (!sFilter.endsWith("?")) {
+					sFilter += "&";
+				}
+				sFilter += sTagFilter;
 
+			}
 		}
-		}
-		Log.v(Constants.LOG_TAG, "Filter Test: " + sFilter);
+
 	}
 
 	/**
 	 * return all filter values to its default settings
 	 */
-	public static void resetFilter(){
+	public static void resetFilter() {
 		sFilter = "?";
 
 		sCategoriesFilter = "";
@@ -166,17 +175,18 @@ public class Filter {
 
 	/**
 	 * Check is filter have setted
+	 *
 	 * @return is filter setted
 	 */
-	public static boolean isFilter(){
-		if (sFilter.equals("?")){
+	public static boolean isFilter() {
+		if (sFilter.equals("?")) {
 			return false;
-		}else {
+		} else {
 			return true;
 		}
 	}
 
-	public static String getsFilter(){
+	public static String getsFilter() {
 		return sFilter;
 	}
 

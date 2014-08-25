@@ -1,10 +1,14 @@
 package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import com.senkatel.bereznikov.bulletinboard.categories.Categories;
 import com.senkatel.bereznikov.bulletinboard.main.R;
+import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.Filter;
 
 /**
@@ -37,30 +41,32 @@ public class PriceFilterActivity extends Activity {
 	}
 
 	public void onCostFilterOk(View view) {
-		float max = -1;
+		float max;
+		float min;
+
 		try {
 			max = Float.valueOf(edMax.getText().toString());
 		} catch (Exception e) {
+			Log.e(Constants.LOG_TAG,"Incorrect max value " + e.toString());
 			max = -1;
 		}
-
-		float min = -1;
 		try {
 			min = Float.valueOf(edMin.getText().toString());
 		} catch (Exception e) {
+			Log.e(Constants.LOG_TAG,"Incorrect min value " + e.toString());
 			min = -1;
 		}
-		if (max < min) {
-			max = min;
-		}
+
+		Intent intent = new Intent(getApplicationContext(),BBGridActivity.class);
+
 		if (min != -1) {
-			Filter.setFilterPriceMin(min);
+			intent.putExtra("pricemin", min);
+			Log.v(Constants.LOG_TAG,"min: " + min);
 		}
 		if (max != -1) {
-			Filter.setFilterPriceMax(max);
-
+			intent.putExtra("pricemax", max);
 		}
-		finish();
+		startActivity(intent);
 	}
 
 

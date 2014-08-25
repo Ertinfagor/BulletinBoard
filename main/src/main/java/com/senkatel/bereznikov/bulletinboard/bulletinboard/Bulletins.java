@@ -79,7 +79,7 @@ public class Bulletins {
 		if (Filter.isFilter()){
 			url+= Filter.getsFilter();
 		}
-Log.v(Constants.LOG_TAG, "Url: "+url);
+
 		CopyOnWriteArrayList<Bulletin> tempBulletins = new CopyOnWriteArrayList<Bulletin>();
 		try {
 
