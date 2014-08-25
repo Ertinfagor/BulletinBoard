@@ -90,6 +90,8 @@ public class BBDetailedActivity extends Activity {
 				tvState.setText(getString(R.string.itemUsed));
 			}
 
+			Contact.init(getApplicationContext());
+
 
 		}
 	}
