@@ -42,6 +42,8 @@ public class AddBulletinActivity extends Activity {
 	private TextView tvCategories;
 	private CheckBox cbState;
 
+	private boolean newSpnCategories = true; //used for obtain is first use of spiner ocured (if first then no changes to categories id)
+
 	List<Integer> categoriesIds = new ArrayList<Integer>();
 
 	private ArrayAdapter<String> adapterCity;
@@ -100,15 +102,19 @@ public class AddBulletinActivity extends Activity {
 		spnCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
 				String categoriesString = "";
-				if (!categoriesIds.contains(Categories.getId(adapterCategories.getItem(position)))) {
-					categoriesIds.add(Categories.getId(adapterCategories.getItem(position)));
-					for (Integer categorieId : categoriesIds) {
-						categoriesString += Categories.getName(categorieId);
-						categoriesString += " ";
+				if (!newSpnCategories) {
+					if (!categoriesIds.contains(Categories.getId(adapterCategories.getItem(position)))) {
+						categoriesIds.add(Categories.getId(adapterCategories.getItem(position)));
+						for (Integer categorieId : categoriesIds) {
+							categoriesString += Categories.getName(categorieId);
+							categoriesString += " ";
+						}
+						tvCategories.setText(categoriesString);
 					}
-					tvCategories.setText(categoriesString);
 				}
+				newSpnCategories = false;
 			}
 
 			@Override
@@ -120,6 +126,7 @@ public class AddBulletinActivity extends Activity {
 
 	public void onAddBulletinClear(View view) {
 		tvCategories.setText("");
+		categoriesIds.clear();
 
 	}
 
