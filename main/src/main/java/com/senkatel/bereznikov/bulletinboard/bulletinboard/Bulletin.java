@@ -1,7 +1,6 @@
 package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.senkatel.bereznikov.bulletinboard.contacts.BulletinContact;
@@ -15,20 +14,20 @@ import java.util.List;
  * Class Bulletin
  * Class is Parcelable
  * Implements container for one bulletin entry
-* Class relates to Bulletins
-*/
+ * Class relates to Bulletins
+ */
 
-public class Bulletin implements Parcelable{
+public class Bulletin implements Parcelable {
 	public static final Parcelable.Creator<Bulletin> CREATOR = new Parcelable.Creator<Bulletin>() {
 		public Bulletin createFromParcel(Parcel in) {
 			return new Bulletin(in);
 		}
+
 		public Bulletin[] newArray(int size) {
 			return new Bulletin[size];
 		}
 	};
 
-	private Bitmap bmpImage; //Uses only to send bulletin by url and temporary, main images container is Image Class
 	private int intBulletinId = -1;
 	private String sTitle = null;
 	private String sText = null;
@@ -39,7 +38,6 @@ public class Bulletin implements Parcelable{
 	private boolean bState = true;
 	private Date dBulletinDate;
 	private BulletinContact bcBulletinContact;
-
 
 
 	public Bulletin() {
@@ -116,14 +114,6 @@ public class Bulletin implements Parcelable{
 		this.bState = bState;
 	}
 
-	public Bitmap getBmpImage() {
-		return bmpImage;
-	}
-
-	public void setBmpImage(Bitmap bmpImage) {
-		this.bmpImage = bmpImage;
-	}
-
 	public List<Integer> getListCategories() {
 		return listCategories;
 	}
@@ -165,9 +155,10 @@ public class Bulletin implements Parcelable{
 		this.sTitle = strArrayParcel[0];
 		this.sText = strArrayParcel[1];
 		this.intContact_uid = strArrayParcel[2];
-		parcel.readList(this.listCategories,Integer.class.getClassLoader());
+		parcel.readList(this.listCategories, Integer.class.getClassLoader());
 		this.bcBulletinContact = parcel.readParcelable(Contact.class.getClassLoader());
 		this.dBulletinDate = new Date(parcel.readLong());
+		this.bState = parcel.readByte() != 0;
 
 
 	}
@@ -179,14 +170,15 @@ public class Bulletin implements Parcelable{
 
 	@Override
 	public void writeToParcel(Parcel parcel, int i) {
-		int[] intArrayParcel = {this.intBulletinId,this.intCity_id};
-		String[] strArrayParcel = {this.sTitle,this.sText,this.intContact_uid};
+		int[] intArrayParcel = {this.intBulletinId, this.intCity_id};
+		String[] strArrayParcel = {this.sTitle, this.sText, this.intContact_uid};
 
 		parcel.writeIntArray(intArrayParcel);
 		parcel.writeStringArray(strArrayParcel);
 		parcel.writeFloat(this.fPrice);
 		parcel.writeList(this.listCategories);
-		parcel.writeParcelable(this.bcBulletinContact,0);
+		parcel.writeParcelable(this.bcBulletinContact, 0);
 		parcel.writeLong(this.dBulletinDate.getTime());
+		parcel.writeByte((byte) (this.bState ? 1 : 0));
 	}
 }

@@ -2,10 +2,8 @@ package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,8 +47,6 @@ public class AddBulletinActivity extends Activity {
 
 	private ArrayAdapter<String> adapterCity;
 	private ArrayAdapter<String> adapterCategories;
-
-	private Bitmap bmpImage = null;
 
 	private Bulletin bulletin = new Bulletin();
 
@@ -150,7 +146,7 @@ public class AddBulletinActivity extends Activity {
 			newBulletin.setIntContact_uid(Contact.getUid());
 			newBulletin.setfPrice(Float.valueOf(edPrice.getText().toString()));
 			newBulletin.setbState(cbState.isChecked());
-			newBulletin.setBmpImage(bmpImage);
+			//newBulletin.setBmpImage(bmpImage);
 
 			if (bulletin.getIntBulletinId() != -1) {
 				newBulletin.setIntBulletinId(bulletin.getIntBulletinId());
@@ -184,9 +180,9 @@ public class AddBulletinActivity extends Activity {
 				public void run() {
 					try {
 						Uri uriImagePath = data.getData();
-						Images.setTempByteArrayBitmap(uriImagePath,getApplicationContext());
-				//		bmpImage = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), uriImagePath);
-				//		final Bitmap scaledBitmap = Bitmap.createScaledBitmap(bmpImage, Constants.IMAGE_WIDTH, Constants.IMAGE_HEIHT, false);
+						Images.setTempByteArrayBitmap(uriImagePath, getApplicationContext());
+						//		bmpImage = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), uriImagePath);
+						//		final Bitmap scaledBitmap = Bitmap.createScaledBitmap(bmpImage, Constants.IMAGE_WIDTH, Constants.IMAGE_HEIHT, false);
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {

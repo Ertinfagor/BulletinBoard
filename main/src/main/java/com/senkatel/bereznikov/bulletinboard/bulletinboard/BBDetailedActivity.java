@@ -85,9 +85,9 @@ public class BBDetailedActivity extends Activity {
 			tvDate.setText(bulletin.getdBulletinDate().toString());
 			tvPrice.setText(String.valueOf(bulletin.getfPrice()));
 			if (bulletin.isbState()) {
-				tvState.setText(getString(R.string.itemNew));
-			} else {
 				tvState.setText(getString(R.string.itemUsed));
+			} else {
+				tvState.setText(getString(R.string.itemNew));
 			}
 
 			Contact.init(getApplicationContext());
