@@ -18,6 +18,6 @@
             android:icon="@drawable/add"
             android:showAsAction="ifRoom|withText"
             android:title="@string/addCategory">
-    </item>;
+    </item>
 
 </menu>

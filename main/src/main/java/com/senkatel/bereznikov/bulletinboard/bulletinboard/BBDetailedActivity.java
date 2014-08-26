@@ -24,6 +24,7 @@ import java.lang.ref.WeakReference;
  * If userId is the same as Creator of viewed bulletin additional buttons Edit/Delete set visible
  * Implements Load image on separate thread
  */
+@SuppressWarnings("ALL")
 public class BBDetailedActivity extends Activity {
 	private ImageView ivImage;
 	private TextView tvTitle;

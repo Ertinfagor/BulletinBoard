@@ -24,6 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Implements DELETE request
  *
  */
+@SuppressWarnings("ALL")
 public class Bulletins {
 	private static CopyOnWriteArrayList<Bulletin> arrayBulletins = new CopyOnWriteArrayList<Bulletin>();
 

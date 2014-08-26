@@ -11,6 +11,7 @@ import com.senkatel.bereznikov.bulletinboard.main.R;
  * Class CityAddActivity
  * Implements interface for Add new City
  */
+@SuppressWarnings("ALL")
 public class CityAddActivity extends Activity {
 	EditText addItem;
 	@Override

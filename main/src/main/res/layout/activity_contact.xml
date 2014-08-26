@@ -10,19 +10,19 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/edContactName" android:hint="Имя"/>
+            android:id="@+id/edContactName" android:hint="@string/name"/>
     <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/edContactLastName" android:hint="Фамилия"/>
+            android:id="@+id/edContactLastName" android:hint="@string/last_name"/>
     <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="phone"
             android:ems="10"
-            android:id="@+id/edContactPhone" android:layout_gravity="center_horizontal" android:hint="Телефон"/>
+            android:id="@+id/edContactPhone" android:layout_gravity="center_horizontal" android:hint="@string/phone"/>
     <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
 
             android:ems="10"
             android:id="@+id/edContactEmail" android:layout_gravity="center_horizontal"
-            android:hint="E-mail"/>
+            android:hint="@string/email"/>
     <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

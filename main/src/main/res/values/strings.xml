@@ -25,4 +25,17 @@
     <string name="tag">Поиск</string>
     <string name="findtag">Поиск</string>
     <string name="price">Цена</string>
+    <string name="title">Заголовок</string>
+    <string name="text">Описание</string>
+    <string name="price">Цена</string>
+    <string name="state">Новый</string>
+    <string name="load_image">Загрузить изображение</string>
+    <string name="clear">Очистить</string>
+    <string name="new_category">Новая категория</string>
+    <string name="new_city">Новый город</string>
+    <string name="name">Имя</string>
+    <string name="last_name">Фамилия</string>
+    <string name="phone">Телефон</string>
+    <string name="email">E-mail</string>
+    <string name="tagfind">Ключевое слово</string>
 </resources>

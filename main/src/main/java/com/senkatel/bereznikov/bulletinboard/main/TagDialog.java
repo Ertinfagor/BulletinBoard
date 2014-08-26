@@ -14,6 +14,7 @@ import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.Filter;
 
+@SuppressWarnings("ALL")
 public  class TagDialog extends DialogFragment {
 
 	private EditText edTag;

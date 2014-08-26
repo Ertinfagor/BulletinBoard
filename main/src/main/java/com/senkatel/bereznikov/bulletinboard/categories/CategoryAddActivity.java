@@ -11,6 +11,7 @@ import com.senkatel.bereznikov.bulletinboard.main.R;
  * Class CategoryAddActivity
  * Implements interface for adding new Category
  */
+@SuppressWarnings("ALL")
 public class CategoryAddActivity extends Activity {
 	EditText addItem;
 	@Override

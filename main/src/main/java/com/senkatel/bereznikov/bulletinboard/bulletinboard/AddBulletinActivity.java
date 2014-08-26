@@ -30,6 +30,7 @@ import java.util.List;
  * Implements Load image on separate thread
  * Implements Get image from Storage and put to temp Images var
  */
+@SuppressWarnings("ALL")
 public class AddBulletinActivity extends Activity {
 
 	private ImageView ivImage;

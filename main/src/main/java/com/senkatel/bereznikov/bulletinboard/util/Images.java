@@ -25,6 +25,7 @@ import java.io.InputStream;
  * implements work with images
  * Implements Memory cache
  */
+@SuppressWarnings("ALL")
 public class Images {
 	private static LruCache<Integer, Bitmap> mMemoryCache;
 	private static byte[] tempByteArrayBitmap;

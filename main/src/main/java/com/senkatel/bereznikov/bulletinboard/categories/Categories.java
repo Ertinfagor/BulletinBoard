@@ -19,6 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Implements method to obtain id by name
  * Has separate array that contains only categories names without ids used in ListView Activities
  */
+@SuppressWarnings("ALL")
 public class Categories {
 	private static CopyOnWriteArrayList<Category> listCategories = new CopyOnWriteArrayList<Category>();
 

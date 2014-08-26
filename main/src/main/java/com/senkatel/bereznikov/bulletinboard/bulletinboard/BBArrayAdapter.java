@@ -25,6 +25,7 @@ import java.lang.ref.WeakReference;
  * Implements ArrayAdapter for main GridView
  * Implements Load image with concurrency on separate thread
  */
+@SuppressWarnings("ALL")
 public class BBArrayAdapter extends ArrayAdapter<Bulletin> {
 	private final Activity actMainContext;
 

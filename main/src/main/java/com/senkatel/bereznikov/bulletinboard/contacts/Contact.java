@@ -15,6 +15,7 @@ import org.json.JSONObject;
  * For identification use ANDROID_ID
  * Implements Save and load prefernces
  */
+@SuppressWarnings("ALL")
 public class Contact  {
 
 	private static String name = "";

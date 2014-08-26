@@ -17,6 +17,7 @@ import com.senkatel.bereznikov.bulletinboard.util.Filter;
 /**
  * Class PriceDialog implements interface of price filter
  */
+@SuppressWarnings("ALL")
 public class PriceDialog extends DialogFragment{
 
 

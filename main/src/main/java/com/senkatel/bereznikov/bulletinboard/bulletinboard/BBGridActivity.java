@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
  * Has force update task running in separate thread
  * Change names of filter buttons
  */
+@SuppressWarnings("ALL")
 public class BBGridActivity extends Activity{
 	private GridView gvBB;
 	private BBArrayAdapter bbArrayAdapter;

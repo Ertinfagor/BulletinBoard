@@ -19,6 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Implements method to obtain id by name
  * Has separate array that contains only cities names without ids used in ListView Activities
  */
+@SuppressWarnings("ALL")
 public class Cities {
 	private static CopyOnWriteArrayList<City> cities = new CopyOnWriteArrayList<City>();
 	private static List<String> citiesList = new ArrayList<String>();

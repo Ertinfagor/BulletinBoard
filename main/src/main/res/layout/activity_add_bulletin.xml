@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/edaddBulletinTitle"
-            android:hint="Заголовок"
+            android:hint="@string/title"
             android:layout_below="@+id/imgAddBulletin" android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" android:layout_alignRight="@+id/btnAddBulletinAddImage"
             android:layout_alignEnd="@+id/btnAddBulletinAddImage"/>
@@ -31,7 +31,7 @@
             android:inputType="textMultiLine"
             android:layout_below="@+id/edaddBulletinTitle"
             android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:hint="Описание"/>
+            android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:hint="@string/text"/>
     <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:id="@+id/edaddBulletinPrice"
-            android:hint="Цена"
+            android:hint="@string/price"
             android:layout_below="@+id/tvaddBulletinSelectedCategories"
             android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
@@ -55,7 +55,7 @@
     <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Новый"
+            android:text="@string/state"
             android:id="@+id/cbaddBulletinState"
             android:checked="true"
             android:layout_below="@+id/edaddBulletinPrice" android:layout_alignParentLeft="true"
@@ -71,13 +71,13 @@
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Загрузить изображение"
+            android:text="@string/load_image"
             android:id="@+id/btnAddBulletinAddImage" android:layout_alignParentTop="true" android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" android:onClick="addBulletinOpenFile"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Очистить"
+            android:text="@string/clear"
             android:id="@+id/btnAddBulletinClearCategories"
             android:layout_alignRight="@+id/btnAddBulletinAddImage"
             android:layout_alignEnd="@+id/btnAddBulletinAddImage" android:layout_below="@+id/spnaddBulletinCategories"
