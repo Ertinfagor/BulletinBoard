@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,7 @@ import java.lang.ref.WeakReference;
 /**
  * Class BBArrayAdapter
  * Implements ArrayAdapter for main GridView
- * Implements Load image on separate thread
+ * Implements Load image with concurrency on separate thread
  */
 public class BBArrayAdapter extends ArrayAdapter<Bulletin> {
 	private final Activity actMainContext;
@@ -71,7 +70,6 @@ public class BBArrayAdapter extends ArrayAdapter<Bulletin> {
 		}
 
 
-
 		return vRow;
 	}
 
@@ -102,7 +100,7 @@ public class BBArrayAdapter extends ArrayAdapter<Bulletin> {
 		protected void onPostExecute(Bitmap bitmap) {
 			if (isCancelled()) {
 				bitmap = null;
-		}
+			}
 
 			if (wrImageViewReference != null && bitmap != null) {
 				final ImageView imageView = wrImageViewReference.get();
@@ -122,7 +120,7 @@ public class BBArrayAdapter extends ArrayAdapter<Bulletin> {
 
 		public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
 			super(res, bitmap);
-			bitmapWorkerTaskReference =	new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
+			bitmapWorkerTaskReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
 		}
 
 		public BitmapWorkerTask getBitmapWorkerTask() {
@@ -132,7 +130,8 @@ public class BBArrayAdapter extends ArrayAdapter<Bulletin> {
 
 	/**
 	 * Checks if another running task is already associated with the ImageView.
-	 * @param data id of Bulletin
+	 *
+	 * @param data      id of Bulletin
 	 * @param imageView associated ImageView
 	 * @return is work canceling
 	 */
@@ -156,6 +155,7 @@ public class BBArrayAdapter extends ArrayAdapter<Bulletin> {
 
 	/**
 	 * Method is used to retrieve the task associated with a particular ImageView:
+	 *
 	 * @param imageView target ImageView
 	 * @return task that`s associated
 	 */

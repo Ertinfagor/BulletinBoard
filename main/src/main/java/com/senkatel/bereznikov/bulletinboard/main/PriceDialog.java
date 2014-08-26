@@ -15,7 +15,7 @@ import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.Filter;
 
 /**
- * Created by Bereznik on 25.08.2014.
+ * Class PriceDialog implements interface of price filter
  */
 public class PriceDialog extends DialogFragment{
 

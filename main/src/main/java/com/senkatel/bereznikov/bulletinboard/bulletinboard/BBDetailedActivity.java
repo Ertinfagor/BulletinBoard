@@ -149,6 +149,9 @@ public class BBDetailedActivity extends Activity {
 		return ret;
 	}
 
+	/**
+	 * Inner Class that load image to temp Image var
+	 */
 	class BitmapWorkerTaskDetailed extends AsyncTask<Integer, Void, Bitmap> {
 		private final WeakReference<ImageView> wrImageViewReference;
 		private int bulletinId = 0;

@@ -29,7 +29,7 @@ public class BulletinContact implements Parcelable{
 	}
 
 	/**
-	 * Create non-static instance of curent user Contact for sending
+	 * Create non-static instance of current user Contact for sending
 	*/
 	public BulletinContact(Contact contact) {
 		this.sName = Contact.getName();

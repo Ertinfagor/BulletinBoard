@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.util.LruCache;
 import org.apache.commons.io.IOUtils;
@@ -18,10 +17,8 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * Static Class Images
@@ -30,7 +27,7 @@ import java.util.List;
  */
 public class Images {
 	private static LruCache<Integer, Bitmap> mMemoryCache;
-	private  static byte[] tempByteArrayBitmap;
+	private static byte[] tempByteArrayBitmap;
 	static int maxMemory;
 
 	/**
@@ -101,34 +98,23 @@ public class Images {
 				}
 
 			}
-		}catch (Exception e){
+		} catch (Exception e) {
 
 			Log.e(Constants.LOG_TAG, "loadImage load image error" + e.toString());
 		}
-			return resultBitmap;
-
-	}
-
-	/**
-	 * Load all bitmaps to cache
-	 * @param ids List of bulletins ids
-	 */
-	public void syncCache(List<Integer> ids) {
-		for (Integer id : ids) {
-			loadImage(id, Constants.IMAGE_WIDTH, Constants.IMAGE_HEIHT);
-		}
-
+		return resultBitmap;
 
 	}
 
 	/**
 	 * Load InputStream with image from server
+	 *
 	 * @param url server url
 	 * @return InputStream with image
 	 */
 	public static byte[] getByteArrayFromUrl(String url) {
 
-		InputStream rawContent = null;
+		InputStream rawContent;
 
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
@@ -143,7 +129,7 @@ public class Images {
 
 		}
 
-		return  null;
+		return null;
 
 	}
 
@@ -161,7 +147,7 @@ public class Images {
 	 * exclude 'META-INF/LICENSE.txt'
 	 * }
 	 *
-	 * @param url   URL for upload
+	 * @param url             URL for upload
 	 * @param byteArrayBitmap Bitmap byte array for Upload
 	 * @throws Exception
 	 */
@@ -185,8 +171,9 @@ public class Images {
 
 	/**
 	 * Calculates level of cropping image
-	 * @param options loaded Bitmap options for cropped Bitmap
-	 * @param reqWidth required width
+	 *
+	 * @param options   loaded Bitmap options for cropped Bitmap
+	 * @param reqWidth  required width
 	 * @param reqHeight required height
 	 * @return cropping ratio
 	 */
@@ -217,26 +204,26 @@ public class Images {
 	 * Get bitmap correct size
 	 * Use apache common-io IOUtils
 	 * changes to build.grandle:
-	 *  exclude 'org/apache/commons/io/FileUtilsTestDataCR.dat'
-	 *  exclude 'org/apache/commons/io/FileUtilsTestDataCRLF.dat'
-	 *  exclude 'org/apache/commons/io/FileUtilsTestDataLF.dat'
-	 *  exclude 'org/apache/commons/io/testfileBOM.xml'
-	 *  exclude 'org/apache/commons/io/testfileNoBOM.xml'
-	 *  exclude 'test-file-20byteslength.bin'
-	 *  exclude 'test-file-empty.bin'
-	 *  exclude 'test-file-iso8859-1-shortlines-win-linebr.bin'
-	 *  exclude 'test-file-iso8859-1.bin'
-	 *  exclude 'test-file-shiftjis.bin'
-	 *  exclude 'test-file-utf16be.bin'
+	 * exclude 'org/apache/commons/io/FileUtilsTestDataCR.dat'
+	 * exclude 'org/apache/commons/io/FileUtilsTestDataCRLF.dat'
+	 * exclude 'org/apache/commons/io/FileUtilsTestDataLF.dat'
+	 * exclude 'org/apache/commons/io/testfileBOM.xml'
+	 * exclude 'org/apache/commons/io/testfileNoBOM.xml'
+	 * exclude 'test-file-20byteslength.bin'
+	 * exclude 'test-file-empty.bin'
+	 * exclude 'test-file-iso8859-1-shortlines-win-linebr.bin'
+	 * exclude 'test-file-iso8859-1.bin'
+	 * exclude 'test-file-shiftjis.bin'
+	 * exclude 'test-file-utf16be.bin'
+	 *
 	 * @param imageByteArray Bitmap ByteArray for scaling
-	 * @param reqWidth required width
-	 * @param reqHeight required height
+	 * @param reqWidth       required width
+	 * @param reqHeight      required height
 	 * @return scaled Bitmap
 	 */
 	public static Bitmap decodeBitmapFromByteArray(byte[] imageByteArray, int reqWidth, int reqHeight) {
 
 		try {
-
 
 
 			// First decode with inJustDecodeBounds=true to check dimensions
@@ -256,6 +243,16 @@ public class Images {
 		}
 		return null;
 	}
+
+	/**
+	 * Convert bitmap loaded from file to appropriate size IMAGE_WIDTH_MAX  IMAGE_HEIHT_MAX
+	 *
+	 * @param uriFile   URI of loaded file
+	 * @param reqWidth  IMAGE_WIDTH_MAX
+	 * @param reqHeight IMAGE_HEIHT_MAX
+	 * @param context   context for load file
+	 * @return scaled Bitmap
+	 */
 	public static Bitmap decodeBitmapFromFile(Uri uriFile, int reqWidth, int reqHeight, Context context) {
 
 		try {
@@ -265,7 +262,7 @@ public class Images {
 			// First decode with inJustDecodeBounds=true to check dimensions
 			final BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inJustDecodeBounds = true;
-			BitmapFactory.decodeStream(input,null,options);
+			BitmapFactory.decodeStream(input, null, options);
 			input.close();
 			// Calculate inSampleSize
 			options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
@@ -273,43 +270,59 @@ public class Images {
 			// Decode bitmap with inSampleSize set
 			options.inJustDecodeBounds = false;
 			InputStream inputSecond = context.getContentResolver().openInputStream(uriFile);
-			return BitmapFactory.decodeStream(inputSecond,null,options);
+			return BitmapFactory.decodeStream(inputSecond, null, options);
 		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "Can`t decode Bitmap" + e.toString());
 		}
 		return null;
 	}
 
-	public static void setTempByteArrayBitmap(final Uri imagePath, final Context context){
+	/**
+	 * Temporary save loaded from file Bitmap for new Bulletin until text part loaded and ID for loading returned
+	 *
+	 * @param imagePath URI of loaded image
+	 * @param context   context for get image
+	 */
+	public static void setTempByteArrayBitmap(final Uri imagePath, final Context context) {
 
-				try {
-					Bitmap tempBitmap = decodeBitmapFromFile(imagePath,Constants.IMAGE_WIDTH_MAX,Constants.IMAGE_HEIHT_MAX,context);
-					ByteArrayOutputStream stream = new ByteArrayOutputStream();
-					tempBitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
-					byte[] byteArray = stream.toByteArray();
-					tempByteArrayBitmap = byteArray;
+		try {
+			Bitmap tempBitmap = decodeBitmapFromFile(imagePath, Constants.IMAGE_WIDTH_MAX, Constants.IMAGE_HEIHT_MAX, context);
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			tempBitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
+			byte[] byteArray = stream.toByteArray();
+			tempByteArrayBitmap = byteArray;
 
 
-				} catch (Exception e) {
-					Log.e(Constants.LOG_TAG, "Can`t get image from file: " + e.toString());
-				}
+		} catch (Exception e) {
+			Log.e(Constants.LOG_TAG, "Can`t get image from file: " + e.toString());
+		}
 
 
 	}
 
-	public static Bitmap getTempBitmap(){
-try {
-	return decodeBitmapFromByteArray(tempByteArrayBitmap, Constants.IMAGE_WIDTH, Constants.IMAGE_HEIHT);
-}catch (Exception e){
-	Log.e(Constants.LOG_TAG, "Cant decode temp image: " + e.toString());
-}
-	return  null;
+	/**
+	 * Returns temporary saved bitmap when postBulletins has ID of new bulletin
+	 *
+	 * @return temporary saved Bitmap
+	 */
+	public static Bitmap getTempBitmap() {
+		try {
+			return decodeBitmapFromByteArray(tempByteArrayBitmap, Constants.IMAGE_WIDTH, Constants.IMAGE_HEIHT);
+		} catch (Exception e) {
+			Log.e(Constants.LOG_TAG, "Cant decode temp image: " + e.toString());
+		}
+		return null;
 	}
 
-	public static void uploadTemp(int id){
+	/**
+	 * when postBulletins has ID of new bulletin runs to upload image to server
+	 *
+	 * @param id ID of new bulletin
+	 */
+	public static void uploadTemp(int id) {
 		String url = Constants.URL + Constants.BULLETIN + "/" + id + Constants.IMAGE;
 		try {
-			postImage(url,tempByteArrayBitmap);
+			postImage(url, tempByteArrayBitmap);
 		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "Can`t POST image: " + e.toString());
 		}

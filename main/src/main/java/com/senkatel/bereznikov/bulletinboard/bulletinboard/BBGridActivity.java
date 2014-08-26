@@ -98,29 +98,23 @@ public class BBGridActivity extends Activity{
 	protected void onResume() {
 		super.onResume();
 
-		boolean wasChanges = false;
 		try {
 
 			if (getIntent().hasExtra("city")) {
-				wasChanges = true;
 				Filter.setFilterCity(getIntent().getIntExtra("city", -1));
 			}
 			if (getIntent().hasExtra("category")) {
-				wasChanges = true;
 				Filter.setFilterCategories(getIntent().getIntExtra("category", -1));
 			}
 			if (getIntent().hasExtra("tag")) {
-				wasChanges = true;
 				Filter.setFilterTag(getIntent().getStringExtra("tag"));
 			}
 			if (getIntent().hasExtra("pricemin")) {
-				wasChanges = true;
 				Filter.setFilterPriceMin(getIntent().getFloatExtra("pricemin", -1));
 				Log.v(Constants.LOG_TAG, "Pricemin: " + Filter.getfPriceFilterMinValue());
 
 			}
 			if (getIntent().hasExtra("pricemax")) {
-				wasChanges = true;
 				Filter.setFilterPriceMax(getIntent().getFloatExtra("pricemax", -1));
 
 			}
@@ -182,8 +176,6 @@ public class BBGridActivity extends Activity{
 		Intent intent;
 		switch (item.getItemId()) {
 			case R.id.menubbgridactivityCategory:
-				/*intent = new Intent(this, CategoriesActivity.class);
-				startActivity(intent);*/
 				FragmentTransaction ftCategories = getFragmentManager().beginTransaction();
 				Fragment fCategoriesPrev = getFragmentManager().findFragmentByTag("category");
 				if (fCategoriesPrev != null) {
@@ -195,8 +187,6 @@ public class BBGridActivity extends Activity{
 				boolReturn = true;
 				break;
 			case R.id.menubbgridactivityCity:
-				/*intent = new Intent(this, CitiesActivity.class);
-				startActivity(intent);*/
 				FragmentTransaction ftCities = getFragmentManager().beginTransaction();
 				Fragment fCitiesPrev = getFragmentManager().findFragmentByTag("city");
 				if (fCitiesPrev != null) {
@@ -263,9 +253,6 @@ public class BBGridActivity extends Activity{
 				ftPrice.addToBackStack(null);
 				PriceDialog fPrice = new PriceDialog();
 				fPrice.show(ftPrice, "price");
-
-				/*intent = new Intent(getApplicationContext(), PriceFilterActivity.class);
-				startActivity(intent);*/
 				boolReturn = true;
 				break;
 			case R.id.menubbgridactivitPreferences:
@@ -280,7 +267,9 @@ public class BBGridActivity extends Activity{
 		return boolReturn;
 	}
 
-
+	/**
+	 * Forces to load JSON objects from server
+	 */
 	private class ForceUpdate extends AsyncTask<Void, Void, Void> {
 		private ProgressDialog Dialog;
 		@Override

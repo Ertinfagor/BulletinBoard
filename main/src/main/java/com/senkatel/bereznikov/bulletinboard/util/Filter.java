@@ -4,7 +4,7 @@ import com.senkatel.bereznikov.bulletinboard.contacts.Contact;
 
 /**
  * Static Class Filter
- * Implenets filtering options (form filtering string)
+ * Implements filtering options (form filtering string)
  */
 public class Filter {
 	private static String sFilter = "?";
@@ -80,7 +80,7 @@ public class Filter {
 	 * filtering by tag name
 	 * reset My Bulletin filter
 	 *
-	 * @param tag
+	 * @param tag string for search
 	 */
 	public static void setFilterTag(String tag) {
 		myBulletins = false;

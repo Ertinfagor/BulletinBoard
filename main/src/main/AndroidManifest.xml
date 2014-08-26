@@ -16,13 +16,10 @@
             </intent-filter>
 
         </activity>
-        <activity android:name="com.senkatel.bereznikov.bulletinboard.categories.CategoriesActivity"/>
-        <activity android:name="com.senkatel.bereznikov.bulletinboard.cities.CitiesActivity"/>
         <activity android:name="com.senkatel.bereznikov.bulletinboard.contacts.ContactActivity"/>
         <activity android:name="com.senkatel.bereznikov.bulletinboard.bulletinboard.BBDetailedActivity"/>
         <activity android:name="com.senkatel.bereznikov.bulletinboard.bulletinboard.AddBulletinActivity"/>
         <activity android:name=".PreferencesActivity"/>
-        <activity android:name="com.senkatel.bereznikov.bulletinboard.bulletinboard.PriceFilterActivity"/>
         <activity android:name="com.senkatel.bereznikov.bulletinboard.cities.CityAddActivity"/>
         <activity android:name="com.senkatel.bereznikov.bulletinboard.categories.CategoryAddActivity"/>
 

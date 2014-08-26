@@ -28,7 +28,7 @@ import java.util.List;
  * Implements interface of Add/Edit Bulletin
  * Implements ActionBar
  * Implements Load image on separate thread
- * Implements Get image from Storage
+ * Implements Get image from Storage and put to temp Images var
  */
 public class AddBulletinActivity extends Activity {
 
@@ -146,7 +146,6 @@ public class AddBulletinActivity extends Activity {
 			newBulletin.setIntContact_uid(Contact.getUid());
 			newBulletin.setfPrice(Float.valueOf(edPrice.getText().toString()));
 			newBulletin.setbState(cbState.isChecked());
-			//newBulletin.setBmpImage(bmpImage);
 
 			if (bulletin.getIntBulletinId() != -1) {
 				newBulletin.setIntBulletinId(bulletin.getIntBulletinId());
@@ -181,8 +180,6 @@ public class AddBulletinActivity extends Activity {
 					try {
 						Uri uriImagePath = data.getData();
 						Images.setTempByteArrayBitmap(uriImagePath, getApplicationContext());
-						//		bmpImage = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), uriImagePath);
-						//		final Bitmap scaledBitmap = Bitmap.createScaledBitmap(bmpImage, Constants.IMAGE_WIDTH, Constants.IMAGE_HEIHT, false);
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
