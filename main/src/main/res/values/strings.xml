@@ -5,7 +5,7 @@
     <string name="BBMainNewBulletin">Новое объявление</string>
     <string name="BBMainUpdate">Обновить</string>
     <string name="ErrorConnectToServer">Отсутсвует соединение с сервером</string>
-    <string name="BBMainNewResetFilters">Сбросить филтры</string>
+    <string name="BBMainNewResetFilters">Сбросить фильтры</string>
     <string name="addBulletin">Добавить</string>
     <string name="addCity">Добавить город</string>
     <string name="addCategory">Добавить категорию</string>
@@ -24,4 +24,5 @@
     <string name="my_bulletin">Мои объявления</string>
     <string name="tag">Поиск</string>
     <string name="findtag">Поиск</string>
+    <string name="price">Цена</string>
 </resources>
