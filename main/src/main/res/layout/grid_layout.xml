@@ -8,13 +8,13 @@
 
 
     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:id="@+id/ivBBGridActivity"
             android:src="@drawable/nonimage"
-            android:minWidth="100dp" android:minHeight="100dp"
-            android:maxWidth="100dp" android:maxHeight="100dp"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY"
+
+          />
 
     <TextView
             android:layout_width="match_parent"
@@ -23,9 +23,9 @@
             android:id="@+id/txtGridLayoutTitle"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/ivBBGridActivity"
-            android:layout_marginLeft="32dp"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="50dp"/>
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
