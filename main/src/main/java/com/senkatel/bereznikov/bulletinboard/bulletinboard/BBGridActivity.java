@@ -237,6 +237,8 @@ public class BBGridActivity extends Activity{
 				Filter.resetFilter();
 				try {
 					new ForceUpdate().execute();
+					intent = new Intent(getApplicationContext(),BBGridActivity.class);
+					startActivity(intent);
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 				}
