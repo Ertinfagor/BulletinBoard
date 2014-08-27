@@ -9,13 +9,13 @@
     </item>
     <item
             android:id="@+id/menuaddbulletinAddCity"
-            android:icon="@drawable/add"
+            android:icon="@drawable/city_filter"
             android:showAsAction="ifRoom|withText"
             android:title="@string/addCity">
     </item>
     <item
             android:id="@+id/menuaddbulletinAddCategory"
-            android:icon="@drawable/add"
+            android:icon="@drawable/category_filter"
             android:showAsAction="ifRoom|withText"
             android:title="@string/addCategory">
     </item>
