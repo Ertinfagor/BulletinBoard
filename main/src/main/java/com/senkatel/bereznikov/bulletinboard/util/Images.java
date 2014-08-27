@@ -30,6 +30,7 @@ public class Images {
 	private static LruCache<Integer, Bitmap> mMemoryCache;
 	private static byte[] tempByteArrayBitmap;
 	static int maxMemory;
+	private static boolean inited = false;
 
 	/**
 	 * Init Memory Cache
@@ -39,20 +40,26 @@ public class Images {
 		// Get max available VM memory, exceeding this amount will throw an
 		// OutOfMemory exception. Stored in kilobytes as LruCache takes an
 		// int in its constructor.
-		maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
-		// Use 1/8th of the available memory for this memory cache.
-		final int cacheSize = maxMemory / Constants.MEMORY_CACHE_USAGE_DIVISOR;
+		if (!inited) {
+			maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
-		mMemoryCache = new LruCache<Integer, Bitmap>(cacheSize) {
-			@Override
-			protected int sizeOf(Integer key, Bitmap bitmap) {
-				// The cache size will be measured in kilobytes rather than
-				// number of items.
-				return bitmap.getByteCount() / 1024;
-			}
+			// Use 1/8th of the available memory for this memory cache.
+			final int cacheSize = maxMemory / Constants.MEMORY_CACHE_USAGE_DIVISOR;
 
-		};
+			mMemoryCache = new LruCache<Integer, Bitmap>(cacheSize) {
+				@Override
+				protected int sizeOf(Integer key, Bitmap bitmap) {
+					// The cache size will be measured in kilobytes rather than
+					// number of items.
+					return bitmap.getByteCount() / 1024;
+				}
+
+			};
+
+			inited = true;
+			Log.v(Constants.LOG_TAG, "Cache inited");
+		}
 	}
 
 	/**
