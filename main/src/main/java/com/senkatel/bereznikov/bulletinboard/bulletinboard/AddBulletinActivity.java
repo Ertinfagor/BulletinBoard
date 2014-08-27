@@ -130,12 +130,15 @@ public class AddBulletinActivity extends Activity {
 	}
 
 	private void post() {
-
+		boolean mayPost = true;
 		if (edTitle.getText().toString().trim().equals("")) {
+			mayPost = false;
 			edTitle.setError(getString(R.string.needSetTitle));
 		} else if (edText.getText().toString().trim().equals("")) {
+			mayPost = false;
 			edText.setError(getString(R.string.needSetDetail));
 		} else if (edPrice.getText().toString().trim().equals("")) {
+			mayPost = false;
 			edPrice.setError(getString(R.string.needSetCost));
 		} else {
 			Bulletin newBulletin = new Bulletin();
@@ -147,19 +150,19 @@ public class AddBulletinActivity extends Activity {
 			newBulletin.setIntContact_uid(Contact.getUid());
 			newBulletin.setfPrice(Float.valueOf(edPrice.getText().toString()));
 			newBulletin.setbState(cbState.isChecked());
+			if (mayPost) {
+				if (bulletin.getIntBulletinId() != -1) {
+					newBulletin.setIntBulletinId(bulletin.getIntBulletinId());
+					Bulletins.putBulletin(newBulletin);
 
-			if (bulletin.getIntBulletinId() != -1) {
-				newBulletin.setIntBulletinId(bulletin.getIntBulletinId());
-				Bulletins.putBulletin(newBulletin);
+				} else {
+					Bulletins.postBulletin(newBulletin);
 
-			} else {
-				Bulletins.postBulletin(newBulletin);
+				}
 
+				Intent intent = new Intent(this, BBGridActivity.class);
+				startActivity(intent);
 			}
-
-			Intent intent = new Intent(this, BBGridActivity.class);
-			startActivity(intent);
-
 		}
 	}
 
