@@ -65,7 +65,7 @@ public class BBArrayAdapter extends ArrayAdapter<Bulletin> {
 
 		if (cancelPotentialWork(Bulletins.get(position).getIntBulletinId(), vhHolder.ivImage)) {
 			final BitmapWorkerTask loadImageTask = new BitmapWorkerTask(vhHolder.ivImage);
-			final AsyncDrawable asyncDrawable = new AsyncDrawable(getContext().getResources(), BitmapFactory.decodeResource(getContext().getResources(), R.drawable.nonimage), loadImageTask);
+			final AsyncDrawable asyncDrawable = new AsyncDrawable(getContext().getResources(), BitmapFactory.decodeResource(getContext().getResources(), R.drawable.abc_ic_clear), loadImageTask);
 			vhHolder.ivImage.setImageDrawable(asyncDrawable);
 			loadImageTask.execute(Bulletins.get(position).getIntBulletinId());
 		}
