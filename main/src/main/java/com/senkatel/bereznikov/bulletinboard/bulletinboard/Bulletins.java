@@ -88,7 +88,7 @@ public class Bulletins {
 
 			for (int i = 0; i <jsonArrayBulletins.length(); i++) {
 				JSONObject jsonBulletin = jsonArrayBulletins.getJSONObject(i);
-				index = jsonBulletin.getInt("Id");
+				index = jsonBulletin.getInt("id");
 				Bulletin bulletin = new Bulletin();
 				bulletin.setIntBulletinId(index);
 				bulletin.setsTitle(jsonBulletin.getString("title"));
@@ -170,7 +170,7 @@ public class Bulletins {
 					postJsonObj.put("categories", categories);
 
 					JSONObject result = ParseJson.postJson(url, postJsonObj);
-					Images.uploadTemp(result.getInt("Id"));
+					Images.uploadTemp(result.getInt("id"));
 
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t POST Category: " + e.toString());
