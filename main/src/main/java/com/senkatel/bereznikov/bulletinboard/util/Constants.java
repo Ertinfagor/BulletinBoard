@@ -21,5 +21,9 @@ public interface Constants {
 	public static final int IMAGE_WIDTH_MAX = 1024;
 	public static final int UPDATE_INTERVAL = 60;
 	public static final int MEMORY_CACHE_USAGE_DIVISOR = 8;
+	public static final int STATUS_OK = 1;
+	public static final int STATUS_FAIL = -1;
+
+
 
 }

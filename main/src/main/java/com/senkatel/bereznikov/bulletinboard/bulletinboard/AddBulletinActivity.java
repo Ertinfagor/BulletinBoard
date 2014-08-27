@@ -151,17 +151,28 @@ public class AddBulletinActivity extends Activity {
 			newBulletin.setfPrice(Float.valueOf(edPrice.getText().toString()));
 			newBulletin.setbState(cbState.isChecked());
 			if (mayPost) {
-				if (bulletin.getIntBulletinId() != -1) {
-					newBulletin.setIntBulletinId(bulletin.getIntBulletinId());
-					Bulletins.putBulletin(newBulletin);
+				try {
+					boolean bResult = false;
+					if (bulletin.getIntBulletinId() != -1) {
+						newBulletin.setIntBulletinId(bulletin.getIntBulletinId());
+						bResult = Bulletins.putBulletin(newBulletin);
 
-				} else {
-					Bulletins.postBulletin(newBulletin);
+					} else {
+						bResult = Bulletins.postBulletin(newBulletin);
 
+					}
+
+					if (bResult) {
+						Intent intent = new Intent(this, BBGridActivity.class);
+						startActivity(intent);
+					}else {
+						Toast.makeText(getApplicationContext(),"Ошибка. Объявление не было загружено",Toast.LENGTH_LONG).show();
+					}
+				} catch (Exception e) {
+					Log.e(Constants.LOG_TAG, "Can`t Load Category: " + e.toString());
+					Toast.makeText(getApplicationContext(),"Ошибка. Объявление не было загружено",Toast.LENGTH_LONG).show();
 				}
 
-				Intent intent = new Intent(this, BBGridActivity.class);
-				startActivity(intent);
 			}
 		}
 	}
@@ -220,8 +231,6 @@ public class AddBulletinActivity extends Activity {
 		switch (item.getItemId()) {
 			case R.id.menuaddbulletinAdd:
 				post();
-				intent = new Intent(getApplicationContext(), BBGridActivity.class);
-				startActivity(intent);
 				ret = true;
 				break;
 			case R.id.menuaddbulletinAddCategory:

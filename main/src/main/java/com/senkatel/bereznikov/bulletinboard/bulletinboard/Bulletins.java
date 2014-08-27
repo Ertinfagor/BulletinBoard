@@ -1,6 +1,7 @@
 package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 import com.senkatel.bereznikov.bulletinboard.contacts.BulletinContact;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
@@ -22,7 +23,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Implements GET request
  * Implements POST request
  * Implements DELETE request
- *
  */
 @SuppressWarnings("ALL")
 public class Bulletins {
@@ -32,18 +32,15 @@ public class Bulletins {
 	private Context context;
 
 
-
-
 	public Bulletins(Context context) {
 		this.context = context;
 	}
 
 	/**
-	 *
 	 * @param id get bulletin from bulletins list
 	 * @return Bulletin
 	 */
-	public static Bulletin get(int id){
+	public static Bulletin get(int id) {
 		if (id < arrayBulletins.size()) {
 			try {
 				return arrayBulletins.get(id);
@@ -57,28 +54,27 @@ public class Bulletins {
 
 	/**
 	 * Used for GridView
+	 *
 	 * @return List of all Bulletins
 	 */
-	public static  CopyOnWriteArrayList<Bulletin> getAll(){
+	public static CopyOnWriteArrayList<Bulletin> getAll() {
 		return Bulletins.arrayBulletins;
 
 	}
-
-
-
 
 
 	/**
 	 * Forms GET request from base address + directory bulletin and filter string and call ParseJson Class to get JSON Array
 	 * Parse JSON Array and set values for bulletins
 	 * Must use Thread or AsyncTask to Implement this method
+	 *
 	 * @param url base address of server
 	 */
 	public synchronized static void getBulletins(String url) {
 
 		url += Constants.BULLETIN;
-		if (Filter.isFilter()){
-			url+= Filter.getsFilter();
+		if (Filter.isFilter()) {
+			url += Filter.getsFilter();
 		}
 		CopyOnWriteArrayList<Bulletin> tempBulletins = new CopyOnWriteArrayList<Bulletin>();
 		try {
@@ -86,7 +82,7 @@ public class Bulletins {
 			int l = jsonArrayBulletins.length();
 			int index = -1;
 
-			for (int i = 0; i <jsonArrayBulletins.length(); i++) {
+			for (int i = 0; i < jsonArrayBulletins.length(); i++) {
 				JSONObject jsonBulletin = jsonArrayBulletins.getJSONObject(i);
 				index = jsonBulletin.getInt("id");
 				Bulletin bulletin = new Bulletin();
@@ -108,14 +104,14 @@ public class Bulletins {
 				JSONArray jsonArrayCategories = jsonBulletin.getJSONArray("categories");
 				int k = jsonArrayCategories.length();
 				List<Integer> listCategories = new ArrayList<Integer>();
-				for (int j=0 ; j<k; j++){
+				for (int j = 0; j < k; j++) {
 					listCategories.add(jsonArrayCategories.getInt(j));
 				}
 				bulletin.setListCategories(listCategories);
 				/*Parse int to bool*/
-				if(jsonBulletin.getInt("state")==0){
+				if (jsonBulletin.getInt("state") == 0) {
 					bulletin.setbState(true);
-				}else {
+				} else {
 					bulletin.setbState(false);
 				}
 				bulletin.setfPrice(jsonBulletin.getLong("price"));
@@ -129,8 +125,8 @@ public class Bulletins {
 		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "getBulletins error: " + e.toString());
 		}
-			arrayBulletins.clear();
-			arrayBulletins.addAll(tempBulletins);
+		arrayBulletins.clear();
+		arrayBulletins.addAll(tempBulletins);
 
 
 	}
@@ -139,9 +135,12 @@ public class Bulletins {
 	 * Forms POST request to send new bulletin to server
 	 * Executed on separate thread
 	 * After POST Text data receive ID of bulletin and send image
+	 *
 	 * @param bulletin bulletin that will sended
 	 */
-	public static void postBulletin(final Bulletin  bulletin) {
+	public static boolean postBulletin(final Bulletin bulletin) throws Exception {
+		final Handler handler = new Handler();
+
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -157,13 +156,13 @@ public class Bulletins {
 					/*convert bool to int*/
 					if (bulletin.isbState()) {
 						postJsonObj.put("state", 1);
-					}else{
+					} else {
 						postJsonObj.put("state", 0);
 					}
 
 					JSONArray categories = new JSONArray();
 					List<Integer> categoriesIds = bulletin.getListCategories();
-					for (int i = 0; i < categoriesIds.size(); i++){
+					for (int i = 0; i < categoriesIds.size(); i++) {
 						categories.put(i, categoriesIds.get(i));
 					}
 
@@ -171,14 +170,24 @@ public class Bulletins {
 
 					JSONObject result = ParseJson.postJson(url, postJsonObj);
 					Images.uploadTemp(result.getInt("id"));
-
+					handler.sendEmptyMessage(Constants.STATUS_OK);
 				} catch (Exception e) {
-					Log.e(Constants.LOG_TAG, "Can`t POST Category: " + e.toString());
+					Log.e(Constants.LOG_TAG, "Can`t POST Bulletin: " + e.toString());
+					handler.sendEmptyMessage(Constants.STATUS_FAIL);
+
 				}
 				Bulletins.getBulletins(Constants.URL);
-				}
+			}
 		});
 		thread.start();
+		thread.join();
+
+
+		if (handler.hasMessages(Constants.STATUS_OK)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -187,7 +196,8 @@ public class Bulletins {
 	 *
 	 * @param bulletin edited bulletin that will sended
 	 */
-	public static void putBulletin(final Bulletin  bulletin) {
+	public static boolean putBulletin(final Bulletin bulletin) throws Exception{
+		final Handler handler = new Handler();
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -203,35 +213,46 @@ public class Bulletins {
 					/*convert bool to int*/
 					if (bulletin.isbState()) {
 						putJsonObj.put("state", 1);
-					}else{
+					} else {
 						putJsonObj.put("state", 0);
 					}
 
 					JSONArray categories = new JSONArray();
 					List<Integer> categoriesIds = bulletin.getListCategories();
-					for (int i = 0; i < categoriesIds.size(); i++){
+					for (int i = 0; i < categoriesIds.size(); i++) {
 						categories.put(i, categoriesIds.get(i));
 					}
 
 					putJsonObj.put("categories", categories);
-					ParseJson.putJson(url, putJsonObj);
+					JSONObject result = ParseJson.putJson(url, putJsonObj);
 					Images.uploadTemp(bulletin.getIntBulletinId());
+					handler.sendEmptyMessage(Constants.STATUS_OK);
 
 				} catch (Exception e) {
-					Log.e(Constants.LOG_TAG, "Can`t PUT Category: " + e.toString());
+					Log.e(Constants.LOG_TAG, "Can`t PUT Bulletin: " + e.toString());
+					handler.sendEmptyMessage(Constants.STATUS_FAIL);
 				}
 				Bulletins.getBulletins(Constants.URL);
-				}
+			}
 		});
 		thread.start();
+		thread.join();
+
+
+		if (handler.hasMessages(Constants.STATUS_OK)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
 	 * Send DELETE command to server
 	 * Executed on separate thread
+	 *
 	 * @param bulletin bulletin that's will be deleted
 	 */
-	public static void deleteBulletin(final Bulletin  bulletin) {
+	public static void deleteBulletin(final Bulletin bulletin) {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -243,7 +264,7 @@ public class Bulletins {
 					Log.e(Constants.LOG_TAG, "Can`t PUT Category: " + e.toString());
 				}
 				Bulletins.getBulletins(Constants.URL);
-				}
+			}
 		});
 		thread.start();
 	}
