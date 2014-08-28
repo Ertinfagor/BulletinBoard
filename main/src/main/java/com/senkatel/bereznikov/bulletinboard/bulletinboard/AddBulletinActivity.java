@@ -134,10 +134,15 @@ public class AddBulletinActivity extends Activity {
 		if (edTitle.getText().toString().trim().equals("")) {
 			mayPost = false;
 			edTitle.setError(getString(R.string.needSetTitle));
+			Toast.makeText(getApplicationContext(),"Укажите заголовок",Toast.LENGTH_LONG).show();
 		} else if (edText.getText().toString().trim().equals("")) {
 			mayPost = false;
 			edText.setError(getString(R.string.needSetDetail));
+			Toast.makeText(getApplicationContext(),"Укажите детальное описание",Toast.LENGTH_LONG).show();
+
 		} else if (edPrice.getText().toString().trim().equals("")) {
+			Toast.makeText(getApplicationContext(),"Укажите цену",Toast.LENGTH_LONG).show();
+
 			mayPost = false;
 			edPrice.setError(getString(R.string.needSetCost));
 		} else {
