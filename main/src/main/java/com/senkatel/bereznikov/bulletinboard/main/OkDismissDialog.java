@@ -29,8 +29,7 @@ public class OkDismissDialog extends DialogFragment implements DialogInterface.O
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
 				.setTitle(getActivity().getString(R.string.isDeleteMessage)).setPositiveButton(getActivity().getString(R.string.isdelete), this)
-				.setNegativeButton(getActivity().getString(R.string.isCancel), this)
-				.setMessage(getActivity().getString(R.string.isDeleteMessage));
+				.setNegativeButton(getActivity().getString(R.string.isCancel), this);
 		return adb.create();
 	}
 
