@@ -62,6 +62,22 @@ public class Images {
 		}
 	}
 
+	public static void reloadCache(){
+		final int cacheSize = maxMemory / Constants.MEMORY_CACHE_USAGE_DIVISOR;
+		mMemoryCache = new LruCache<Integer, Bitmap>(cacheSize) {
+			@Override
+			protected int sizeOf(Integer key, Bitmap bitmap) {
+				// The cache size will be measured in kilobytes rather than
+				// number of items.
+				return bitmap.getByteCount() / 1024;
+			}
+
+		};
+		Log.v(Constants.LOG_TAG,"cache reloaded");
+
+
+	}
+
 	/**
 	 * Load Bitmap to Cache
 	 *

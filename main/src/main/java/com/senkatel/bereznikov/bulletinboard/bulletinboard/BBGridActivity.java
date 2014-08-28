@@ -56,6 +56,7 @@ public class BBGridActivity extends Activity{
 				Categories.getCategories(Constants.URL);
 				Cities.getCities(Constants.URL);
 
+
 				if (bbArrayAdapter != null) {
 					runOnUiThread(runUpdateNotifierTask);
 				}
@@ -228,6 +229,7 @@ public class BBGridActivity extends Activity{
 			case R.id.menubbgridactivityUpdate:
 				try {
 					new ForceUpdate().execute();
+					Images.reloadCache();
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
 				}
