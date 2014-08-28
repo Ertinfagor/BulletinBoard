@@ -14,10 +14,7 @@ import com.senkatel.bereznikov.bulletinboard.categories.Categories;
 import com.senkatel.bereznikov.bulletinboard.categories.CategoriesDialog;
 import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.cities.CitiesDialog;
-import com.senkatel.bereznikov.bulletinboard.main.PreferencesActivity;
-import com.senkatel.bereznikov.bulletinboard.main.PriceDialog;
-import com.senkatel.bereznikov.bulletinboard.main.R;
-import com.senkatel.bereznikov.bulletinboard.main.TagDialog;
+import com.senkatel.bereznikov.bulletinboard.main.*;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.Filter;
 import com.senkatel.bereznikov.bulletinboard.util.Images;
@@ -113,12 +110,12 @@ public class BBGridActivity extends Activity{
 			}
 			if (getIntent().hasExtra("pricemin")) {
 				Filter.setFilterPriceMin(getIntent().getFloatExtra("pricemin", -1));
-				Log.v(Constants.LOG_TAG, "Pricemin: " + Filter.getfPriceFilterMinValue());
-
 			}
 			if (getIntent().hasExtra("pricemax")) {
 				Filter.setFilterPriceMax(getIntent().getFloatExtra("pricemax", -1));
-
+			}
+			if (getIntent().hasExtra("status")) {
+				Filter.setFilterStatus(getIntent().getStringExtra("status"));
 			}
 		} catch (Exception e) {
 
@@ -224,6 +221,17 @@ public class BBGridActivity extends Activity{
 				ftTag.addToBackStack(null);
 				TagDialog fTagNew = new TagDialog();
 				fTagNew.show(ftTag, "tag");
+				boolReturn = true;
+				break;
+			case R.id.menubbgridactivityStatusFilter:
+				FragmentTransaction ftStatus = getFragmentManager().beginTransaction();
+				Fragment fStatusPrev = getFragmentManager().findFragmentByTag("tag");
+				if (fStatusPrev != null) {
+					ftStatus.remove(fStatusPrev);
+				}
+				ftStatus.addToBackStack(null);
+				StatusDialog fStatusNew = new StatusDialog();
+				fStatusNew.show(ftStatus, "status");
 				boolReturn = true;
 				break;
 			case R.id.menubbgridactivityUpdate:

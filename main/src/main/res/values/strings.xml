@@ -40,4 +40,8 @@
     <string name="isdelete">Удалить</string>
     <string name="isCancel">Отмена</string>
     <string name="isDeleteMessage">Подтвердить удаление?</string>
+    <string name="rbnStatusNew">Новые</string>
+    <string name="rbnStatusUsed">Подержанные</string>
+    <string name="StatusDialogStatus">Статус</string>
+    <string name="status">Состояние</string>
 </resources>

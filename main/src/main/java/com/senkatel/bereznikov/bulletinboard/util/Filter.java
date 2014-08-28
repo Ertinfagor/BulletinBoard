@@ -12,6 +12,8 @@ public class Filter {
 	private static int iCategoriesFilterId = -1;
 	private static String sCitiesFilter = "";
 	private static int iCitiesFilterId = -1;
+	private static String sStatusFilter = "";
+	private static int iStatusFilterValue = -1;
 	private static String sTagFilter = "";
 	private static String sTagFilterValue = "";
 	private static String sPriceFilterMax = "";
@@ -100,6 +102,19 @@ public class Filter {
 		sTagFilterValue = tag;
 		buildFilter();
 	}
+	public static void setFilterStatus(String status) {
+		myBulletins = false;
+		sStatusFilter = "";
+		if (status.equals("new")) {
+			sStatusFilter = "state=" + 1;
+			iStatusFilterValue = 1;
+		}else{
+			sStatusFilter = "state=" + 0;
+			iStatusFilterValue = 0;
+		}
+
+		buildFilter();
+	}
 
 	/**
 	 * setting filter for bulletins
@@ -154,6 +169,11 @@ public class Filter {
 				}
 				sFilter += sTagFilter;
 
+			}if (!sStatusFilter.equals("")) {
+				if (!sFilter.endsWith("?")) {
+					sFilter += "&";
+				}
+				sFilter += sStatusFilter;
 			}
 		}
 
@@ -179,6 +199,9 @@ public class Filter {
 
 		sTagFilter = "";
 		sTagFilterValue = "";
+
+		sStatusFilter = "";
+		iStatusFilterValue = -1;
 
 		myBulletins = false;
 

@@ -50,6 +50,11 @@
             android:title="@string/cost">
     </item>
     <item
+            android:id="@+id/menubbgridactivityStatusFilter"
+            android:showAsAction="ifRoom|withText"
+            android:title="@string/status">
+    </item>
+    <item
             android:id="@+id/menubbgridactivitPreferences"
             android:icon="@drawable/settings"
             android:showAsAction="ifRoom|withText"
