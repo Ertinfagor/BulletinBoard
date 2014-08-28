@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import com.senkatel.bereznikov.bulletinboard.bulletinboard.BBGridActivity;
+import com.senkatel.bereznikov.bulletinboard.cities.Cities;
+import com.senkatel.bereznikov.bulletinboard.util.Filter;
 
 @SuppressWarnings("ALL")
 public  class StatusDialog extends DialogFragment {
@@ -43,14 +45,25 @@ public  class StatusDialog extends DialogFragment {
 		rbnUsed.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(),BBGridActivity.class);
-					intent.putExtra("status", "used");
+				Intent intent = new Intent(getActivity(), BBGridActivity.class);
+				intent.putExtra("status", "used");
 				startActivity(intent);
 			}
 		});
 
 		return view;
 
+	}
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (Filter.getiStatusFilterValue() == 1){
+			rbnNew.setChecked(true);
+			rbnUsed.setChecked(false);
+		}else if(Filter.getiStatusFilterValue() == 0) {
+			rbnNew.setChecked(false);
+			rbnUsed.setChecked(true);
+		}
 	}
 
 

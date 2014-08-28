@@ -241,6 +241,10 @@ public class Filter {
 
 	}
 
+	public static int getiStatusFilterValue() {
+		return iStatusFilterValue;
+	}
+
 	public static String getsTagFilterValue() {
 		return sTagFilterValue;
 	}
