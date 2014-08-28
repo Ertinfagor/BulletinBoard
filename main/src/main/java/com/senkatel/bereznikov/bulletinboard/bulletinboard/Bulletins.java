@@ -226,6 +226,7 @@ public class Bulletins {
 					putJsonObj.put("categories", categories);
 					JSONObject result = ParseJson.putJson(url, putJsonObj);
 					Images.uploadTemp(bulletin.getIntBulletinId());
+					Images.removeBitmapFromMemoryCache(bulletin.getIntBulletinId());
 					handler.sendEmptyMessage(Constants.STATUS_OK);
 
 				} catch (Exception e) {

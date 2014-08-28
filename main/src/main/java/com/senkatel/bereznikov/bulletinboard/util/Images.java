@@ -91,6 +91,14 @@ public class Images {
 		}
 	}
 
+	public static void removeBitmapFromMemoryCache(Integer key) {
+		if (getBitmapFromMemCache(key) != null) {
+			mMemoryCache.remove(key);
+			Log.v(Constants.LOG_TAG,"removed from cache");
+
+		}
+	}
+
 	/**
 	 * Get bitmap from cache
 	 *

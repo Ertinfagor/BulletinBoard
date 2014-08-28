@@ -38,7 +38,7 @@ public class PriceDialog extends DialogFragment{
 		btnOk = (Button) view.findViewById(R.id.btnCostFilterOk);
 
 		getDialog().setTitle(getActivity().getString(R.string.price));
-		edMax.requestFocus();
+		edMin.requestFocus();
 		getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
 
@@ -68,7 +68,7 @@ public class PriceDialog extends DialogFragment{
 
 
 					intent.putExtra("pricemax", max);
-				
+
 				startActivity(intent);
 
 			}
