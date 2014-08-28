@@ -206,8 +206,6 @@ public class ParseJson {
 			HttpResponse httpresponse = httpclient.execute(httpdeletereq);
 			responseText = EntityUtils.toString(httpresponse.getEntity());
 			json = new JSONObject(responseText);
-		} catch (JSONException e1) {
-			throw new JSONException(responseText);
 		} catch (Exception e) {
 			Log.e("log_tag", "Delete: " + e.toString());
 		}

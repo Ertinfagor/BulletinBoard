@@ -37,4 +37,7 @@
     <string name="phone">Телефон</string>
     <string name="email">E-mail</string>
     <string name="tagfind">Ключевое слово</string>
+    <string name="isdelete">Удалить</string>
+    <string name="isCancel">Отмена</string>
+    <string name="isDeleteMessage">Подтвердить удаление?</string>
 </resources>

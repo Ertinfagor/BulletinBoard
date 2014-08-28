@@ -261,7 +261,7 @@ public class Bulletins {
 					String url = Constants.URL + Constants.BULLETIN + "/" + String.valueOf(bulletin.getIntBulletinId());
 					ParseJson.deleteJson(url);
 				} catch (Exception e) {
-					Log.e(Constants.LOG_TAG, "Can`t PUT Category: " + e.toString());
+					Log.e(Constants.LOG_TAG, "Can`t DELETE bulletin: " + e.toString());
 				}
 				Bulletins.getBulletins(Constants.URL);
 			}

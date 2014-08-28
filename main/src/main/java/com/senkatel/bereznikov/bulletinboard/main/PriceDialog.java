@@ -63,12 +63,12 @@ public class PriceDialog extends DialogFragment{
 
 				Intent intent = new Intent(getActivity(),BBGridActivity.class);
 
-				if (min != -1) {
+
 					intent.putExtra("pricemin", min);
-				}
-				if (max != -1) {
+
+
 					intent.putExtra("pricemax", max);
-				}
+				
 				startActivity(intent);
 
 			}

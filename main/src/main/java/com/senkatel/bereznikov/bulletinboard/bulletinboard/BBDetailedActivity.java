@@ -1,6 +1,7 @@
 package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.senkatel.bereznikov.bulletinboard.categories.Categories;
 import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.contacts.Contact;
+import com.senkatel.bereznikov.bulletinboard.main.OkDismissDialog;
 import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.Images;
@@ -138,8 +140,8 @@ public class BBDetailedActivity extends Activity {
 				ret = true;
 				break;
 			case R.id.menuDetailedViewDelete:
-				Bulletins.deleteBulletin(bulletin);
-				finish();
+				DialogFragment dig1 = new OkDismissDialog(bulletin,this);
+				dig1.show(getFragmentManager(),"dig1");
 				ret = true;
 				break;
 

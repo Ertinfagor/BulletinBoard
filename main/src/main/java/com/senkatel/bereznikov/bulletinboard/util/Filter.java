@@ -55,11 +55,17 @@ public class Filter {
 	 * @param costMax value of maximum price
 	 */
 	public static void setFilterPriceMax(Float costMax) {
-		myBulletins = false;
-		sPriceFilterMax = "";
-		sPriceFilterMax = "priceless=" + costMax;
-		fPriceFilterMaxValue = costMax;
+		if (costMax >= 0) {
+			myBulletins = false;
+			sPriceFilterMax = "";
+			sPriceFilterMax = "priceless=" + costMax;
+			fPriceFilterMaxValue = costMax;
+		} else {
+			sPriceFilterMax = "";
+			fPriceFilterMaxValue = costMax;
+		}
 		buildFilter();
+
 	}
 
 	/**
@@ -69,10 +75,15 @@ public class Filter {
 	 * @param costMin value of minimum price
 	 */
 	public static void setFilterPriceMin(Float costMin) {
-		myBulletins = false;
-		sPriceFilterMin = "";
-		sPriceFilterMin = "pricemore=" + costMin;
-		fPriceFilterMinValue = costMin;
+		if (costMin >= 0) {
+			myBulletins = false;
+			sPriceFilterMin = "";
+			sPriceFilterMin = "pricemore=" + costMin;
+			fPriceFilterMinValue = costMin;
+		} else {
+			sPriceFilterMin = "";
+			fPriceFilterMinValue = costMin;
+		}
 		buildFilter();
 	}
 
