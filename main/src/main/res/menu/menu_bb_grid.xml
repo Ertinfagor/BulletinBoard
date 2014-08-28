@@ -10,13 +10,13 @@
     <item
             android:id="@+id/menubbgridactivityNewBulletin"
             android:icon="@drawable/add"
-            android:showAsAction="always|withText"
+            android:showAsAction="ifRoom|withText"
             android:title="@string/BBMainNewBulletin">
     </item>
     <item
             android:id="@+id/menubbgridactivityCategory"
             android:icon="@drawable/category_filter"
-            android:showAsAction="always|withText"
+            android:showAsAction="ifRoom|withText"
             android:title="@string/BBMainCategories">
     </item>
     <item
