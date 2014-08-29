@@ -34,7 +34,7 @@ public class PriceDialog extends DialogFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.activiti_price_filter, container);
+		View view = inflater.inflate(R.layout.dialog_price_filter, container);
 		edMax = (EditText) view.findViewById(R.id.edCostFilterMax);
 		edMin = (EditText) view.findViewById(R.id.edCostFilterMin);
 		btnOk = (Button) view.findViewById(R.id.btnCostFilterOk);

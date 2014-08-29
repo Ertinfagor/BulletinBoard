@@ -3,7 +3,6 @@ package com.senkatel.bereznikov.bulletinboard.cities;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import com.senkatel.bereznikov.bulletinboard.bulletinboard.BBGridActivity;
 import com.senkatel.bereznikov.bulletinboard.main.R;
-import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.Filter;
 
 /**
@@ -23,7 +21,6 @@ import com.senkatel.bereznikov.bulletinboard.util.Filter;
  */
 public  class CitiesDialog extends DialogFragment {
 
-	private EditText mEditText;
 	private  ArrayAdapter<String> citiesAdapter;
 	private ListView lvCities;
 
@@ -34,7 +31,7 @@ public  class CitiesDialog extends DialogFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.activity_cities, container);
+		View view = inflater.inflate(R.layout.dilaog_cities, container);
 		lvCities = (ListView) view.findViewById(R.id.lvCities);
 
 		lvCities.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
