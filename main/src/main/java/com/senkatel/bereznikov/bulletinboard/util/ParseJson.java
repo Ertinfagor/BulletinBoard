@@ -1,6 +1,5 @@
 package com.senkatel.bereznikov.bulletinboard.util;
 
-import android.graphics.Bitmap;
 import android.util.Log;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -10,9 +9,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
@@ -20,7 +16,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 /**
@@ -39,7 +38,7 @@ public class ParseJson {
 	 */
 	public static JSONArray getJsonArray(String url) throws Exception {
 
-		Log.v(Constants.LOG_TAG,"GET Array: " + url);
+		Log.v(Constants.LOG_TAG, "GET Array: " + url);
 		InputStream isRawContent = null;
 		String sJSONRawString = null;
 		JSONArray jaResultJSONArray = null;
@@ -79,6 +78,7 @@ public class ParseJson {
 		return jaResultJSONArray;
 
 	}
+
 	/**
 	 * GET JSON Array from http
 	 *
@@ -87,7 +87,7 @@ public class ParseJson {
 	 * @throws Exception
 	 */
 	public static JSONObject getJsonObject(String url) throws Exception {
-		Log.v(Constants.LOG_TAG,"GET Object: " + url);
+		Log.v(Constants.LOG_TAG, "GET Object: " + url);
 		InputStream isRawContent = null;
 		String sJSONRawString = null;
 		JSONObject jaResultJSONObject = null;
@@ -137,7 +137,7 @@ public class ParseJson {
 	 * @throws Exception
 	 */
 	public static JSONObject postJson(String url, JSONObject jsonObject) throws Exception {
-		Log.v(Constants.LOG_TAG,"POST: " + url);
+		Log.v(Constants.LOG_TAG, "POST: " + url);
 		JSONObject json = null;
 		String responseText = null;
 		try {
@@ -167,7 +167,7 @@ public class ParseJson {
 	 * @throws Exception
 	 */
 	public static JSONObject putJson(String url, JSONObject jsonObject) throws Exception {
-		Log.v(Constants.LOG_TAG,"PUT: " + url);
+		Log.v(Constants.LOG_TAG, "PUT: " + url);
 		JSONObject json = null;
 		String responseText = null;
 		try {
@@ -197,7 +197,7 @@ public class ParseJson {
 	 * @throws Exception
 	 */
 	public static JSONObject deleteJson(String url) throws Exception {
-		Log.v(Constants.LOG_TAG,"DELETE: " + url);
+		Log.v(Constants.LOG_TAG, "DELETE: " + url);
 		JSONObject json = null;
 		String responseText = null;
 		try {
@@ -212,44 +212,4 @@ public class ParseJson {
 		return json;
 
 	}
-/*
-	/**
-	 * Load Image on server
-	 * Using externale apache libraries
-	 * for compile on Intelij IDEA change in build.gradle:
-	 * packagingOptions{
-	 * <p/>
-	 * exclude 'META-INF/DEPENDENCIES'
-	 * exclude 'META-INF/NOTICE'
-	 * exclude 'META-INF/LICENSE'
-	 * exclude 'META-INF/NOTICE.txt'
-	 * exclude 'META-INF/LICENSE.txt'
-	 * }
-	 *
-	 * @param url   URL for upload
-	 * @param image Bitmap for Upload
-	 * @throws Exception
-	 *//*
-	public static void postImage(String url, Bitmap image) throws Exception {
-		try {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			image.compress(Bitmap.CompressFormat.JPEG, 75, bos);
-			byte[] data = bos.toByteArray();
-			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost postRequest = new HttpPost(url);
-			ByteArrayBody bab = new ByteArrayBody(data, "test.jpg");
-			MultipartEntity reqEntity = new MultipartEntity(
-					HttpMultipartMode.BROWSER_COMPATIBLE);
-			reqEntity.addPart("file", bab);
-			postRequest.setEntity(reqEntity);
-			httpClient.execute(postRequest);
-
-		} catch (Exception e) {
-			Log.e(e.getClass().getName(), e.getMessage());
-		}
-
-
-	}*/
-
-
 }

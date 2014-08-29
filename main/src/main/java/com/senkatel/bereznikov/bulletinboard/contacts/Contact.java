@@ -16,7 +16,7 @@ import org.json.JSONObject;
  * Implements Save and load prefernces
  */
 @SuppressWarnings("ALL")
-public class Contact  {
+public class Contact {
 
 	private static String name = "";
 	private static String lastName = "";
@@ -27,13 +27,12 @@ public class Contact  {
 	private static boolean exist = false;
 
 
+	public static boolean init(Context context) {
+		Contact.context = context;
+		loadContact();
+		return exist;
 
-public static boolean init(Context context){
-	Contact.context = context;
-	loadContact();
-	return exist;
-
-}
+	}
 
 	public static String getName() {
 		return name;
@@ -79,7 +78,7 @@ public static boolean init(Context context){
 		Contact.exist = exist;
 	}
 
-	public static void save(){
+	public static void save() {
 		saveContact();
 
 	}
@@ -87,9 +86,9 @@ public static boolean init(Context context){
 	/**
 	 * Generate unique ID and save class
 	 */
-	private static void saveContact(){
-		uid =  Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-		Log.v(Constants.LOG_TAG,"UID: " + uid);
+	private static void saveContact() {
+		uid = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+		Log.v(Constants.LOG_TAG, "UID: " + uid);
 		SharedPreferences preferences = context.getSharedPreferences("contact", Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = preferences.edit();
 		editor.putString("name", name);
@@ -101,13 +100,13 @@ public static boolean init(Context context){
 		uploadContact();
 		exist = true;
 
-		Log.v(Constants.LOG_TAG,"Preferences Saved, uid: " + uid);
+		Log.v(Constants.LOG_TAG, "Preferences Saved, uid: " + uid);
 	}
 
 	/**
 	 * Try to load svaed class and if able to load set exist to true
 	 */
-	private static void loadContact(){
+	private static void loadContact() {
 		try {
 			SharedPreferences preferences = context.getSharedPreferences("contact", Context.MODE_PRIVATE);
 			name = preferences.getString("name", null);
@@ -115,9 +114,9 @@ public static boolean init(Context context){
 			email = preferences.getString("email", null);
 			phone = preferences.getString("phone", null);
 			uid = preferences.getString("uid", null);
-		}catch (Exception e){
+		} catch (Exception e) {
 
-			Log.e(Constants.LOG_TAG,"Can`t load preferences: " + e.toString());
+			Log.e(Constants.LOG_TAG, "Can`t load preferences: " + e.toString());
 		}
 		try {
 
@@ -128,9 +127,9 @@ public static boolean init(Context context){
 				Contact.setExist(true);
 			}
 
-		}catch (Exception e){
+		} catch (Exception e) {
 
-			Log.e(Constants.LOG_TAG,"Can`t set exist: " + e.toString());
+			Log.e(Constants.LOG_TAG, "Can`t set exist: " + e.toString());
 		}
 
 	}
@@ -141,7 +140,7 @@ public static boolean init(Context context){
 	 * If Get Request returns value use PUT else POST
 	 * Execute in separate thread
 	 */
-	public static void uploadContact(){
+	public static void uploadContact() {
 
 		Thread thread = new Thread(new Runnable() {
 			@Override
@@ -152,11 +151,10 @@ public static boolean init(Context context){
 					getUrl += "/" + uid;
 					ParseJson.getJsonObject(getUrl);
 
-				}catch (JSONException e1) {
+				} catch (JSONException e1) {
 					existInDb = false;
-				}
-				catch (Exception e){
-					Log.e(Constants.LOG_TAG,"Can`t GET preferences: " + e.toString());
+				} catch (Exception e) {
+					Log.e(Constants.LOG_TAG, "Can`t GET preferences: " + e.toString());
 				}
 				try {
 
@@ -167,21 +165,20 @@ public static boolean init(Context context){
 					jsonobj.put("email", email);
 					jsonobj.put("phone", phone);
 					jsonobj.put("uid", uid);
-					if (existInDb){
+					if (existInDb) {
 						postUrl += "/" + uid;
 						ParseJson.putJson(postUrl, jsonobj);
-					}else {
+					} else {
 						ParseJson.postJson(postUrl, jsonobj);
 					}
-					Log.v(Constants.LOG_TAG,"Exist: " + existInDb);
-				}catch (Exception e){
-					Log.e(Constants.LOG_TAG,"Can`t POST preferences: " + e.toString());
+					Log.v(Constants.LOG_TAG, "Exist: " + existInDb);
+				} catch (Exception e) {
+					Log.e(Constants.LOG_TAG, "Can`t POST preferences: " + e.toString());
 				}
 			}
 		});
 		thread.start();
 	}
-
 
 
 }

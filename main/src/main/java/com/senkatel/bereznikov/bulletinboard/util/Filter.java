@@ -102,13 +102,19 @@ public class Filter {
 		sTagFilterValue = tag;
 		buildFilter();
 	}
+
+	/**
+	 * filtering by bulletin state new/used
+	 *
+	 * @param status keyword new/used
+	 */
 	public static void setFilterStatus(String status) {
 		myBulletins = false;
 		sStatusFilter = "";
 		if (status.equals("new")) {
 			sStatusFilter = "state=" + 1;
 			iStatusFilterValue = 1;
-		}else{
+		} else {
 			sStatusFilter = "state=" + 0;
 			iStatusFilterValue = 0;
 		}
@@ -169,7 +175,8 @@ public class Filter {
 				}
 				sFilter += sTagFilter;
 
-			}if (!sStatusFilter.equals("")) {
+			}
+			if (!sStatusFilter.equals("")) {
 				if (!sFilter.endsWith("?")) {
 					sFilter += "&";
 				}

@@ -3,19 +3,20 @@ package com.senkatel.bereznikov.bulletinboard.main;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.*;
-import android.view.inputmethod.EditorInfo;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import com.senkatel.bereznikov.bulletinboard.bulletinboard.BBGridActivity;
-import com.senkatel.bereznikov.bulletinboard.cities.Cities;
-import com.senkatel.bereznikov.bulletinboard.util.Constants;
-import com.senkatel.bereznikov.bulletinboard.util.Filter;
 
 @SuppressWarnings("ALL")
-public  class TagDialog extends DialogFragment {
+/**
+ * Class TagDialog implements dialog interface to set find key word filter
+ * on set send extra to BBGrid Activity
+ */
+public class TagDialog extends DialogFragment {
 
 	private EditText edTag;
 	private Button btnOk;
@@ -39,8 +40,8 @@ public  class TagDialog extends DialogFragment {
 		btnOk.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(),BBGridActivity.class);
-				if(!edTag.getText().toString().equals("")) {
+				Intent intent = new Intent(getActivity(), BBGridActivity.class);
+				if (!edTag.getText().toString().equals("")) {
 					intent.putExtra("tag", edTag.getText().toString());
 
 				}
@@ -53,7 +54,6 @@ public  class TagDialog extends DialogFragment {
 		return view;
 
 	}
-
 
 
 }

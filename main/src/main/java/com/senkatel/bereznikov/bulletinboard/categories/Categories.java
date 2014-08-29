@@ -26,27 +26,27 @@ public class Categories {
 	private static List<String> listCategoriesNames = new ArrayList<String>();
 
 
-
 	public static List<String> getListCategoriesNames() {
 
 		return listCategoriesNames;
 	}
 
-	public static int getId(String name){
-		for (Category category : listCategories){
-			if (category.getName().equals(name)){
+	public static int getId(String name) {
+		for (Category category : listCategories) {
+			if (category.getName().equals(name)) {
 				return category.getId();
 			}
 		}
 		return -1;
 	}
-	public static String getName(int id){
+
+	public static String getName(int id) {
 		for (Category category : listCategories) {
-			if (category.getId() == id){
+			if (category.getId() == id) {
 				return category.getName();
 			}
 		}
-	return null;
+		return null;
 	}
 
 	/**
@@ -54,6 +54,7 @@ public class Categories {
 	 * Parse JSON Array and set categories
 	 * Must use Thread or AsyncTask to Implement this method
 	 * When execute method data load to temp array
+	 *
 	 * @param url base address of server
 	 */
 	public synchronized static void getCategories(String url) {
@@ -81,7 +82,7 @@ public class Categories {
 		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "Categories getCategories error: " + e.toString());
 		}
-		synchronized (listCategories){
+		synchronized (listCategories) {
 			listCategories.clear();
 			listCategories.addAll(tempCategories);
 
@@ -96,9 +97,10 @@ public class Categories {
 	/**
 	 * Forms POST request to upload new Category and then force to load categories from server
 	 * Execute in separate thread
+	 *
 	 * @param name Name of new category
 	 */
-	public static void postCategory(final String  name){
+	public static void postCategory(final String name) {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -107,9 +109,9 @@ public class Categories {
 					String url = Constants.URL + Constants.CATEGORY;
 					JSONObject jsonobj = new JSONObject();
 					jsonobj.put("name", name);
-							ParseJson.postJson(url,jsonobj);
-				}catch (Exception e){
-					Log.e(Constants.LOG_TAG,"Can`t POST Category: " + e.toString());
+					ParseJson.postJson(url, jsonobj);
+				} catch (Exception e) {
+					Log.e(Constants.LOG_TAG, "Can`t POST Category: " + e.toString());
 				}
 				Categories.getCategories(Constants.URL);
 

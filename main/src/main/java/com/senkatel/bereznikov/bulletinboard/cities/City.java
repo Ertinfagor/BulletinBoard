@@ -28,6 +28,7 @@ public class City implements Parcelable {
 
 	public City() {
 	}
+
 	/*Getters and setters*/
 	public int getId() {
 		return intCityId;
@@ -52,8 +53,9 @@ public class City implements Parcelable {
 				", sCityName='" + sCityName + '\'' +
 				'}';
 	}
+
 	/*Implements Parcelable*/
-	private City(Parcel parcel){
+	private City(Parcel parcel) {
 		intCityId = parcel.readInt();
 		sCityName = parcel.readString();
 	}

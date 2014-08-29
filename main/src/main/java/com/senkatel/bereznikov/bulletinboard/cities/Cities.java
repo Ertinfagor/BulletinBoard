@@ -25,23 +25,22 @@ public class Cities {
 	private static List<String> citiesList = new ArrayList<String>();
 
 
-
 	public static List<String> getCitiesList() {
 		return citiesList;
 	}
 
-	public static int getId(String name){
+	public static int getId(String name) {
 		for (City city : cities) {
-			if (city.getName().equals(name)){
+			if (city.getName().equals(name)) {
 				return city.getId();
 			}
 		}
 		return -1;
 	}
 
-	public static String getName(int id){
+	public static String getName(int id) {
 		for (City city : cities) {
-			if (city.getId() == id){
+			if (city.getId() == id) {
 				return city.getName();
 			}
 		}
@@ -49,11 +48,13 @@ public class Cities {
 
 
 	}
+
 	/**
 	 * Forms GET request from base address + directory city and call ParseJson Class to get JSON Array
 	 * Parse JSON Array and set cities
 	 * Must use Thread or AsyncTask to Implement this method
 	 * When execute method data load to temp array
+	 *
 	 * @param url base address of server
 	 */
 	public synchronized static void getCities(String url) {
@@ -81,7 +82,7 @@ public class Cities {
 		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "Cities getCities error: " + e.toString());
 		}
-		synchronized (cities){
+		synchronized (cities) {
 			cities.clear();
 			cities.addAll(tempCities);
 
@@ -92,12 +93,14 @@ public class Cities {
 
 		}
 	}
+
 	/**
 	 * Forms POST request to upload new City and then force to load cities from server
 	 * Execute in separate thread
+	 *
 	 * @param name Name of new City
 	 */
-	public static void postCity(final String  name) {
+	public static void postCity(final String name) {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {

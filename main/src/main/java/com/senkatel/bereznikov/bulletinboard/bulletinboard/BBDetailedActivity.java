@@ -93,6 +93,7 @@ public class BBDetailedActivity extends Activity {
 				tvState.setText(getString(R.string.itemNew));
 			}
 
+			/*Contact data must be loaded to check if delete/edit buttons must be visible*/
 			Contact.init(getApplicationContext());
 
 
@@ -116,7 +117,7 @@ public class BBDetailedActivity extends Activity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		/*Buttons allow only if user is create item*/
+		/*Buttons visible only if user is create item*/
 		if (bulletin.getIntContact_uid().equals(Contact.getUid())) {
 			miEdit.setVisible(true);
 			miDelete.setVisible(true);
@@ -140,8 +141,8 @@ public class BBDetailedActivity extends Activity {
 				ret = true;
 				break;
 			case R.id.menuDetailedViewDelete:
-				DialogFragment dig1 = new OkDismissDialog(bulletin,this);
-				dig1.show(getFragmentManager(),"dig1");
+				DialogFragment dig1 = new OkDismissDialog(bulletin, this);
+				dig1.show(getFragmentManager(), "dig1");
 				ret = true;
 				break;
 
@@ -153,7 +154,7 @@ public class BBDetailedActivity extends Activity {
 	}
 
 	/**
-	 * Inner Class that load image to temp Image var
+	 * Inner Class that load image
 	 */
 	class BitmapWorkerTaskDetailed extends AsyncTask<Integer, Void, Bitmap> {
 		private final WeakReference<ImageView> wrImageViewReference;

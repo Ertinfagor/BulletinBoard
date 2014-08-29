@@ -1,6 +1,9 @@
 package com.senkatel.bereznikov.bulletinboard.bulletinboard;
 
-import android.app.*;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  * Change names of filter buttons
  */
 @SuppressWarnings("ALL")
-public class BBGridActivity extends Activity{
+public class BBGridActivity extends Activity {
 	private GridView gvBB;
 	private BBArrayAdapter bbArrayAdapter;
 	private MenuItem miRefreshBB;
@@ -81,7 +84,6 @@ public class BBGridActivity extends Activity{
 		gvBB.setAdapter(bbArrayAdapter);
 
 
-
 		gvBB.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -94,6 +96,9 @@ public class BBGridActivity extends Activity{
 
 
 	@Override
+	/**
+	 * recievs extras from filter dialogs and set filters
+	 */
 	protected void onResume() {
 		super.onResume();
 
@@ -153,6 +158,11 @@ public class BBGridActivity extends Activity{
 		return true;
 	}
 
+	/**
+	 * if filter for category or city set then change apropriate button text to filter value
+	 * @param menu
+	 * @return
+	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 
@@ -225,7 +235,7 @@ public class BBGridActivity extends Activity{
 				break;
 			case R.id.menubbgridactivityStatusFilter:
 				FragmentTransaction ftStatus = getFragmentManager().beginTransaction();
-				Fragment fStatusPrev = getFragmentManager().findFragmentByTag("tag");
+				Fragment fStatusPrev = getFragmentManager().findFragmentByTag("status");
 				if (fStatusPrev != null) {
 					ftStatus.remove(fStatusPrev);
 				}
@@ -247,7 +257,7 @@ public class BBGridActivity extends Activity{
 				Filter.resetFilter();
 				try {
 					new ForceUpdate().execute();
-					intent = new Intent(getApplicationContext(),BBGridActivity.class);
+					intent = new Intent(getApplicationContext(), BBGridActivity.class);
 					startActivity(intent);
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Cannot start Bulletin update task: " + e.toString());
@@ -285,6 +295,7 @@ public class BBGridActivity extends Activity{
 	 */
 	private class ForceUpdate extends AsyncTask<Void, Void, Void> {
 		private ProgressDialog Dialog;
+
 		@Override
 		protected void onProgressUpdate(Void... values) {
 			super.onProgressUpdate(values);
@@ -324,8 +335,7 @@ public class BBGridActivity extends Activity{
 			super.onPostExecute(aVoid);
 
 			bbArrayAdapter.notifyDataSetChanged();
-			if(Dialog.isShowing())
-			{
+			if (Dialog.isShowing()) {
 				Dialog.dismiss();
 			}
 

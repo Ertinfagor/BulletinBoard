@@ -7,30 +7,31 @@ import android.os.Parcelable;
  * Class BulletinContact
  * Class Parcelable
  * Implements container for contacts
-	* Class relates to bulletin
- * */
-public class BulletinContact implements Parcelable{
+ * Class relates to bulletin
+ */
+public class BulletinContact implements Parcelable {
 	public static final Parcelable.Creator<BulletinContact> CREATOR = new Parcelable.Creator<BulletinContact>() {
 		public BulletinContact createFromParcel(Parcel in) {
 			return new BulletinContact(in);
 		}
+
 		public BulletinContact[] newArray(int size) {
 			return new BulletinContact[size];
 		}
 	};
 
-	private  String sName = "";
-	private  String sLastName = "";
-	private  String sEmail = "";
-	private  String sPhone = "";
-	private  String sUid = "";
+	private String sName = "";
+	private String sLastName = "";
+	private String sEmail = "";
+	private String sPhone = "";
+	private String sUid = "";
 
 	public BulletinContact() {
 	}
 
 	/**
 	 * Create non-static instance of current user Contact for sending
-	*/
+	 */
 	public BulletinContact(Contact contact) {
 		this.sName = Contact.getName();
 		this.sLastName = Contact.getLastName();
@@ -44,39 +45,39 @@ public class BulletinContact implements Parcelable{
 
 /*Getters and setters*/
 
-	public  String getName() {
+	public String getName() {
 		return sName;
 	}
 
-	public  void setName(String name) {
+	public void setName(String name) {
 		this.sName = name;
 	}
 
-	public  String getLastName() {
+	public String getLastName() {
 		return sLastName;
 	}
 
-	public  void setLastName(String lastName) {
+	public void setLastName(String lastName) {
 		this.sLastName = lastName;
 	}
 
-	public  String getPhone() {
+	public String getPhone() {
 		return sPhone;
 	}
 
-	public  void setPhone(String phone) {
+	public void setPhone(String phone) {
 		this.sPhone = phone;
 	}
 
-	public  String getEmail() {
+	public String getEmail() {
 		return sEmail;
 	}
 
-	public  void setEmail(String email) {
+	public void setEmail(String email) {
 		this.sEmail = email;
 	}
 
-	public  String getUid() {
+	public String getUid() {
 		return sUid;
 	}
 
@@ -97,7 +98,6 @@ public class BulletinContact implements Parcelable{
 		this.sUid = strings[4];
 
 
-
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class BulletinContact implements Parcelable{
 	@Override
 	public void writeToParcel(Parcel parcel, int i) {
 
-		String[] strings = {this.sName,this.sLastName,this.sPhone,this.sEmail,this.sUid};
+		String[] strings = {this.sName, this.sLastName, this.sPhone, this.sEmail, this.sUid};
 
 		parcel.writeStringArray(strings);
 

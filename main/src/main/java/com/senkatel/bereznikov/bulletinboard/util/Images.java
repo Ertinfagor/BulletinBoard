@@ -62,7 +62,7 @@ public class Images {
 		}
 	}
 
-	public static void reloadCache(){
+	public static void reloadCache() {
 		final int cacheSize = maxMemory / Constants.MEMORY_CACHE_USAGE_DIVISOR;
 		mMemoryCache = new LruCache<Integer, Bitmap>(cacheSize) {
 			@Override
@@ -73,7 +73,7 @@ public class Images {
 			}
 
 		};
-		Log.v(Constants.LOG_TAG,"cache reloaded");
+		Log.v(Constants.LOG_TAG, "cache reloaded");
 
 
 	}
@@ -91,10 +91,15 @@ public class Images {
 		}
 	}
 
+	/**
+	 * removes bitmap from cache
+	 *
+	 * @param key Bulletin id
+	 */
 	public static void removeBitmapFromMemoryCache(Integer key) {
 		if (getBitmapFromMemCache(key) != null) {
 			mMemoryCache.remove(key);
-			Log.v(Constants.LOG_TAG,"removed from cache");
+			Log.v(Constants.LOG_TAG, "removed from cache");
 
 		}
 	}

@@ -17,6 +17,11 @@ import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.Filter;
 
+/**
+ * Class implements dialog fragment to pick category for filter
+ * if category filter set check radiobutton on currently set category
+ * when picked category send extra to BBGridActivity
+ */
 public  class CategoriesDialog extends DialogFragment {
 
 

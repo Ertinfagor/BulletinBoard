@@ -74,12 +74,13 @@ public class AddBulletinActivity extends Activity {
 		spnCity.setAdapter(adapterCity);
 		spnCategories.setAdapter(adapterCategories);
 
+		/*If contacts a not filled for current device popup activity to fill up contacts*/
 		if (!Contact.init(this)) {
 			Intent intent = new Intent(this, ContactActivity.class);
 			startActivity(intent);
 		}
 
-
+/*When editing bulletin activity recievc extra with edited bulletin*/
 		if (getIntent().hasExtra("bulletin")) {
 			Bundle extras = getIntent().getExtras();
 
@@ -99,6 +100,9 @@ public class AddBulletinActivity extends Activity {
 			tvCategories.setText(categories);
 		}
 
+		/**
+		 * adding categories
+		 */
 		spnCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -123,25 +127,35 @@ public class AddBulletinActivity extends Activity {
 		});
 	}
 
+	/**
+	 * clearing categories
+	 * @param view
+	 */
 	public void onAddBulletinClear(View view) {
 		tvCategories.setText("");
 		categoriesIds.clear();
 
 	}
 
+	/**
+	 * post bulletin.
+	 * check if all fields filled.
+	 * If bulletin has id then put else post.
+	 * if post/put return error tthen toast error message
+	 */
 	private void post() {
 		boolean mayPost = true;
 		if (edTitle.getText().toString().trim().equals("")) {
 			mayPost = false;
 			edTitle.setError(getString(R.string.needSetTitle));
-			Toast.makeText(getApplicationContext(),"Укажите заголовок",Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), "Укажите заголовок", Toast.LENGTH_LONG).show();
 		} else if (edText.getText().toString().trim().equals("")) {
 			mayPost = false;
 			edText.setError(getString(R.string.needSetDetail));
-			Toast.makeText(getApplicationContext(),"Укажите детальное описание",Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), "Укажите детальное описание", Toast.LENGTH_LONG).show();
 
 		} else if (edPrice.getText().toString().trim().equals("")) {
-			Toast.makeText(getApplicationContext(),"Укажите цену",Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), "Укажите цену", Toast.LENGTH_LONG).show();
 
 			mayPost = false;
 			edPrice.setError(getString(R.string.needSetCost));
@@ -170,18 +184,22 @@ public class AddBulletinActivity extends Activity {
 					if (bResult) {
 						Intent intent = new Intent(this, BBGridActivity.class);
 						startActivity(intent);
-					}else {
-						Toast.makeText(getApplicationContext(),"Ошибка. Объявление не было загружено",Toast.LENGTH_LONG).show();
+					} else {
+						Toast.makeText(getApplicationContext(), "Ошибка. Объявление не было загружено", Toast.LENGTH_LONG).show();
 					}
 				} catch (Exception e) {
 					Log.e(Constants.LOG_TAG, "Can`t Load Category: " + e.toString());
-					Toast.makeText(getApplicationContext(),"Ошибка. Объявление не было загружено",Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(), "Ошибка. Объявление не было загружено", Toast.LENGTH_LONG).show();
 				}
 
 			}
 		}
 	}
 
+	/**
+	 * Opens android file manager
+	 * @param view
+	 */
 	public void addBulletinOpenFile(View view) {
 
 		Intent intent = new Intent();
@@ -191,6 +209,12 @@ public class AddBulletinActivity extends Activity {
 
 	}
 
+	/**
+	 * get image uri from android file manager and loads bitmap to temp Images
+	 * @param requestCode
+	 * @param resultCode
+	 * @param data uri of image
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		if (resultCode == RESULT_OK) {
@@ -229,6 +253,11 @@ public class AddBulletinActivity extends Activity {
 		return super.onPrepareOptionsMenu(menu);
 	}
 
+	/**
+	 * actionbar buttons
+	 * @param item
+	 * @return
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		boolean ret;

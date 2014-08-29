@@ -15,6 +15,10 @@ import com.senkatel.bereznikov.bulletinboard.cities.Cities;
 import com.senkatel.bereznikov.bulletinboard.util.Filter;
 
 @SuppressWarnings("ALL")
+/**
+ * Class StatusDialog implements dialog interface to set status filter
+ * on set send extra to BBGrid Activity
+ */
 public  class StatusDialog extends DialogFragment {
 
 	private RadioButton rbnNew;

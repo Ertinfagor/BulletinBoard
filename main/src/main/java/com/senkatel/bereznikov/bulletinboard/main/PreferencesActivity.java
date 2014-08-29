@@ -18,7 +18,7 @@ public class PreferencesActivity extends Activity {
 
 	}
 
-	public void onPreferencesSetContactsClick(View view){
+	public void onPreferencesSetContactsClick(View view) {
 		Intent intent = new Intent(getApplicationContext(), ContactActivity.class);
 		startActivity(intent);
 	}

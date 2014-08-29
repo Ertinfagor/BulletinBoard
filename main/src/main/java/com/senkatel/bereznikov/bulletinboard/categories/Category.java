@@ -26,10 +26,9 @@ public class Category implements Parcelable {
 	};
 
 
-
-
 	public Category() {
 	}
+
 	/*Getters and Setters*/
 	public int getId() {
 		return intCategoryId;
@@ -55,10 +54,11 @@ public class Category implements Parcelable {
 				'}';
 	}
 
-	private Category(Parcel parcel){
+	private Category(Parcel parcel) {
 		intCategoryId = parcel.readInt();
 		sCategoryName = parcel.readString();
 	}
+
 	/*Parcelable implementation*/
 	@Override
 	public int describeContents() {

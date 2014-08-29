@@ -16,6 +16,11 @@ import com.senkatel.bereznikov.bulletinboard.main.R;
 import com.senkatel.bereznikov.bulletinboard.util.Constants;
 import com.senkatel.bereznikov.bulletinboard.util.Filter;
 
+/**
+ * Class implements dialog fragment to pick city for filter
+ * if city filter set check radiobutton on currently set city
+ * when picked city send extra to BBGridActivity
+ */
 public  class CitiesDialog extends DialogFragment {
 
 	private EditText mEditText;

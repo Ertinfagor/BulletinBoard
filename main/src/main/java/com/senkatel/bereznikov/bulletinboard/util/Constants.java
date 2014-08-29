@@ -25,5 +25,4 @@ public interface Constants {
 	public static final int STATUS_FAIL = -1;
 
 
-
 }

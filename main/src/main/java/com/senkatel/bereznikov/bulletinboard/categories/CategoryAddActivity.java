@@ -14,13 +14,15 @@ import com.senkatel.bereznikov.bulletinboard.main.R;
 @SuppressWarnings("ALL")
 public class CategoryAddActivity extends Activity {
 	EditText addItem;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_category);
 
-		addItem = (EditText)findViewById(R.id.edAddCategoryActivity);
+		addItem = (EditText) findViewById(R.id.edAddCategoryActivity);
 	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_add_categry_city, menu);
@@ -38,7 +40,7 @@ public class CategoryAddActivity extends Activity {
 		switch (item.getItemId()) {
 
 			case R.id.menuAddCategoryCityAdd:
-				if(!addItem.getText().toString().trim().equals("")){
+				if (!addItem.getText().toString().trim().equals("")) {
 					Categories.postCategory(addItem.getText().toString());
 				}
 				finish();

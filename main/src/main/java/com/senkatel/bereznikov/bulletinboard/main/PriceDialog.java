@@ -16,9 +16,11 @@ import com.senkatel.bereznikov.bulletinboard.util.Filter;
 
 /**
  * Class PriceDialog implements interface of price filter
+ * if price filter set fill edittext on currently values
+ * when set filter send extra to BBGridActivity
  */
 @SuppressWarnings("ALL")
-public class PriceDialog extends DialogFragment{
+public class PriceDialog extends DialogFragment {
 
 
 	private EditText edMax;
@@ -57,17 +59,17 @@ public class PriceDialog extends DialogFragment{
 				try {
 					min = Float.valueOf(edMin.getText().toString());
 				} catch (Exception e) {
-					Log.e(Constants.LOG_TAG,"Incorrect min value " + e.toString());
+					Log.e(Constants.LOG_TAG, "Incorrect min value " + e.toString());
 					min = -1;
 				}
 
-				Intent intent = new Intent(getActivity(),BBGridActivity.class);
+				Intent intent = new Intent(getActivity(), BBGridActivity.class);
 
 
-					intent.putExtra("pricemin", min);
+				intent.putExtra("pricemin", min);
 
 
-					intent.putExtra("pricemax", max);
+				intent.putExtra("pricemax", max);
 
 				startActivity(intent);
 
@@ -82,7 +84,7 @@ public class PriceDialog extends DialogFragment{
 	@Override
 	public void onResume() {
 		super.onResume();
-	if (Filter.getfPriceFilterMaxValue() != -1) {
+		if (Filter.getfPriceFilterMaxValue() != -1) {
 			edMax.setText(String.valueOf(Filter.getfPriceFilterMaxValue()));
 		}
 		if (Filter.getfPriceFilterMinValue() != -1) {

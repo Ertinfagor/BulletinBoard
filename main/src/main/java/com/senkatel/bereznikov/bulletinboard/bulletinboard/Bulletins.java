@@ -137,6 +137,7 @@ public class Bulletins {
 	 * After POST Text data receive ID of bulletin and send image
 	 *
 	 * @param bulletin bulletin that will sended
+	 * @return true if bulletin posted
 	 */
 	public static boolean postBulletin(final Bulletin bulletin) throws Exception {
 		final Handler handler = new Handler();
@@ -193,10 +194,12 @@ public class Bulletins {
 	/**
 	 * Forms PUT request to send edited bulletin to server
 	 * Executed on separate thread
+	 * removes current bitmap from cache
 	 *
 	 * @param bulletin edited bulletin that will sended
+	 * @return true if bulletin puted
 	 */
-	public static boolean putBulletin(final Bulletin bulletin) throws Exception{
+	public static boolean putBulletin(final Bulletin bulletin) throws Exception {
 		final Handler handler = new Handler();
 		Thread thread = new Thread(new Runnable() {
 			@Override
