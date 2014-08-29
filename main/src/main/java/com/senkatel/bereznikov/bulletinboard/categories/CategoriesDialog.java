@@ -40,7 +40,7 @@ public  class CategoriesDialog extends DialogFragment {
 
 		lvCategories.setAdapter(categoriesAdapter);
 
-		getDialog().setTitle("Категория");
+		getDialog().setTitle(getActivity().getString(R.string.CategoryTitle));
 
 
 

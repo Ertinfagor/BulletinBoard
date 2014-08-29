@@ -44,4 +44,6 @@
     <string name="rbnStatusUsed">Подержанные</string>
     <string name="StatusDialogStatus">Статус</string>
     <string name="status">Состояние</string>
+    <string name="CityTitle">Город</string>
+    <string name="CategoryTitle">Категория</string>
 </resources>

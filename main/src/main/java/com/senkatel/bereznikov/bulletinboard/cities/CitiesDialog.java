@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import com.senkatel.bereznikov.bulletinboard.bulletinboard.BBGridActivity;
 import com.senkatel.bereznikov.bulletinboard.main.R;
@@ -19,9 +18,9 @@ import com.senkatel.bereznikov.bulletinboard.util.Filter;
  * if city filter set check radiobutton on currently set city
  * when picked city send extra to BBGridActivity
  */
-public  class CitiesDialog extends DialogFragment {
+public class CitiesDialog extends DialogFragment {
 
-	private  ArrayAdapter<String> citiesAdapter;
+	private ArrayAdapter<String> citiesAdapter;
 	private ListView lvCities;
 
 	public CitiesDialog() {
@@ -38,14 +37,14 @@ public  class CitiesDialog extends DialogFragment {
 		citiesAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_single_choice, Cities.getCitiesList());
 
 		lvCities.setAdapter(citiesAdapter);
-		getDialog().setTitle("Город");
+		getDialog().setTitle(getActivity().getString(R.string.CityTitle));
 
 		lvCities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				int pos = lvCities.getCheckedItemPosition();
-				Intent intent = new Intent(getActivity(),BBGridActivity.class);
-				if(pos != -1) {
+				Intent intent = new Intent(getActivity(), BBGridActivity.class);
+				if (pos != -1) {
 					intent.putExtra("city", Cities.getId(citiesAdapter.getItem(position)));
 
 				}
@@ -61,8 +60,8 @@ public  class CitiesDialog extends DialogFragment {
 	public void onResume() {
 		super.onResume();
 		citiesAdapter.notifyDataSetChanged();
-		if (Filter.getCityFilterId()!=-1){
-			lvCities.setItemChecked(citiesAdapter.getPosition(Cities.getName(Filter.getCityFilterId())),true);
+		if (Filter.getCityFilterId() != -1) {
+			lvCities.setItemChecked(citiesAdapter.getPosition(Cities.getName(Filter.getCityFilterId())), true);
 		}
 	}
 }
